@@ -1,20 +1,19 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include 'ast.h'
+#include "ast.h"
 
-enum token_type
-{
-    TOKEN_WHILE,
-    TOKEN_DO,
-    TOKEN_DONE,
-};
 
-enum parser_status
-{
-    PARSER_DONE = 0,
-    PARSER_NO_MATCH,
-    PARSER_ERROR,
-};
+struct parser{
+    struct ast *ast;
+    struct ast_nodes *nodes;
+}
 
-#endif /* PARSER_H */
+int parse_input(struct lexer *lexer, struct parser *parser);
+
+int parse_if(struct lexer *lexer, struct parser *parser);
+
+
+
+
+#endif /* ! PARSER_H */

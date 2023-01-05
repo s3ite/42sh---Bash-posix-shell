@@ -1,34 +1,36 @@
 #ifndef AST_H
 #define AST_H
 
-#include "commands.h"
-
-
-union node_data
+struct condition_if_node
 {
-    // struct node_if node_if;
-    // struct node_command node_command;
-    struct node_simple_command node_simple_command;
+    struct ast *condition; //ast associé à la condition
+    struct ast *then; //action si autorisée
+    struct ast *else; //Action si faux 
 };
 
-enum node_type
+
+struct simple_command_node
 {
-    // NODE_IF,
-    // NODE_COMMAND,
-    NODE_SIMPLE_COMMAND,
+    struct str_list *prefix; //commande & args
+    struct str_list *values; //valeur après la cmd
+    struct red *red; // les redirections de la commande
 };
 
-struct ast
-{
-    union node_data data;
-    enum node_type type;
+enum node_type {
+    CONDITIONS,
+    SIMPLE_COMMAND,
+
+    
 };
 
-struct ast_node
-{
+struct ast{
+    enum node_type node_type;
+    void *node;
+};
+
+struct ast_nodes{
     struct ast *ast;
-    struct ast_node *next;
+    struct ast_nodes *next;
 };
 
-
-#endif /* AST_H */
+#endif /* ! AST_H */
