@@ -31,9 +31,9 @@ struct ast{
     void *node;
 };
 
-struct ast_nodes{
+struct ast_node{
     struct ast *ast;
-    struct ast_nodes *next;
+    struct ast_node *next;
 };
 
 
