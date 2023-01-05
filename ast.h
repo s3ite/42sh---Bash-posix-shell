@@ -1,7 +1,9 @@
 #ifndef AST_H
 #define AST_H
 
-#include 'commands.h';
+#include "commands.h"
+
+
 union node_data
 {
     // struct node_if node_if;
@@ -16,10 +18,17 @@ enum node_type
     NODE_SIMPLE_COMMAND,
 };
 
-struct ast_node
+struct ast
 {
     union node_data data;
-    struct node_type type;
+    enum node_type type;
 };
+
+struct ast_node
+{
+    struct ast *ast;
+    struct ast_node *next;
+};
+
 
 #endif /* AST_H */

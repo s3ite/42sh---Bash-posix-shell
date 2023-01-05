@@ -1,9 +1,9 @@
 #include "lexer.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
+
 
 struct lexer *lexer_init(size_t n, char *input)
 {
@@ -235,12 +235,12 @@ int main(int argc,char **argv)
     printf("token list is: ");
     for(size_t i = 0; i<a->size;i++)
     {
-        printf("%s/",a->data[i]->value);
+        printf("%s ",a->data[i]->value);
     }
     printf("\ntokentype list is: ");
     for(size_t i = 0; i<a->size;i++)
     {
-        printf("%d/",a->data[i]->type);
+        printf("%d ",(enum TokenType) a->data[i]->type);
     }
     printf("\n");
     free(a);
