@@ -13,12 +13,17 @@ struct simple_command_node
 {
     struct str_list *prefix; //commande & args
     struct str_list *values; //valeur après la cmd
-    struct red *red; // les redirections de la commande
+    //struct red *red;  les redirections de la commande
 };
 
 enum node_type {
-    CONDITIONS,
+    INPUT,
+    LIST,
+    AND_OR,
+    PIPELINE,
+    COMMAND,
     SIMPLE_COMMAND,
+    SHELL_COMMAND,
 };
 
 struct ast{
