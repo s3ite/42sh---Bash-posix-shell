@@ -154,49 +154,49 @@ struct lexer *lexer (char *input, struct lexer *res)
     int i = 0;
     while(input[i] != '\0')
     {
-        if(strncmp(input + i,";",1) == 0)
+        if(strncasecmp(input + i,";",1) == 0)
         {
             struct token *tok = token_init(";", TOKEN_SEMICOLON);
             res = lexer_append(res, tok);
             i += 1;
         }
-        else if(strncmp(input + i,"'",1) == 0)
+        else if(strncasecmp(input + i,"'",1) == 0)
         {
             struct token *tok = token_init("'", TOKEN_QUOTE);
             res = lexer_append(res, tok);
             i += 1;
         }
-        else if(strncmp(input + i,"\n",1) == 0)
+        else if(strncasecmp(input + i,"\n",1) == 0)
         {
             struct token *tok = token_init("\n", TOKEN_NEWLINE);
             res = lexer_append(res, tok);
             i += 1;
         }
-        else if(strncmp(input + i,"if",2) == 0)
+        else if(strncasecmp(input + i,"if",2) == 0)
         {
             struct token *tok = token_init("if", TOKEN_IF);
             res = lexer_append(res, tok);
             i += 2;
         }
-        else if(strncmp(input + i,"fi",2) == 0)
+        else if(strncasecmp(input + i,"fi",2) == 0)
         {
             struct token *tok = token_init("fi", TOKEN_FI);
             res = lexer_append(res, tok);
             i += 2;
         }
-        else if(strncmp(input + i,"then",4) == 0)
+        else if(strncasecmp(input + i,"then",4) == 0)
         {
             struct token *tok = token_init("then", TOKEN_THEN);
             res = lexer_append(res, tok);
             i += 4;
         }
-        else if(strncmp(input + i,"else",4) == 0)
+        else if(strncasecmp(input + i,"else",4) == 0)
         {
             struct token *tok = token_init("else", TOKEN_ELSE);
             res = lexer_append(res, tok);
             i += 4;
         }
-        else if(strncmp(input + i,"elif",4) == 0)
+        else if(strncasecmp(input + i,"elif",4) == 0)
         {
             struct token *tok = token_init("elif", TOKEN_ELIF);
             res = lexer_append(res, tok);

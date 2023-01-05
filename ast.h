@@ -19,8 +19,6 @@ struct simple_command_node
 enum node_type {
     CONDITIONS,
     SIMPLE_COMMAND,
-
-    
 };
 
 struct ast{
@@ -32,5 +30,7 @@ struct ast_nodes{
     struct ast *ast;
     struct ast_nodes *next;
 };
+
+
 
 #endif /* ! AST_H */
