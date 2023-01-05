@@ -6,11 +6,17 @@
 
 int parse_list(struct lexer *lexer, struct parser *parser)
 {
+    struct ast *ast = malloc(sizeof(struct ast));
+    ast->node_type = LIST;
+    ast->node = //
+
+    parse_and_or();
+
 
 }
 int parse_and_or(struct lexer *lexer, struct parser *parser)
 {
-
+    parse_pipeline();
 }
 int parse_pipeline(struct lexer *lexer, struct parser *parser)
 {
