@@ -3,9 +3,9 @@
 
 struct condition_if_node
 {
-    struct ast *condition; //ast associé à la condition
-    struct ast *then; //action si autorisée
-    struct ast *else; //Action si faux 
+    struct ast *condition_c; //ast associé à la condition
+    struct ast *then_action; //action si autorisée
+    struct ast *else_action; //Action si faux 
 };
 
 
