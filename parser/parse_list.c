@@ -23,7 +23,7 @@ struct ast *parse_list(struct lexer *lexer, struct parser *parser)
             lexer_pop(lexer);
 
        
-        ast_append(parser->nodes, res);
+        ast_append(parser->nodes, and_or_ast);
 
         token = lexer_peek(lexer);
 
