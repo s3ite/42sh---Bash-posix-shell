@@ -17,9 +17,9 @@ int parse(struct lexer *lexer)
     if(!parser)
         return RC_ERROR;
     parser->ast = NULL;
-    parser->node = NULL;
+    parser->nodes = NULL;
 
-    rc = parse_input(lexer, parser);
+    int rc = parse_input(lexer, parser);
     if(rc == RC_ERROR) //TODO: Free all structures to avoid memory leak. Then return error code.
         return RC_ERROR;
     //TODO ...
