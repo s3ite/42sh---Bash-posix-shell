@@ -53,5 +53,8 @@ struct ast_node{
 };
 
 
+void ast_append(struct ast_node *list, struct ast *ast);
+
+
 
 #endif /* ! AST_H */
