@@ -1,7 +1,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "ast/ast.h"
+#include "../ast/ast.h"
+#include "../lexer/lexer.h"
 
 #define RC_ERROR -1
 #define RC_SUCCESS 0

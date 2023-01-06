@@ -10,6 +10,10 @@ struct ast *parse_list(struct lexer *lexer, struct parser *parser)
 
     while(token && token->type != TOKEN_EOF && token->type != TOKEN_NEWLINE )
     {
+        struct ast *and_or_ast = parse_and_or();  
+        if(!and_or_ast)
+            return NULL;
+
         token = lexer_peek(lexer);
         if(token->type == TOKEN_EOF)
             break;
@@ -17,10 +21,7 @@ struct ast *parse_list(struct lexer *lexer, struct parser *parser)
         if(token->type == TOKEN_SEMICOLON ||token->type == TOKEN_NEWLINE)
             lexer_pop(lexer);
 
-        struct ast *and_or_ast = parse_and_or();  
-         if(!and_or_ast)
-            return NULL;
-
+       
         ast_append(parser->to_free, res);
 
         token = lexer_peek(lexer);
