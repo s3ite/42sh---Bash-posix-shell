@@ -23,7 +23,17 @@ struct lexer *lexer_init(size_t n, char *input)
 
 void lexer_destroy(struct lexer *v)
 {
+    for(size_t i = 0; i<v->size;i++)
+    {
+        if(v->data[i]->type == WORD)
+        {
+            free(v->data[i]->value);
+        }
+        //free(v->data[i]->value);
+        free(v->data[i]);
+    }
     free(v->data);
+    //free(v->input);
     free(v);
 }
 
@@ -264,5 +274,5 @@ int main(int argc,char **argv)
     printf("%s\n",t->value);
     t=peek(a);
     printf("%s\n",t->value);
-    free(a);
+    lexer_destroy(a);
 }
