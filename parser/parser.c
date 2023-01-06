@@ -18,8 +18,8 @@ int parse(struct lexer *lexer)
     parser->ast = NULL;
     parser->node = NULL;
 
-    int rc = parse_input(lexer, parser);
-    if(rec == RC_ERROR) //TODO: Free all structures to avoid memory leak. Then return error code.
+    struct ast *ast = parse_input(lexer, parser);
+    if(!ast) //TODO: Free all structures to avoid memory leak. Then return error code.
         return RC_ERROR;
     //TODO ...
 
@@ -28,7 +28,7 @@ int parse(struct lexer *lexer)
 
 int parse_input(struct lexer *lexer, struct parser *parser)
 {
-    struct token *token = null;//TODO: Peek from lexer. Waiting for implementation
+    struct token *token = lexer_peek(lexer);
     if(!token)
         return RC_SUCCESS;
     struct ast *root = parse_list(lexer, parse);
@@ -41,25 +41,33 @@ int parse_input(struct lexer *lexer, struct parser *parser)
 
 }
 
-int parse_list(struct lexer *lexer, struct parser *parser)
+struct ast *parse_list(struct lexer *lexer, struct parser *parser)
 {
+
+    struct ast *and_or_ast = parse_and_or();
+   
+    if(!and_or_ast)
+        return NULL;
+
+    struct token *next_token = lexer_peek(lexer);
+    
+
     struct ast *ast = malloc(sizeof(struct ast));
     ast->node_type = LIST;
     ast->node = //
 
-    parse_and_or();
 
 
 }
-int parse_and_or(struct lexer *lexer, struct parser *parser)
+struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
 {
     parse_pipeline();
 }
-int parse_pipeline(struct lexer *lexer, struct parser *parser)
+struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 {
 
 }
-int parse_command(struct lexer *lexer, struct parser *parser)
+struct ast *parse_command(struct lexer *lexer, struct parser *parser)
 {
 
 }
@@ -72,7 +80,7 @@ int parse_command(struct lexer *lexer, struct parser *parser)
  * 
  * Goal : Parse a simple command following the grammar, create a simple command node
 */
-int parse_simple_commande(struct lexer *lexer, struct parser *parser)
+struct ast *parse_simple_commande(struct lexer *lexer, struct parser *parser)
 {
 	struct simple_command_node *simple_command = malloc(sizeof(struct simple_command_node));
 	struct ast *ast = malloc(sizeof(struct ast));
