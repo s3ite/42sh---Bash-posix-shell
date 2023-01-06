@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 void my_echo (struct simple_command_node simple_commande)
 {
@@ -28,11 +29,11 @@ void my_echo (struct simple_command_node simple_commande)
 	while (val->next != NULL)
 	{
 		fputs(val->value,stdout);
-		fputc(" ",stdout)
+		fputc(" ",stdout);
 	}
 	if (newline)
 	{
-		fputc('')
+		fputc(' ');
 	}
 }
 

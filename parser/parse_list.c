@@ -1,4 +1,5 @@
 #include "parser.h"
+#include <stdlib.h>
 
 struct ast *parse_list(struct lexer *lexer, struct parser *parser)
 {
