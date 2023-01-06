@@ -43,6 +43,8 @@ static void shift(struct token **arr, int index, int size);
 //struct lexer *lexer_insert(struct lexer *v, size_t i, int elt);
 static void left_shift(struct token **arr, int index, int size);
 struct lexer *lexer_remove(struct lexer *v, size_t i);
+struct token *lexer_pop(struct lexer *v);
+struct token *lexer_peek(struct lexer *v);
 
 struct lexer *lexer (char *input, struct lexer *res);
 
