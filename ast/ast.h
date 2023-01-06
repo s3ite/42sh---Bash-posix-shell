@@ -2,19 +2,6 @@
 #define AST_H
 #include <stdlib.h>
 #include <stddef.h>
-struct str_list
-{
-    struct str_list_item *head; 
-    struct str_list_item *tail; 
-};
-
-struct str_list_item 
-{
-    char *value; 
-    struct str_list_item *next; 
-    struct str_list_item *prev; 
-    int quote;
-};
 
 struct condition_if_node
 {
@@ -32,17 +19,20 @@ struct simple_command_node
 };
 
 enum node_type {
-    INPUT,
-    LIST,
-    AND_OR,
-    PIPELINE,
-    COMMAND,
-    SIMPLE_COMMAND,
-    SHELL_COMMAND,
-    IF,
-    
+    INPUT = "INPUT",
+    LIST = "LIST",
+    AND_OR = "AND_OR",
+    PIPELINE = "PIPELINE",
+    COMMAND = "COMMAND",
+    SIMPLE_COMMAND = "SIMPLE_COMMAND",
+    SHELL_COMMAND = "SHELL_COMMAND",
+    IF = "IF",
 };
 
+/**
+ * node_type = type du noeud de l'ast
+ * node = value du noeud de l'ast
+*/
 struct ast{
     enum node_type node_type;
     void *node;

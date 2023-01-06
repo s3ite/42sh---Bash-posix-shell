@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 
-struct dlist *list_init(void)
+struct dlist *dlist_init(void)
 {
     struct dlist *head = malloc(sizeof(struct dlist));
     head->size = 0;
