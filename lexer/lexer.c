@@ -1,8 +1,9 @@
-#include "lexer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
+
+#include "lexer.h"
 
 
 struct lexer *lexer_init(size_t n, char *input)
@@ -182,9 +183,25 @@ struct lexer *lexer (char *input, struct lexer *res)
         }
         else if(strncmp(input + i,"'",1) == 0)
         {
-            struct token *tok = token_init("'", TOKEN_QUOTE);
+            int j = 1;
+            while(*(input + i + j) != '\0' && *(input + i + j) != '\'')
+            {
+                j++;
+            }
+            if(*(input + i + j) == '\0')
+            {
+                printf("error: single quote openned but not closed\n");
+                return NULL;
+            }
+            char *value = malloc(j + 1);
+            strncpy(value, input + i + 1, j - 1);
+            if(j > 0)
+            {
+                value[j - 1] = '\0';
+            }
+            struct token *tok = token_init(value, WORD);
             res = lexer_append(res, tok);
-            i += 1;
+            i += j + 1;
         }
         else if(strncmp(input + i,"\n",1) == 0)
         {
@@ -244,6 +261,8 @@ struct lexer *lexer (char *input, struct lexer *res)
             i++;
         }
     }
+    struct token *tok = token_init("\0", TOKEN_EOF);
+    res = lexer_append(res, tok);
     return res;
 }
 
@@ -253,15 +272,18 @@ int main(int argc,char **argv)
     {
         struct lexer *a=lexer_init(10, argv[1]);
         a=lexer(argv[1],a);
-        lexer_print(a);
-        struct token *t = lexer_peek(a);
-        printf("%s\n",t->value);
-        t=lexer_peek(a);
-        printf("%s\n",t->value);
-        t=lexer_pop(a);
-        printf("%s\n",t->value);
-        t=lexer_peek(a);
-        printf("%s\n",t->value);
-        lexer_destroy(a);
+        if(a!=NULL)
+        {
+            lexer_print(a);
+            struct token *t = lexer_peek(a);
+            printf("%s\n",t->value);
+            t=lexer_peek(a);
+            printf("%s\n",t->value);
+            t=lexer_pop(a);
+            printf("%s\n",t->value);
+            t=lexer_peek(a);
+            printf("%s\n",t->value);
+            lexer_destroy(a);
+        }
     }
 }

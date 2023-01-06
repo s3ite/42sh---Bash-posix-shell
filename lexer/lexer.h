@@ -17,6 +17,7 @@ enum TokenType
   TOKEN_QUOTE = 7,
   TOKEN_SEMICOLON =8,
   WORD = 9,
+  TOKEN_EOF =10,
 };
 
 struct token
