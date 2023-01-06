@@ -148,12 +148,12 @@ struct lexer *lexer_remove(struct lexer *v, size_t i)
     return v;
 }
 
-struct token *peek(struct lexer *v)
+struct token *lexer_peek(struct lexer *v)
 {
     return v->data[v->index];
 }
 
-struct token *pop(struct lexer *v)
+struct token *lexer_pop(struct lexer *v)
 {
     struct token *ret = v->data[v->index];
     v->index+=1;
