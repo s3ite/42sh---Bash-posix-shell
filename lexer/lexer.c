@@ -29,11 +29,9 @@ void lexer_destroy(struct lexer *v)
         {
             free(v->data[i]->value);
         }
-        //free(v->data[i]->value);
         free(v->data[i]);
     }
     free(v->data);
-    //free(v->input);
     free(v);
 }
 
@@ -71,21 +69,20 @@ struct lexer *lexer_append(struct lexer *v, struct token *elt)
     return v;
 }
 
-void lexer_print(const struct lexer *v)
+void lexer_print(struct lexer *v)
 {
-    return;
-    /*if (v->size == 0)
+    printf("input is: %s\n",v->input);
+    printf("token list is: ");
+    for(size_t i = 0; i<v->size;i++)
     {
-        printf("\n");
-        return;
+        printf("%s ",v->data[i]->value);
     }
-    for (size_t i = 0; i < v->size - 1; i++)
+    printf("\ntokentype list is: ");
+    for(size_t i = 0; i<v->size;i++)
     {
-        printf("%d,", v->data[i]);
+        printf("%d ",(enum TokenType) v->data[i]->type);
     }
-    if (v->size > 0)
-        printf("%d", v->data[v->size - 1]);
-    printf("\n");*/
+    printf("\n");
 }
 
 struct lexer *lexer_reset(struct lexer *v, size_t n)
@@ -96,7 +93,7 @@ struct lexer *lexer_reset(struct lexer *v, size_t n)
     return v;
 }
 
-static void shift(struct token **arr, int index, int size)
+void shift(struct token **arr, int index, int size)
 {
     while (size > index - 1)
     {
@@ -177,49 +174,49 @@ struct lexer *lexer (char *input, struct lexer *res)
     int i = 0;
     while(input[i] != '\0')
     {
-        if(strncasecmp(input + i,";",1) == 0)
+        if(strncmp(input + i,";",1) == 0)
         {
             struct token *tok = token_init(";", TOKEN_SEMICOLON);
             res = lexer_append(res, tok);
             i += 1;
         }
-        else if(strncasecmp(input + i,"'",1) == 0)
+        else if(strncmp(input + i,"'",1) == 0)
         {
             struct token *tok = token_init("'", TOKEN_QUOTE);
             res = lexer_append(res, tok);
             i += 1;
         }
-        else if(strncasecmp(input + i,"\n",1) == 0)
+        else if(strncmp(input + i,"\n",1) == 0)
         {
             struct token *tok = token_init("\n", TOKEN_NEWLINE);
             res = lexer_append(res, tok);
             i += 1;
         }
-        else if(strncasecmp(input + i,"if",2) == 0)
+        else if(strncmp(input + i,"if",2) == 0)
         {
             struct token *tok = token_init("if", TOKEN_IF);
             res = lexer_append(res, tok);
             i += 2;
         }
-        else if(strncasecmp(input + i,"fi",2) == 0)
+        else if(strncmp(input + i,"fi",2) == 0)
         {
             struct token *tok = token_init("fi", TOKEN_FI);
             res = lexer_append(res, tok);
             i += 2;
         }
-        else if(strncasecmp(input + i,"then",4) == 0)
+        else if(strncmp(input + i,"then",4) == 0)
         {
             struct token *tok = token_init("then", TOKEN_THEN);
             res = lexer_append(res, tok);
             i += 4;
         }
-        else if(strncasecmp(input + i,"else",4) == 0)
+        else if(strncmp(input + i,"else",4) == 0)
         {
             struct token *tok = token_init("else", TOKEN_ELSE);
             res = lexer_append(res, tok);
             i += 4;
         }
-        else if(strncasecmp(input + i,"elif",4) == 0)
+        else if(strncmp(input + i,"elif",4) == 0)
         {
             struct token *tok = token_init("elif", TOKEN_ELIF);
             res = lexer_append(res, tok);
@@ -252,27 +249,19 @@ struct lexer *lexer (char *input, struct lexer *res)
 
 int main(int argc,char **argv)
 {
-    struct lexer *a=lexer_init(10, argv[1]);
-    a=lexer(argv[1],a);
-    /*printf("input is: %s\n",a->input);
-    printf("token list is: ");
-    for(size_t i = 0; i<a->size;i++)
+    if(argc)
     {
-        printf("%s ",a->data[i]->value);
+        struct lexer *a=lexer_init(10, argv[1]);
+        a=lexer(argv[1],a);
+        lexer_print(a);
+        struct token *t = lexer_peek(a);
+        printf("%s\n",t->value);
+        t=lexer_peek(a);
+        printf("%s\n",t->value);
+        t=lexer_pop(a);
+        printf("%s\n",t->value);
+        t=lexer_peek(a);
+        printf("%s\n",t->value);
+        lexer_destroy(a);
     }
-    printf("\ntokentype list is: ");
-    for(size_t i = 0; i<a->size;i++)
-    {
-        printf("%d ",(enum TokenType) a->data[i]->type);
-    }
-    printf("\n");*/
-    struct token *t = peek(a);
-    printf("%s\n",t->value);
-    t=peek(a);
-    printf("%s\n",t->value);
-    t=pop(a);
-    printf("%s\n",t->value);
-    t=peek(a);
-    printf("%s\n",t->value);
-    lexer_destroy(a);
 }
