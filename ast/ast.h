@@ -24,6 +24,8 @@ enum node_type {
     COMMAND,
     SIMPLE_COMMAND,
     SHELL_COMMAND,
+    IF,
+    
 };
 
 struct ast{
