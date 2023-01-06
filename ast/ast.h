@@ -19,14 +19,14 @@ struct simple_command_node
 };
 
 enum node_type {
-    INPUT = "INPUT",
-    LIST = "LIST",
-    AND_OR = "AND_OR",
-    PIPELINE = "PIPELINE",
-    COMMAND = "COMMAND",
-    SIMPLE_COMMAND = "SIMPLE_COMMAND",
-    SHELL_COMMAND = "SHELL_COMMAND",
-    IF = "IF",
+    INPUT,
+    LIST,
+    AND_OR,
+    PIPELINE,
+    COMMAND ,
+    SIMPLE_COMMAND,
+    SHELL_COMMAND,
+    IF,
 };
 
 /**
