@@ -1,4 +1,6 @@
 #include "parser.h"
+#include "../ast/list.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -11,33 +13,37 @@
 */
 
 
-struct simple_command_node parse_simple_commande (struct lexer *lexer)
+struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct parser *parser)
 {
 	struct token *next_token = lexer_pop(lexer);
-	if next_token->type != WORD
-		//ERROR
+	if (next_token->type != WORD)
+		return NULL;
 
 	//revoir limplemntation de la liste pour placer le premier token
-	struct str_list prefix->head->value = next_token->value;
+	struct dlist *prefix = dlsit_init();
+	struct dlist *values = dlist_init();
+
+	dlist_push_front(prefix,next_token->value);
+
 	next_token = lexer_pop;
 
 
 	//Si 1er toker est un args -> ajouter dans prefix
 	if (next_token->value[0] == '-')
 	{
-		prefix->head->next->value = next_token->value
+		dlist_push_front(prefix,next_token->value);
 	}
 
 
 	//sinon creer une list value : 
-	struct str_list value->head->value = next_token->value;
-	while ((next_token = lexer_pop())->type == WORD)
+
     {
-    	value->head->next->value = next_token->value;
+    	dlist_push_front(values,next_token->value);
+		lexer_pop(lexer);
 
    	}
     if (next_token->type != EOF)
-        //ERROR
+        return NULL;
 	
 	struct simple_command_node *simple_command = malloc(sizeof
 		(struct simple_command_node));
@@ -50,16 +56,10 @@ struct simple_command_node parse_simple_commande (struct lexer *lexer)
 
 struct ast *add_simple_commande(struct lexer *lexer, struct parser *parser)
 {
-	
+	struct simple_command_node *node = parse_simple_commande(lexer,parser);
 	struct ast *ast = malloc(sizeof(struct ast));
 	ast->node_type = SIMPLE_COMMAND;
-	ast->node = simple_command;
+	ast->node = node;
 
-    // init simple_command_node (str_list) a terminer
-	struct ast_node *ast_node = malloc(sizeof(struct ast_node));
-    ast_node->ast = ast;
-    ast_node->next = NULL;
-
-    return RC_SUCCESS;
-
+	return node;
 }
