@@ -3,6 +3,9 @@
 
 #include "ast/ast.h"
 
+#define RC_ERROR -1
+#define RC_SUCCESS 0
+
 struct parser{
     struct ast *ast;
     struct ast_nodes *nodes;

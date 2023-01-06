@@ -1,8 +1,7 @@
 #include "parser.h"
 #include <stdlib.h>
 
-#define RC_ERROR -1
-#define RC_SUCCESS 0
+
 
 
 /*
@@ -11,7 +10,8 @@
  ** @struct lexer *
  ** Return: Success code
  */
-int parse(struct lexer *lexer){
+int parse(struct lexer *lexer)
+{
     struct parser *parser = malloc(sizeof(struct parser));
     if(!parser)
         return RC_ERROR;
@@ -19,12 +19,27 @@ int parse(struct lexer *lexer){
     parser->node = NULL;
 
     int rc = parse_input(lexer, parser);
-    if(rec == RC_ERROR)
+    if(rec == RC_ERROR) //TODO: Free all structures to avoid memory leak. Then return error code.
         return RC_ERROR;
     //TODO ...
 
 }
 
+
+int parse_input(struct lexer *lexer, struct parser *parser)
+{
+    struct token *token = null;//TODO: Peek from lexer. Waiting for implementation
+    if(!token)
+        return RC_SUCCESS;
+    struct ast *root = parse_list(lexer, parse);
+    if(!root)
+        return RC_ERROR;
+
+    parser->ast = root;
+
+    return RC_SUCCESS;
+
+}
 
 int parse_list(struct lexer *lexer, struct parser *parser)
 {
