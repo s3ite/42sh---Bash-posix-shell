@@ -30,8 +30,6 @@ int parse(struct lexer *lexer)
 
 
 
-
-
 struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
 {
    return parse_pipeline(lexer, parser);
@@ -45,7 +43,7 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 
 struct ast *parse_command(struct lexer *lexer, struct parser *parser)
 {
-    return parse_simple_commande(lexer,parser);
+    return add_simple_commande(lexer,parser);
 }
 
 

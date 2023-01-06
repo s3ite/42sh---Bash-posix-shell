@@ -1,6 +1,7 @@
 #ifndef AST_H
 #define AST_H
-
+#include <stdlib.h>
+#include <stddef.h>
 struct str_list
 {
     struct str_list_item *head; 

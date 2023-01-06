@@ -25,7 +25,7 @@ void ast_append(struct ast_node *list, struct ast *ast)
         new_node->ast = ast;
         new_node->next = NULL;
 
-        list->next = new;
+        list->next = new_node;
     }
 }
 
