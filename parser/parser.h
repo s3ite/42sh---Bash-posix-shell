@@ -15,6 +15,7 @@ int parse(struct lexer *lexer);
 
 int parse_input(struct lexer *lexer, struct parser *parser);
 struct ast *parse_list(struct lexer *lexer, struct parser *parser);
+struct ast *parse_command(struct lexer *lexer, struct parser *parser);
 
 struct ast parse_simple_commande(struct lexer *lexer, struct parser *parser);
 struct ast *parse_if(struct lexer *lexer, struct parser *parser);

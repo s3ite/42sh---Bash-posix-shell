@@ -11,6 +11,8 @@
  */
 int parse(struct lexer *lexer)
 {
+    //Check for eof or newline
+    
     struct parser *parser = malloc(sizeof(struct parser));
     if(!parser)
         return RC_ERROR;
@@ -21,6 +23,8 @@ int parse(struct lexer *lexer)
     if(rc == RC_ERROR) //TODO: Free all structures to avoid memory leak. Then return error code.
         return RC_ERROR;
     //TODO ...
+
+    return RC_SUCCESS;
 
 }
 
