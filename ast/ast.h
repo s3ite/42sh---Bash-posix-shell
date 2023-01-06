@@ -1,6 +1,20 @@
 #ifndef AST_H
 #define AST_H
 
+struct str_list
+{
+    struct str_list_item *head; 
+    struct str_list_item *tail; 
+};
+
+struct str_list_item 
+{
+    char *value; 
+    struct str_list_item *next; 
+    struct str_list_item *prev; 
+    int quote;
+};
+
 struct condition_if_node
 {
     struct ast *condition_c; //ast associé à la condition
