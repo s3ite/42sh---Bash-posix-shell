@@ -17,6 +17,7 @@ struct lexer *lexer_init(size_t n, char *input)
     v->size = 0;
     v->data = array;
     v->input=input;
+    v->index=0;
     return v;
 }
 
@@ -137,6 +138,18 @@ struct lexer *lexer_remove(struct lexer *v, size_t i)
     return v;
 }
 
+struct token *peek(struct lexer *v)
+{
+    return v->data[v->index];
+}
+
+struct token *pop(struct lexer *v)
+{
+    struct token *ret = v->data[v->index];
+    v->index+=1;
+    return ret;
+}
+
 struct token *token_init(char *value, enum TokenType type)
 {
     struct token *ret = ret = malloc(sizeof(struct token));
@@ -231,7 +244,7 @@ int main(int argc,char **argv)
 {
     struct lexer *a=lexer_init(10, argv[1]);
     a=lexer(argv[1],a);
-    printf("input is: %s\n",a->input);
+    /*printf("input is: %s\n",a->input);
     printf("token list is: ");
     for(size_t i = 0; i<a->size;i++)
     {
@@ -242,6 +255,14 @@ int main(int argc,char **argv)
     {
         printf("%d ",(enum TokenType) a->data[i]->type);
     }
-    printf("\n");
+    printf("\n");*/
+    struct token *t = peek(a);
+    printf("%s\n",t->value);
+    t=peek(a);
+    printf("%s\n",t->value);
+    t=pop(a);
+    printf("%s\n",t->value);
+    t=peek(a);
+    printf("%s\n",t->value);
     free(a);
 }
