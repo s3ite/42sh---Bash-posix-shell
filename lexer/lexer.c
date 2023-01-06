@@ -170,11 +170,28 @@ struct token *token_init(char *value, enum TokenType type)
     return ret;
 }
 
+int in(char c, char *delim)
+{
+    size_t i = 0;
+    while(delim[i]!='\0' && delim[i]!=c)
+    {
+        i++;
+    }
+    return (delim[i]==c || c=='\0');
+}
+
 struct lexer *lexer (char *input, struct lexer *res)
 {
     int i = 0;
     while(input[i] != '\0')
     {
+        if(strncmp(input + i,"#",1) == 0)
+        {
+            while(*(input + i) != '\0' && *(input + i) != '\n')
+            {
+                i++;
+            }
+        }
         if(strncmp(input + i,";",1) == 0)
         {
             struct token *tok = token_init(";", TOKEN_SEMICOLON);
@@ -190,7 +207,6 @@ struct lexer *lexer (char *input, struct lexer *res)
             }
             if(*(input + i + j) == '\0')
             {
-                printf("error: single quote openned but not closed\n");
                 return NULL;
             }
             char *value = malloc(j + 1);
@@ -209,31 +225,31 @@ struct lexer *lexer (char *input, struct lexer *res)
             res = lexer_append(res, tok);
             i += 1;
         }
-        else if(strncmp(input + i,"if",2) == 0)
+        else if(strncmp(input + i,"if",2) == 0  && in(input[i+2]," \t\n;"))
         {
             struct token *tok = token_init("if", TOKEN_IF);
             res = lexer_append(res, tok);
             i += 2;
         }
-        else if(strncmp(input + i,"fi",2) == 0)
+        else if(strncmp(input + i,"fi",2) == 0  && in(input[i+2]," \t\n;"))
         {
             struct token *tok = token_init("fi", TOKEN_FI);
             res = lexer_append(res, tok);
             i += 2;
         }
-        else if(strncmp(input + i,"then",4) == 0)
+        else if(strncmp(input + i,"then",4) == 0  && in(input[i+4]," \t\n;"))
         {
             struct token *tok = token_init("then", TOKEN_THEN);
             res = lexer_append(res, tok);
             i += 4;
         }
-        else if(strncmp(input + i,"else",4) == 0)
+        else if(strncmp(input + i,"else",4) == 0  && in(input[i+4]," \t\n;"))
         {
             struct token *tok = token_init("else", TOKEN_ELSE);
             res = lexer_append(res, tok);
             i += 4;
         }
-        else if(strncmp(input + i,"elif",4) == 0)
+        else if(strncmp(input + i,"elif",4) == 0  && in(input[i+4]," \t\n;"))
         {
             struct token *tok = token_init("elif", TOKEN_ELIF);
             res = lexer_append(res, tok);
