@@ -3,6 +3,7 @@
 
 #include "../ast/ast.h"
 #include "../lexer/lexer.h"
+#include "../ast/list.h"
 
 #define RC_ERROR -1
 #define RC_SUCCESS 0

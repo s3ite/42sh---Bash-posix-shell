@@ -32,7 +32,6 @@ void lexer_destroy(struct lexer *v)
         }
         free(v->data[i]);
     }
-    free(v->input);
     free(v->data);
     free(v);
 }

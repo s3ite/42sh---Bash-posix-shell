@@ -1,7 +1,8 @@
 #ifndef EXEX_H
 #define EXEX_H
 
+#include "../ast/ast.h"
+#include "../parser/parser.h"
 
-int execute_simple_command(struct simple_command_node *node);
-
+int run_command(char **cmd);
 #endif

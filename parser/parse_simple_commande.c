@@ -53,10 +53,10 @@ struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct pa
 	simple_command->prefix = prefix;
 	simple_command->values = values;
 
-	printf("prefix\n");
-	dlist_print(simple_command->prefix);
-	printf("values\n");
-	dlist_print(simple_command->values);
+	//printf("prefix\n");
+//	dlist_print(simple_command->prefix);
+	//printf("values\n");
+	//dlist_print(simple_command->values);
 
 	return simple_command;
 

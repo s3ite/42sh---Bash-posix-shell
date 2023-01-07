@@ -17,6 +17,8 @@ void ast_append(struct ast_node *list, struct ast *ast)
     {
         while(list)
         {
+            if (list->ast == ast)
+                return;
             if(!list->next)
                 break;
                 list = list->next;
