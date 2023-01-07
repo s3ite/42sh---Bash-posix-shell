@@ -68,7 +68,24 @@ struct ast *add_simple_commande(struct lexer *lexer, struct parser *parser)
 	ast->node_type = SIMPLE_COMMAND;
 	ast->node = parse_simple_commande(lexer,parser);
 
-
-
 	return ast;
+}
+
+
+
+void free_simple_command(struct simple_command_node *simple_command) {
+  if (simple_command == NULL) 
+  		return;
+
+  free_dlist(simple_command->prefix);
+  free_dlist(simple_command->values);
+  free(simple_command);
+}
+
+void free_ast_simple_command(struct ast *ast) {
+  if (ast == NULL) 
+  	return;
+
+  free_simple_command(ast->node);
+  free(ast);
 }
