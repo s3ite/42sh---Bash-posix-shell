@@ -15,7 +15,7 @@
 
 struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct parser *parser)
 {
-	struct token *next_token = lexer_peek(lexer);
+	struct token *next_token = lexer_pop(lexer);
 	//printf("%s\n", next_token->value);
 
 	if (next_token->type != WORD)
@@ -27,36 +27,36 @@ struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct pa
 
 	dlist_push_front(prefix,next_token->value);
 
-	//next_token = lexer_pop(lexer);
-
+	next_token = lexer_peek(lexer);
 
 	//Si 1er toker est un args -> ajouter dans prefix
 	if (next_token->value[0] == '-')
 	{
-		dlist_push_front(prefix,next_token->value);
+		dlist_push_back(prefix,next_token->value);
+	
 	}
-
-
-	//sinon creer une list value : 
-	dlist_push_front(values,next_token->value);
+	else
+	{
+		dlist_push_back(values,next_token->value);
+	} 
+	
 	while (next_token->type == WORD)
     {
-    	dlist_push_front(values,next_token->value);
-		lexer_pop(lexer);
+    	lexer_pop(lexer);
 		next_token = lexer_peek(lexer);
-		printf("%s\n", next_token->value);
+		dlist_push_back(values,next_token->value);
+	}
 
-
-   	}
-
-	
-    if (next_token->type != EOF)
-        return NULL;
 	
 	struct simple_command_node *simple_command = malloc(sizeof
 		(struct simple_command_node));
 	simple_command->prefix = prefix;
 	simple_command->values = values;
+
+	printf("prefix\n");
+	dlist_print(simple_command->prefix);
+	printf("values\n");
+	dlist_print(simple_command->values);
 
 	return simple_command;
 
@@ -66,7 +66,9 @@ struct ast *add_simple_commande(struct lexer *lexer, struct parser *parser)
 {
 	struct ast *ast = malloc(sizeof(struct ast));
 	ast->node_type = SIMPLE_COMMAND;
-	ast->node = parse_simple_commande(lexer,parser);;
+	ast->node = parse_simple_commande(lexer,parser);
+
+
 
 	return ast;
 }
