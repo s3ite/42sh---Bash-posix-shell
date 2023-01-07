@@ -5,9 +5,13 @@ struct ast *parse_list(struct lexer *lexer, struct parser *parser)
 {
     struct ast *tmp;
     struct token *peek = NULL;
+
+
+
     while ((peek = lexer_peek(lexer))->type != TOKEN_EOF && peek->type != TOKEN_NEWLINE)
     {
-       // printf("%s\n", peek->value);
+            printf("%s\n",peek->value);
+        
         tmp = parse_and_or(lexer, parser);
         if (!tmp)
         {
@@ -15,6 +19,7 @@ struct ast *parse_list(struct lexer *lexer, struct parser *parser)
             return NULL;
         }
         ast_append(parser->nodes, tmp);
+
         if (lexer_peek(lexer)->type == TOKEN_EOF)
         {
             break;

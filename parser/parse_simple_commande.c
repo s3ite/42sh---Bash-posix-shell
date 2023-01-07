@@ -15,8 +15,8 @@
 
 struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct parser *parser)
 {
-	struct token *next_token = lexer_pop(lexer);
-	printf("%s\n", next_token->value);
+	struct token *next_token = lexer_peek(lexer);
+	//printf("%s\n", next_token->value);
 
 	if (next_token->type != WORD)
 		return NULL;
@@ -27,7 +27,7 @@ struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct pa
 
 	dlist_push_front(prefix,next_token->value);
 
-	next_token = lexer_pop(lexer);
+	//next_token = lexer_pop(lexer);
 
 
 	//Si 1er toker est un args -> ajouter dans prefix
@@ -39,11 +39,13 @@ struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct pa
 
 	//sinon creer une list value : 
 	dlist_push_front(values,next_token->value);
-	while (next_token->type != WORD)
+	while (next_token->type == WORD)
     {
     	dlist_push_front(values,next_token->value);
 		lexer_pop(lexer);
 		next_token = lexer_peek(lexer);
+		printf("%s\n", next_token->value);
+
 
    	}
 
