@@ -56,9 +56,9 @@ struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct pa
 
 struct ast *add_simple_commande(struct lexer *lexer, struct parser *parser)
 {
-	struct ast *ast = parse_simple_commande(lexer,parser);
+	struct ast *ast = malloc(sizeof(struct ast));
 	ast->node_type = SIMPLE_COMMAND;
-	ast->node = ast;
+	ast->node = parse_simple_commande(lexer,parser);;
 
 	return ast;
 }

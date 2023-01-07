@@ -9,7 +9,7 @@
 
 struct parser{
     struct ast *ast;
-    struct ast_nodes *nodes;
+    struct ast_node *nodes;
 };
 
 int parse(struct lexer *lexer);
