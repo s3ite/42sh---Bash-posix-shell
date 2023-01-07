@@ -44,7 +44,14 @@ struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct pa
     {
     	lexer_pop(lexer);
 		next_token = lexer_peek(lexer);
-		dlist_push_back(values,next_token->value);
+		if (next_token->type != WORD)
+		{
+			break;
+		}
+		else
+		{
+			dlist_push_back(values,next_token->value);
+		}
 	}
 
 	
@@ -54,7 +61,7 @@ struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct pa
 	simple_command->values = values;
 
 	//printf("prefix\n");
-//	dlist_print(simple_command->prefix);
+	//dlist_print(simple_command->prefix);
 	//printf("values\n");
 	//dlist_print(simple_command->values);
 
@@ -73,7 +80,8 @@ struct ast *add_simple_commande(struct lexer *lexer, struct parser *parser)
 
 
 
-void free_simple_command(struct simple_command_node *simple_command) {
+void free_simple_command(struct simple_command_node *simple_command) 
+{
   if (simple_command == NULL) 
   		return;
 
@@ -82,7 +90,8 @@ void free_simple_command(struct simple_command_node *simple_command) {
   free(simple_command);
 }
 
-void free_ast_simple_command(struct ast *ast) {
+void free_ast_simple_command(struct ast *ast)
+{
   if (ast == NULL) 
   	return;
 
