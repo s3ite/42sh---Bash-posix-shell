@@ -4,7 +4,7 @@ project(42sh)
 include_directories(src)
 
 
-add_executable(42sh
+add_executable(42SH
 ast/ast.h
 src/ast/ast.c
 src/ast/list.c
@@ -24,7 +24,6 @@ src/parser/parse_command.c
 src/parser/parser.c
 src/parser/parser.h
 src/parser/parse_input.c
-src/parser/parse_shell_command.c
 src/parser/parse_simple_commande.c
 src/parser/parse_list.c
 src/main.c
