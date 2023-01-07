@@ -20,12 +20,12 @@ struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct pa
 		return NULL;
 
 	//revoir limplemntation de la liste pour placer le premier token
-	struct dlist *prefix = dlsit_init();
+	struct dlist *prefix = dlist_init();
 	struct dlist *values = dlist_init();
 
 	dlist_push_front(prefix,next_token->value);
 
-	next_token = lexer_pop;
+	next_token = lexer_pop(lexer);
 
 
 	//Si 1er toker est un args -> ajouter dans prefix
@@ -56,10 +56,9 @@ struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct pa
 
 struct ast *add_simple_commande(struct lexer *lexer, struct parser *parser)
 {
-	struct simple_command_node *node = parse_simple_commande(lexer,parser);
-	struct ast *ast = malloc(sizeof(struct ast));
+	struct ast *ast = parse_simple_commande(lexer,parser);
 	ast->node_type = SIMPLE_COMMAND;
-	ast->node = node;
+	ast->node = ast;
 
-	return node;
+	return ast;
 }
