@@ -21,7 +21,7 @@ void ast_append(struct ast_node *list, struct ast *ast)
                 return;
             if(!list->next)
                 break;
-                list = list->next;
+            list = list->next;
         }
         struct ast_node *new_node = malloc(sizeof(struct ast_node));
         new_node->ast = ast;

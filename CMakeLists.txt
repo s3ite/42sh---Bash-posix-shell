@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.0)
 project(42sh)
 
 include_directories(src)
+add_compile_options(-std=c99)
+add_compile_options(-pedantic)
+add_compile_options(-Werror)
+add_compile_options(-Wall)
+add_compile_options(-Wextra)
+add_compile_options(-Wvla)
 
 
 add_executable(42SH
