@@ -1,5 +1,5 @@
 #include "parser.h"
-
+#include "../ast/print_ast.h"
 
 /*
  ** Name: parse_input
@@ -14,6 +14,9 @@ int parse_input(struct lexer *lexer, struct parser *parser)
         return RC_SUCCESS;
    
     struct ast *root = parse_list(lexer, parser);
+
+    print_ast(parser->nodes);
+
     if(!root)
         return RC_ERROR;
 
