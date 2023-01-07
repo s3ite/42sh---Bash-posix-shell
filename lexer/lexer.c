@@ -180,7 +180,7 @@ int in(char c, char *delim)
     return (delim[i]==c || c=='\0');
 }
 
-struct lexer *lexer (char *input, struct lexer *res)
+struct lexer *lexer_load (char *input, struct lexer *res)
 {
     int i = 0;
     while(input[i] != '\0')

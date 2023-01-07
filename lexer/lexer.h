@@ -48,6 +48,6 @@ struct lexer *lexer_remove(struct lexer *v, size_t i);
 struct token *lexer_pop(struct lexer *v);
 struct token *lexer_peek(struct lexer *v);
 
-struct lexer *lexer (char *input, struct lexer *res);
+struct lexer *lexer_load (char *input, struct lexer *res);
 
 #endif  /* LEXER.H */

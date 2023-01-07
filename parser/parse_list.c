@@ -3,34 +3,33 @@
 
 struct ast *parse_list(struct lexer *lexer, struct parser *parser)
 {
-    
-    struct ast *and_or_ast = parse_and_or(lexer, parser);  
-    if(!and_or_ast)
-            return NULL;
-    ast_append(parser->nodes, and_or_ast);
-    
-    struct token *token = lexer_peek(lexer);
-
-    while(token && token->type != TOKEN_EOF && token->type != TOKEN_NEWLINE )
+    struct ast *tmp;
+    struct token *peek = NULL;
+    while ((peek = lexer_peek(lexer))->type != TOKEN_EOF && peek->type != TOKEN_NEWLINE)
     {
-         and_or_ast = parse_and_or(lexer, parser);  
-        if(!and_or_ast)
+       // printf("%s\n", peek->value);
+        tmp = parse_and_or(lexer, parser);
+        if (!tmp)
+        {
+            printf("%s\n", "return null");
             return NULL;
-
-        token = lexer_peek(lexer);
-        if(token->type == TOKEN_EOF)
+        }
+        ast_append(parser->nodes, tmp);
+        if (lexer_peek(lexer)->type == TOKEN_EOF)
+        {
             break;
-
-        if(token->type == TOKEN_SEMICOLON ||token->type == TOKEN_NEWLINE)
+        }
+        else if (lexer_peek(lexer)->type == TOKEN_SEMICOLON|| lexer_peek(lexer)->type == TOKEN_NEWLINE)
+        {
             lexer_pop(lexer);
-
-       
-        ast_append(parser->nodes, and_or_ast);
-
-        token = lexer_peek(lexer);
-
+        }
+        else
+        {
+            return NULL;
+        }
     }
-    return and_or_ast;
+    return tmp;
+
 
 }
 

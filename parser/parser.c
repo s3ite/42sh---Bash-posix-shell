@@ -2,6 +2,17 @@
 
 #include "parser.h"
 
+
+struct ast_node *ast_list_init(void)
+{
+    struct ast_node *res = malloc(sizeof(struct ast_node));
+
+    res->ast = NULL;
+    res->next = NULL;
+
+    return res;
+}
+
 /*
  ** Name: parse
  ** Description: parse given string in lexer input / Entry function
@@ -16,12 +27,13 @@ int parse(struct lexer *lexer)
     if(!parser)
         return RC_ERROR;
     parser->ast = NULL;
-    parser->nodes = NULL;
+    parser->nodes = ast_list_init();
 
-   /* int rc = parse_input(lexer, parser);
+    int rc = parse_input(lexer, parser);
+
     if(rc == RC_ERROR) //TODO: Free all structures to avoid memory leak. Then return error code.
         return RC_ERROR;
-    //TODO ...*/
+  
 
     return RC_SUCCESS;
 
