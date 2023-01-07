@@ -255,10 +255,10 @@ struct lexer *lexer_load (char *input, struct lexer *res)
             res = lexer_append(res, tok);
             i += 4;
         }
-        else if(*(input + i) != ' ' && *(input + i) != '\t')
+        else if(!in(input[i]," \t"))
         {
             int j = 0;
-            while(*(input + i + j) != ';' && *(input + i + j) != '\n' && *(input + i + j) != ' ' && *(input + i + j) != '\0')
+            while(!in(input[i + j],"; \t\n")) //*(input + i + j) != ';' && *(input + i + j) != '\n' && *(input + i + j) != ' ' && *(input + i + j) != '\0' 
             {
                 j++;
             }
@@ -288,7 +288,7 @@ int main(int argc,char **argv)
     if(argc)
     {
         struct lexer *a=lexer_init(10, argv[1]);
-        a=lexer(argv[1],a);
+        a=lexer_load(argv[1],a);
         if(a!=NULL)
         {
             lexer_print(a);
