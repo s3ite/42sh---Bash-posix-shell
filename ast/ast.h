@@ -20,11 +20,11 @@ struct simple_command_node
 
 union rules
 {
-    struct condition_if_node if_condition;
-    // struct rule_for rule_for;
-    // struct rule_while rule_while;
-    // struct rule_until rule_until;
-    // struct rule_case rule_case;    
+    struct condition_if_node *if_condition;
+    // struct rule_for *rule_for;
+    // struct rule_while *rule_while;
+    // struct rule_until *rule_until;
+    // struct rule_case *rule_case;    
 };
 
 struct shell_command_node
