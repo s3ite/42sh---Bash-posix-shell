@@ -38,12 +38,16 @@ struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct pa
 
 
 	//sinon creer une list value : 
-
+	dlist_push_front(values,next_token->value);
+	while (next_token->type != WORD)
     {
     	dlist_push_front(values,next_token->value);
 		lexer_pop(lexer);
+		next_token = lexer_peek(lexer);
 
    	}
+
+	
     if (next_token->type != EOF)
         return NULL;
 	
