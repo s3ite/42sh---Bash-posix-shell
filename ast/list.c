@@ -101,7 +101,7 @@ void dlist_print(const struct dlist *list)
 
     while (index)
     {
-        printf("%d\n", index->value);
+        printf("%s\n", index->value);
         index = index->next;
     }
 }
