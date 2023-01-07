@@ -14,7 +14,16 @@ struct ast_node *ast_list_init(void)
     return res;
 }
 
-
+static void free_cmd(char **cmd)
+{
+    size_t index = 0;
+    while(cmd[index])
+    {
+        free(cmd[index]);
+        index++;
+    }
+    free(cmd);
+}
 
 char **to_command(struct dlist *prefix,struct dlist *values)
 {
@@ -58,6 +67,7 @@ int simple_cmd_exec(struct ast *ast)
     char **cmd = to_command(prefix, values);
 
     int rc = run_command(cmd);
+    free_cmd(cmd);
 
 
 
@@ -70,14 +80,21 @@ int global_exec(struct ast *node)
 
     if(node->node_type == SIMPLE_COMMAND)
     {
-        printf("%s\n", "HIT !!!!!==>");
         simple_cmd_exec(node);
     }
     else 
     {
-        printf("%s\n", "NOT MATCH !!!!!==>");
+       // printf("%s\n", "NOT MATCH !!!!!==>");
     }
     return 0;
+}
+
+
+
+static void parser_destroy(struct parser *parser)
+{
+
+
 }
 
 

@@ -28,8 +28,7 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser);
 struct ast *add_simple_commande(struct lexer *lexer, struct parser *parser);
 struct ast *parse_if(struct lexer *lexer, struct parser *parser);
 
-
-
+void free_ast_simple_command(struct ast *ast);
 
 
 #endif /* ! PARSER_H */
