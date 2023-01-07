@@ -7,9 +7,11 @@
  ** @struct lexer; struct parser
  ** Return: future shell command ast 
  */
+
+
 struct ast *parse_command(struct lexer *lexer, struct parser *parser)
 {
-    //struct token *next_token =;
-
+    struct ast *res = add_simple_commande(lexer,parser);
+    return res;
 
 }

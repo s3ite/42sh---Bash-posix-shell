@@ -3,11 +3,10 @@
 
 struct ast *parse_list(struct lexer *lexer, struct parser *parser)
 {
-    //While != eof & newline
-    //peek then If eof break
-    //pop if semi or newline
     
     struct ast *and_or_ast = parse_and_or(lexer, parser);  
+    if(!and_or_ast)
+            return NULL;
     ast_append(parser->nodes, and_or_ast);
     
     struct token *token = lexer_peek(lexer);

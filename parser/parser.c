@@ -1,7 +1,6 @@
-#include "parser.h"
 #include <stdlib.h>
 
-
+#include "parser.h"
 
 /*
  ** Name: parse
@@ -19,10 +18,10 @@ int parse(struct lexer *lexer)
     parser->ast = NULL;
     parser->nodes = NULL;
 
-    int rc = parse_input(lexer, parser);
+   /* int rc = parse_input(lexer, parser);
     if(rc == RC_ERROR) //TODO: Free all structures to avoid memory leak. Then return error code.
         return RC_ERROR;
-    //TODO ...
+    //TODO ...*/
 
     return RC_SUCCESS;
 
@@ -40,11 +39,6 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
     return parse_command(lexer,parser);
 }
 
-
-struct ast *parse_command(struct lexer *lexer, struct parser *parser)
-{
-    return add_simple_commande(lexer,parser);
-}
 
 
 

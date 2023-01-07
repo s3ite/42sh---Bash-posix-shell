@@ -282,6 +282,7 @@ struct lexer *lexer (char *input, struct lexer *res)
     return res;
 }
 
+/*
 int main(int argc,char **argv)
 {
     if(argc)
@@ -302,4 +303,4 @@ int main(int argc,char **argv)
             lexer_destroy(a);
         }
     }
-}
+}*/
