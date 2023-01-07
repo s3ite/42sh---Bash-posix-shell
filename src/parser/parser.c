@@ -44,7 +44,7 @@ char **to_command(struct dlist *prefix,struct dlist *values)
         tmp1 = tmp1->next;
     }
 
-    for ( i; i < size && tmp2; ++i)
+    for (; i < size && tmp2; ++i)
     {
         cmd[i] = strdup(tmp2->value);
         tmp2 = tmp2->next;
