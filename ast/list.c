@@ -90,3 +90,18 @@ size_t dlist_size(const struct dlist *list)
     free(head);
     return res;
 }
+
+
+void dlist_print(const struct dlist *list)
+{
+    if (list->size == 0)
+        return;
+
+    struct dlist_item *index = list->head;
+
+    while (index)
+    {
+        printf("%d\n", index->value);
+        index = index->next;
+    }
+}

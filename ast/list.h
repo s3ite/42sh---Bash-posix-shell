@@ -25,6 +25,7 @@ struct dlist *dlist_init(void);
 int dlist_push_front(struct dlist *list, char *data);
 int dlist_push_back(struct dlist *list, char *data);
 size_t dlist_size(const struct dlist *list);
+void dlist_print(const struct dlist *list);
 
 
 #endif /* LIST */
