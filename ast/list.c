@@ -105,3 +105,19 @@ void dlist_print(const struct dlist *list)
         index = index->next;
     }
 }
+
+void free_dlist(struct dlist *list)
+{
+    struct dlist_item *tmpindex = list->head;
+
+    for (; list->head;)
+    {
+        tmpindex = list->head;
+        list->head = list->head->next;
+
+        free(tmpindex);
+    }
+    list->head = NULL;
+    list->tail = NULL;
+    list->size = 0;
+}
