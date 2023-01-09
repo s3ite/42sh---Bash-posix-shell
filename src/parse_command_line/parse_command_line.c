@@ -10,7 +10,6 @@
 
 size_t get_file_size(FILE *f)
 {
-
     fseek(f, 0L, SEEK_END);
     size_t res = ftell(f);
     fseek(f, 0, SEEK_SET);
@@ -55,14 +54,23 @@ char *parse_command_line(int argc, char **argv)
     }
     if(argc == 1)
     {
-        size_t l = get_file_size(stdin);
+        size_t l = 1024;
+        size_t red=0;
         char* buff=malloc(l+1);
         if(!buff)
         {
             return NULL;
         }
-        fread(buff,l,1,stdin);
-        buff[l]='\0';
+        size_t i = fread(buff,1,l,stdin);
+        red+=i;
+        while(i == 1024)
+        {
+            l += 1024;
+            buff = realloc(buff,l+1);
+            i = fread(buff,1,1024,stdin);
+            red += i;
+        }
+        buff[red] = '\0';
         return buff;
     }
     return NULL;
