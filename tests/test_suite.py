@@ -7,14 +7,13 @@ from dataclasses import dataclass
 
 import yaml
 import subprocess
-#import termcolor
+import termcolor
 
-#OK_TAG = f"[{termcolor.colored('OK', 'green')}]"
-#KO_TAG = f"[{termcolor.colored('KO', 'red')}]"
+OK_TAG = f"[{termcolor.colored('OK', 'green')}]"
+KO_TAG = f"[{termcolor.colored('KO', 'red')}]"
 
 
-OK_TAG = "OK"
-KO_TAG = "KO"
+
 
 @dataclass
 class TestCase:
@@ -35,8 +34,10 @@ def run_shell(shell : str, test : str) -> subprocess.CompletedProcess:
 def performc_checks(test : TestCase, actual : subprocess.CompletedProcess):
     assert (not test.stderr) or actual.stderr != "", \
         "somethinng was expoected on stderr"
+
     assert test.stdout == actual.stdout, \
         f"sdout differs \n{diff(test.stdout, actual.stdout)}"
+
     assert test.exit_code == actual.returncode, \
         f"Exited with {actual.returncode} expected {test.exit_code}"
 
@@ -64,3 +65,5 @@ if __name__ == "__main__":
         else:
             print(f"{OK_TAG} {file}")
             pass
+        
+        print("\n\t===================================\t")
