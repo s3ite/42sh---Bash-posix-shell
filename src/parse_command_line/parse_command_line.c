@@ -28,7 +28,7 @@ char *parse_command_line(int argc, char **argv)
         {
             switch (opt)
             {
-                case 'e':
+                case 'c':
                     l=strlen(optarg);
                     a=malloc(l+1);
                     strcpy(a,optarg);
