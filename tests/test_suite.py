@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     binary_path = "build/42SH"
     
-    with open("./test/data.yml", "r") as file:
+    with open("./tests/data.yml", "r") as file:
         testsuite = [TestCase(**test) for test in yaml.safe_load(file)]
 
     for testcase in testsuite:

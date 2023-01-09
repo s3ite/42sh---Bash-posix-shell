@@ -4,9 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "ast.h"
+#include "../lexer/lexer.h"
 
-void print_ast(struct ast_node *head);
+void print_ast(struct lexer *lexer);
 
-char *print_simplecommand(struct simple_command_node *simple_command);
-char *print_simplecommand_args(struct simple_command_node *simple_command);
 #endif   /* ! PRINT_AST */

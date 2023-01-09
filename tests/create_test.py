@@ -23,10 +23,10 @@ def create_testcase_from_file(file : str) -> TestCase:
 
 
 if __name__ == "__main__":
-    test_repo = "./test/test_input"
+    test_repo = "./tests/test_input"
     test_files = [join(test_repo, f) for f in listdir(test_repo) if isfile(join(test_repo, f))]
     test_cases = [create_testcase_from_file(f) for f in test_files]
     test_dicts = [asdict(case) for case in test_cases]
 
-    with open("./test/data.yml", "w") as outfile:
+    with open("./tests/data.yml", "w") as outfile:
         yaml.dump(test_dicts, outfile)

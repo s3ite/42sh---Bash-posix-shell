@@ -3,40 +3,45 @@
 #include "ast.h"
 #include "list.h"
 #include "print_ast.h"
+#include "../lexer/lexer.h"
 
-void print_ast(struct ast_node *head) {
-    
-struct ast_node *ast_node = head;
 
-    if (!head)
-    {
-        printf("empty ast_node\n");
-        return;
-    }
+const char *tokenTypeTable(struct token *token)
+{
+  static const char *tokenTypes[] = {
+    [TOKEN_IF] = "TOKEN_IF",
+    [TOKEN_THEN] = "TOKEN_THEN",
+    [TOKEN_ELIF] = "TOKEN_ELIF",
+    [TOKEN_ELSE] = "TOKEN_ELSE",
+    [TOKEN_FI] = "TOKEN_FI",
+    [TOKEN_NEWLINE] = "TOKEN_NEWLINE",
+    [TOKEN_QUOTE] = "TOKEN_QUOTE",
+    [TOKEN_SEMICOLON] = "TOKEN_SEMICOLON",
+    [WORD] = "WORD",
+    [TOKEN_EOF] = "TOKEN_EOF",
+  };
 
-    for(; ast_node; ast_node = ast_node->next)
-    {
-        
-        if(ast_node->ast->node_type !=  SIMPLE_COMMAND) {
-            printf("%d (", ast_node->ast->node_type);
+  return tokenTypes[token->type];
+}
+
+
+void print_ast(struct lexer *lexer) {
+
+    for (size_t i = 0; i < lexer->size; i++) {
+
+        if (lexer->data[i]->type == TOKEN_SEMICOLON)
+            printf(" } ");
+
+        else if (lexer->data[i]->type == TOKEN_EOF)
             continue;
-        }
-        else{
-            char *command = print_simplecommand(ast_node->ast->node);
-            char *arguments = print_simplecommand_args(ast_node->ast->node);
+            
+        else if (lexer->data[i]->type == TOKEN_NEWLINE || lexer->data[i]->type == TOKEN_FI)
+                printf("\n");
 
-            printf("%s { command %s %s } ", (char *) ast_node->ast->node, command, arguments);
-        }
+        else if (lexer->data[i]->type == WORD)
+            printf("COMMAND: %s ", lexer->data[i]->value);
+            
+        else
+            printf("%s { ", tokenTypeTable(lexer->data[i]));
     }
-}
-
-
-char *print_simplecommand(struct simple_command_node *simple_command)
-{
-    return simple_command->prefix->head->value;
-}
-
-char *print_simplecommand_args(struct simple_command_node *simple_command)
-{
-    return simple_command->values->head->value;
 }
