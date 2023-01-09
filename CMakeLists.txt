@@ -11,7 +11,6 @@ add_compile_options(-Wvla)
 
 
 add_executable(42SH
-ast/ast.h
 src/ast/ast.c
 src/ast/list.c
 src/ast/print_ast.c
