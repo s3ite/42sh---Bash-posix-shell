@@ -120,4 +120,6 @@ void free_dlist(struct dlist *list)
     list->head = NULL;
     list->tail = NULL;
     list->size = 0;
+
+    free(list);
 }

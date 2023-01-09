@@ -50,23 +50,32 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 
 
 void parser_destroy(struct parser *parser)
-{
-    struct ast_node *node = parser->nodes;
-   
-    while (node != NULL)
+{   
+    struct ast *root = parser->ast; 
+    struct ast_node *next = NULL;
+    struct ast_node *nodes = parser->nodes;
+    while (nodes != NULL)
     {
-        struct ast_node *next = node->next;
-        struct ast *ast = node->ast;
-        if(ast->node_type == SIMPLE_COMMAND)
+        printf("%s\n", "Hit0");
+        struct ast *ast = nodes->ast;
+        if (nodes->next != NULL)
+        {
+            next = nodes->next;
+        }
+        if(ast && ast->node_type == SIMPLE_COMMAND)
         {
             printf("%s\n", "Hit");
             free_ast_simple_command(ast);
         }
-
-        node = next;
+        free(nodes->ast);
+        nodes = next;
     
     }
-    free(parser->ast);
+    if (root->node_type == SIMPLE_COMMAND)
+    {
+         free_ast_simple_command(parser->ast);
+    }
+    free(parser->nodes);
     free(parser);
 }
 
