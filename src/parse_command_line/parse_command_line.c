@@ -8,7 +8,7 @@
 
 #include "parse_command_line.h"
 
-size_t get_file_size(FILE *f)
+int get_file_size(FILE *f)
 {
     fseek(f, 0L, SEEK_END);
     size_t res = ftell(f);
@@ -21,7 +21,7 @@ char *parse_command_line(int argc, char **argv)
     if(argc == 3)
     {
         int opt;
-        size_t l;
+        int l;
         char *a;
         while((opt=getopt(argc, argv, "c:")) != -1)
         {
@@ -40,7 +40,7 @@ char *parse_command_line(int argc, char **argv)
         FILE *f;
         if((f = fopen(argv[optind],"r")))
         {
-            size_t l = get_file_size(f);
+            int l = get_file_size(f);
             char* buff=malloc(l+1);
             if(!buff)
             {
@@ -54,21 +54,32 @@ char *parse_command_line(int argc, char **argv)
     }
     if(argc == 1)
     {
-        size_t l = 1024;
+        if((isatty(STDIN_FILENO)))
+        {
+            return NULL;
+        }
+        int l = 1024;
         size_t red=0;
         char* buff=malloc(l+1);
         if(!buff)
         {
             return NULL;
         }
-        size_t i = fread(buff,1,l,stdin);
+        size_t i = fread(buff,sizeof(char),l,stdin);
+        printf("i = %d   ",i);
         red+=i;
+        if(red==0)
+        {
+            return NULL;
+        }
         while(i == 1024)
         {
             l += 1024;
             buff = realloc(buff,l+1);
-            i = fread(buff,1,1024,stdin);
+            i = fread(buff + red,sizeof(char),1024,stdin);
+            printf("i = %d   ",i);
             red += i;
+            printf("red = %d   ",red);
         }
         buff[red] = '\0';
         return buff;
@@ -79,6 +90,9 @@ char *parse_command_line(int argc, char **argv)
 /*int main (int argc, char **argv)
 {
     char *res=parse_command_line(argc,argv);
-    printf("%s\n",res);
-    free(res);
+    if (res)
+    {
+        printf("%s\n",res);
+        free(res);
+    }
 }*/
