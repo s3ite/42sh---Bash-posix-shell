@@ -56,7 +56,6 @@ void parser_destroy(struct parser *parser)
     struct ast_node *nodes = parser->nodes;
     while (nodes != NULL)
     {
-        printf("%s\n", "Hit0");
         struct ast *ast = nodes->ast;
         if (nodes->next != NULL)
         {
@@ -64,10 +63,10 @@ void parser_destroy(struct parser *parser)
         }
         if(ast && ast->node_type == SIMPLE_COMMAND)
         {
-            printf("%s\n", "Hit");
+            printf("YO");
             free_ast_simple_command(ast);
         }
-        free(nodes->ast);
+        //free(nodes->ast);
         nodes = next;
     
     }
