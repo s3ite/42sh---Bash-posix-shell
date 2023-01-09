@@ -5,8 +5,8 @@
 
 int main(int argc, char **argv)
 {
-
-    char *input = argv[1];
+    (void) argc;
+    //char *input = argv[1];
     struct lexer *a=lexer_init(10, argv[1]);
     a=lexer_load(argv[1],a);
     int rc =parse(a);
@@ -16,6 +16,4 @@ int main(int argc, char **argv)
     lexer_destroy(a);
   
     return 1;
-
-
 }

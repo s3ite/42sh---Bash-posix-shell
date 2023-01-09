@@ -1,5 +1,4 @@
 #include <stdlib.h>
-
 #include "parser.h"
 #include "../exec/exec.h"
 
@@ -63,7 +62,7 @@ int simple_cmd_exec(struct ast *ast)
     struct dlist *prefix = cmd_nbode->prefix;
     struct dlist *values = cmd_nbode->values;
 
-    struct dlist_item *head = prefix->head; 
+    //struct dlist_item *head = prefix->head; 
     char **cmd = to_command(prefix, values);
 
     int rc = run_command(cmd);
@@ -76,8 +75,6 @@ int simple_cmd_exec(struct ast *ast)
 
 int global_exec(struct ast *node)
 {
-    int success = 0;
-
     if(node->node_type == SIMPLE_COMMAND)
     {
         simple_cmd_exec(node);
@@ -86,16 +83,16 @@ int global_exec(struct ast *node)
     {
        // printf("%s\n", "NOT MATCH !!!!!==>");
     }
-    return 0;
+    return RC_SUCCESS;
 }
 
 
 
-static void parser_destroy(struct parser *parser)
-{
+// static void parser_destroy(struct parser *parser)
+// {
+//     (void) parser;
+// }
 
-
-}
 
 
 /*
@@ -119,7 +116,7 @@ int parse(struct lexer *lexer)
     if(rc == RC_ERROR) //TODO: Free all structures to avoid memory leak. Then return error code.
         return RC_ERROR;
 
-        global_exec(parser->ast);
+    global_exec(parser->ast);
 
     return RC_SUCCESS;
 

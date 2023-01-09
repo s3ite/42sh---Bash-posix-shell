@@ -4,6 +4,7 @@
 #include "../ast/ast.h"
 #include "../lexer/lexer.h"
 #include "../ast/list.h"
+#include "../others/tools.h"
 
 #define RC_ERROR -1
 #define RC_SUCCESS 0

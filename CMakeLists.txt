@@ -8,6 +8,8 @@ add_compile_options(-Werror)
 add_compile_options(-Wall)
 add_compile_options(-Wextra)
 add_compile_options(-Wvla)
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
 
 
 add_executable(42SH
@@ -31,6 +33,7 @@ src/parser/parser.h
 src/parser/parse_input.c
 src/parser/parse_simple_commande.c
 src/parser/parse_list.c
+src/others/tools.c
+src/others/tools.h
 src/main.c
-
 )

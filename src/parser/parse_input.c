@@ -15,7 +15,7 @@ int parse_input(struct lexer *lexer, struct parser *parser)
    
     struct ast *root = parse_list(lexer, parser);
 
-    print_ast(parser->nodes);
+    //print_ast(parser->nodes);
 
     if(!root)
         return RC_ERROR;

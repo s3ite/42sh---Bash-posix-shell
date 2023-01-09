@@ -15,6 +15,7 @@
 
 struct simple_command_node *parse_simple_commande (struct lexer *lexer,struct parser *parser)
 {
+	(void) parser;
 	struct token *next_token = lexer_pop(lexer);
 	//printf("%s\n", next_token->value);
 
