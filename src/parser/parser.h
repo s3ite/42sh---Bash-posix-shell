@@ -21,6 +21,7 @@ int parse_input(struct lexer *lexer, struct parser *parser);
 struct ast *parse_list(struct lexer *lexer, struct parser *parser);
 struct ast *parse_and_or(struct lexer *lexer, struct parser *parser);
 struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser);
+void parser_destroy(struct parser *parser);
 
 
 struct simple_command_node *parse_simple_commande(struct lexer *lexer,  struct parser *parser);
