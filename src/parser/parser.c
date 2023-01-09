@@ -118,8 +118,8 @@ int parse(struct lexer *lexer)
 
     global_exec(parser->ast);
 
-    printf("%s\n", "Hit");
     
+
     parser_destroy(parser);
 
     return RC_SUCCESS;
@@ -142,17 +142,21 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 void parser_destroy(struct parser *parser)
 {
     struct ast_node *node = parser->nodes;
-    while (node->next != NULL)
+   
+    while (node != NULL)
     {
+        struct ast_node *next = node->next;
         struct ast *ast = node->ast;
         if(ast->node_type == SIMPLE_COMMAND)
         {
+            printf("%s\n", "Hit");
             free_ast_simple_command(ast);
         }
 
-        node = node->next;
+        node = next;
     
     }
+    free(parser->ast);
     free(parser);
 }
 
