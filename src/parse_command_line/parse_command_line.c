@@ -24,7 +24,7 @@ char *parse_command_line(int argc, char **argv)
         int opt;
         size_t l;
         char *a;
-        while((opt=getopt(argc, argv, "e:")) != -1)
+        while((opt=getopt(argc, argv, "c:")) != -1)
         {
             switch (opt)
             {
