@@ -31,3 +31,15 @@ void ast_append(struct ast_node *list, struct ast *ast)
     }
 }
 
+
+
+struct ast_node *ast_list_init()
+{
+    struct ast_node *res = malloc(sizeof(struct ast_node));
+
+    res->ast = NULL;
+    res->next = NULL;
+
+    return res;
+}
+

@@ -61,6 +61,6 @@ struct ast_node{
 
 void ast_append(struct ast_node *list, struct ast *ast);
 
-
+struct ast_node *ast_list_init();
 
 #endif /* ! AST_H */
