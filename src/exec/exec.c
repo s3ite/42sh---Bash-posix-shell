@@ -81,7 +81,7 @@ static int simple_cmd_exec(struct ast *ast)
 
 static int ast_exec(struct ast *node)
 {
-     if(node->node_type == SIMPLE_COMMAND)
+     if(node && node->node_type == SIMPLE_COMMAND)
             simple_cmd_exec(node);
       return RC_SUCCESS;
 }
