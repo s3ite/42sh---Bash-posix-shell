@@ -5,7 +5,6 @@
 
 #include "lexer.h"
 
-
 struct lexer *lexer_init(size_t n, char *input)
 {
     struct lexer *v = malloc(sizeof(struct lexer));
@@ -32,6 +31,7 @@ void lexer_destroy(struct lexer *v)
         }
         free(v->data[i]);
     }
+    //free(v->input);  //mettre en commentaire si l'input du lexer est statique(test)
     free(v->data);
     free(v);
 }
@@ -282,8 +282,8 @@ struct lexer *lexer_load (char *input, struct lexer *res)
     return res;
 }
 
-/*
-int main(int argc,char **argv)
+
+/*int main(int argc,char **argv)
 {
     if(argc)
     {
