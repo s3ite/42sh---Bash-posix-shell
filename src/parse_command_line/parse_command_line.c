@@ -24,11 +24,11 @@ char *parse_command_line(int argc, char **argv)
         int opt;
         size_t l;
         char *a;
-        while((opt=getopt(argc, argv, "e:")) != -1)
+        while((opt=getopt(argc, argv, "c:")) != -1)
         {
             switch (opt)
             {
-                case 'e':
+                case 'c':
                     l=strlen(optarg);
                     a=malloc(l+1);
                     strcpy(a,optarg);

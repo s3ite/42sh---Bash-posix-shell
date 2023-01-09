@@ -1,19 +1,23 @@
 #include "parser/parser.h"
 #include "lexer/lexer.h"
 #include "exec/exec.h"
+#include "parse_command_line/parse_command_line.h"
 
 
 int main(int argc, char **argv)
 {
-    (void) argc;
-    //char *input = argv[1];
-    struct lexer *a=lexer_init(10, argv[1]);
-    a=lexer_load(argv[1],a);
-    int rc =parse(a);
+    
+    char *input = parse_command_line(argc,argv);
+
+    struct lexer *lexer = lexer_init(10, input);
+    lexer = lexer_load(input, lexer);
+    int rc = parse(lexer);
+    
+    lexer_destroy(lexer);
 
     if(rc == RC_ERROR)
         return RC_ERROR;
-    lexer_destroy(a);
+
   
     return 1;
 }
