@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include "ast.h"
 #include "../lexer/lexer.h"
+#include "../parser/parser.h"
 
-void print_ast(struct lexer *lexer);
+void print_ast(struct parser *parser);
 
 #endif   /* ! PRINT_AST */

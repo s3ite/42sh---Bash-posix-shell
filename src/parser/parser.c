@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "parser.h"
 #include "../exec/exec.h"
+#include "../ast/print_ast.h"
 
 
 
@@ -28,6 +29,9 @@ int parse(struct lexer *lexer)
 
     global_exec(parser);
 
+
+    // representing the ast
+    print_ast( parser);
     
 
     parser_destroy(parser);
