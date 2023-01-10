@@ -8,6 +8,10 @@ int main(int argc, char **argv)
 {
     
     char *input = parse_command_line(argc,argv);
+    if(!input)
+    {
+        return 1;
+    }
 
     struct lexer *lexer = lexer_init(10, input);
     lexer = lexer_load(input, lexer);
