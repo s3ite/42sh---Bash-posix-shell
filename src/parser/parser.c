@@ -40,8 +40,6 @@ int parse(struct lexer *lexer)
 
 }
 
-
-
 struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
 {
    return parse_pipeline(lexer, parser);
