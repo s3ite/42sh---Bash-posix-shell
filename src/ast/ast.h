@@ -10,6 +10,11 @@ struct condition_if_node
     struct ast *else_action; //Action si faux 
 };
 
+enum shell_type
+{
+    IF = 0,
+};
+
 struct simple_command_node
 {
     struct dlist *prefix; //commande & args
@@ -29,8 +34,25 @@ union rules
 
 struct shell_command_node
 {
-    struct dlist *compound_list; //
-    union rule *rules; //{for, while, until, case, if}
+    enum shell_type type; //
+    void *node;
+};
+
+
+enum operator_type
+{
+    AND = 0,
+    OR, 
+    BITAND,
+    SEMICOLON
+};
+
+
+struct operator_node
+{
+    enum operator_type type; 
+    struct ast *left; 
+    struct ast *right; 
 };
 
 enum node_type {
@@ -41,8 +63,9 @@ enum node_type {
     COMMAND ,
     SIMPLE_COMMAND,
     SHELL_COMMAND,
-    IF,
+    OPERATOR,
 };
+
 
 /**
  * node_type = type du noeud de l'ast

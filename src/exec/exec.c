@@ -73,8 +73,6 @@ static int simple_cmd_exec(struct ast *ast)
     int rc = run_command(cmd);
     free_cmd(cmd);
 
-
-
     return rc;
 }
 

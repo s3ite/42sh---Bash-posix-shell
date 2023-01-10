@@ -66,7 +66,7 @@ char *parse_command_line(int argc, char **argv)
             return NULL;
         }
         size_t i = fread(buff,sizeof(char),l,stdin);
-        printf("i = %d   ",i);
+      //  printf("i = %d   ",i);
         red+=i;
         if(red==0)
         {
@@ -77,9 +77,9 @@ char *parse_command_line(int argc, char **argv)
             l += 1024;
             buff = realloc(buff,l+1);
             i = fread(buff + red,sizeof(char),1024,stdin);
-            printf("i = %d   ",i);
+     //       printf("i = %d   ",i);
             red += i;
-            printf("red = %d   ",red);
+     //       printf("red = %d   ",red);
         }
         buff[red] = '\0';
         return buff;

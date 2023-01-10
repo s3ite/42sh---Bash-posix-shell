@@ -20,8 +20,13 @@ src/ast/print_ast.c
 src/ast/list.h
 src/ast/print_ast.h
 src/ast/ast.h
+src/parser/parse_shell_command.c
 src/parse_command_line/parse_command_line.h
 src/parse_command_line/parse_command_line.c
+src/parser/parse_rule_if.c
+src/parser/parse_rule_else.c
+
+src/parser/parse_compound_list.c
 src/built_in/boolean.c
 src/built_in/built_in.h
 src/exec/exec.c

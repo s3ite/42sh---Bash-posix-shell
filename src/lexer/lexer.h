@@ -48,5 +48,6 @@ struct token *lexer_pop(struct lexer *v);
 struct token *lexer_peek(struct lexer *v);
 
 struct lexer *lexer_load (char *input, struct lexer *res);
-
+struct token *token_init(char *value, enum TokenType type);
+void token_free(struct token *token);
 #endif  /* LEXER.H */
