@@ -18,7 +18,7 @@ int get_file_size(FILE *f)
 
 char *parse_command_line(int argc, char **argv)
 {
-    if(argc == 3)
+    if(argc >= 3)
     {
         int opt;
         int l;

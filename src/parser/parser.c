@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "parser.h"
 #include "../exec/exec.h"
+#include "../ast/print_ast.h"
 
 
 
@@ -28,6 +29,9 @@ int parse(struct lexer *lexer)
 
     ast_exec(parser->ast);
 
+
+    // representing the ast
+    print_ast( parser);
     
 
    // parser_destroy(parser);
@@ -35,8 +39,6 @@ int parse(struct lexer *lexer)
     return RC_SUCCESS;
 
 }
-
-
 
 struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
 {   

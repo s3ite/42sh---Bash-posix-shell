@@ -57,7 +57,7 @@ struct operator_node
 
 enum node_type {
     INPUT,
-    LIST,
+    LISTE,
     AND_OR,
     PIPELINE,
     COMMAND ,
