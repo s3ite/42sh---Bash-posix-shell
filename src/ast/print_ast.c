@@ -55,52 +55,47 @@ const char *nodeTypeTable(struct ast *ast)
     }
 }*/
 
-
 void print_ast_bis(struct ast *ast)
 {
-    if(!ast)
+    if (!ast)
         return;
 
-    if(ast->node_type == OPERATOR)
+    if (ast->node_type == OPERATOR)
     {
         struct operator_node *op = ast->node;
         printf("Valeur opérator: ;\n");
-        if(op->left)
+        if (op->left)
             print_ast_bis(op->left);
-        if(op->right)
+        if (op->right)
             print_ast_bis(op->right);
     }
-    if(ast->node_type == SIMPLE_COMMAND)
+    if (ast->node_type == SIMPLE_COMMAND)
     {
         struct simple_command_node *node = ast->node;
-        printf("Commande:\n" );
+        printf("Commande:\n");
         dlist_print(node->prefix);
         dlist_print(node->values);
-        printf("%s\n","");
-
+        printf("%s\n", "");
     }
-    if(ast->node_type == SHELL_COMMAND)
+    if (ast->node_type == SHELL_COMMAND)
     {
         printf("-Shell Command \n");
 
         struct shell_command_node *cmd = ast->node;
-        if(cmd->type == IF)
+        if (cmd->type == IF)
         {
             struct condition_if_node *node = cmd->node;
-            if(node->condition_c)
+            if (node->condition_c)
                 print_ast_bis(node->condition_c);
-            if(node->then_action)
+            if (node->then_action)
                 print_ast_bis(node->then_action);
-            if(node->else_action)
+            if (node->else_action)
                 print_ast_bis(node->else_action);
         }
-
-
     }
 }
 
-
-/*void print_ast(struct lexer *lexer) 
+/*void print_ast(struct lexer *lexer)
 {
 
     for (size_t i = 0; i < lexer->size; i++) {
@@ -122,4 +117,3 @@ void print_ast_bis(struct ast *ast)
     }
 }
 */
-

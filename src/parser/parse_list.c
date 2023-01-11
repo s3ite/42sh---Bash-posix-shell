@@ -2,8 +2,8 @@
 
 #include "parser.h"
 
-static struct ast *build_operator_node(enum operator_type type, struct ast *left,
-                                  struct ast *right)
+static struct ast *build_operator_node(enum operator_type type,
+                                       struct ast *left, struct ast *right)
 {
     struct ast *ast = malloc(sizeof(struct ast));
     ast->node_type = OPERATOR;
@@ -16,7 +16,6 @@ static struct ast *build_operator_node(enum operator_type type, struct ast *left
     ast->node = node;
     return ast;
 }
-
 
 struct ast *parse_list(struct lexer *lexer, struct parser *parser)
 {
@@ -44,7 +43,7 @@ struct ast *parse_list(struct lexer *lexer, struct parser *parser)
             }
         }
         if (op && op->type == TOKEN_SEMICOLON)
-                res = build_operator_node(SEMICOLON, res, right);
+            res = build_operator_node(SEMICOLON, res, right);
 
         ast_append(parser->nodes, res);
         token = lexer_peek(lexer);

@@ -173,13 +173,12 @@ struct token *token_init(char *value, enum TokenType type)
 
 void token_free(struct token *token)
 {
-    if(token)
+    if (token)
     {
-        if(token->type == WORD && token->value)
+        if (token->type == WORD && token->value)
             free(token->value);
         free(token);
     }
-
 }
 
 int in(char c, char *delim)

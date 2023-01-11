@@ -31,7 +31,7 @@ static struct ast *apply_operator_compound(struct ast *res, struct ast *left,
     if (op && (op->type == TOKEN_SEMICOLON || op->type == TOKEN_NEWLINE))
         res = build_operator_node(SEMICOLON, left, right);
 
-    token_free(op); 
+    token_free(op);
     return res;
 }
 
@@ -59,7 +59,7 @@ struct ast *parse_compound_list(struct lexer *lexer, struct parser *parser)
             return NULL;
 
         struct token *copy = consume(lexer);
-        
+
         token = lexer_peek(lexer);
         if (token->type == TOKEN_THEN || token->type == TOKEN_ELIF
             || token->type == TOKEN_ELSE || token->type == TOKEN_FI)

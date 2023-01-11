@@ -23,12 +23,11 @@ int parse(struct lexer *lexer)
 
     int rc = parse_input(lexer, parser);
 
-    if (rc == RC_ERROR) // TODO: Free all structures to avoid memory leak. Then// return error code.
+    if (rc == RC_ERROR) // TODO: Free all structures to avoid memory leak.
+                        // Then// return error code.
         return RC_ERROR;
 
     ast_exec(parser->ast);
-
-   
 
     parser_free(parser);
 
@@ -46,7 +45,6 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
     return parse_command(lexer, parser);
 }
 
-
 void node_free(struct ast_node *nodes)
 {
     if (!nodes)
@@ -54,19 +52,17 @@ void node_free(struct ast_node *nodes)
     node_free(nodes->next);
     ast_free(nodes->ast);
     free(nodes);
-
 }
 
 void ast_free(struct ast *ast)
 {
     if (ast && ast->node_type == SIMPLE_COMMAND)
     {
-         free_ast_simple_command(ast);
-
+        free_ast_simple_command(ast);
     }
     if (ast && ast->node_type == SHELL_COMMAND)
     {
-        struct shell_command_node *node  = ast->node;
+        struct shell_command_node *node = ast->node;
         free(node->node);
         free(ast->node);
     }
@@ -82,8 +78,7 @@ void ast_free(struct ast *ast)
 
 void parser_free(struct parser *parser)
 {
-    //ast_free(parser->ast);
+    // ast_free(parser->ast);
     node_free(parser->nodes);
     free(parser);
-
 }

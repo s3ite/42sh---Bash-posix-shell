@@ -33,7 +33,7 @@ def run_shell(shell : str, test : str) -> subprocess.CompletedProcess:
 
 def performc_checks(test : TestCase, actual : subprocess.CompletedProcess):
     assert (not test.stderr) or actual.stderr != "", \
-        "somethinng was expoected on stderr"
+        "something was expected on stderr"
 
     assert test.stdout == actual.stdout, \
         f"sdout differs \n{diff(test.stdout, actual.stdout)}"

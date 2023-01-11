@@ -3,10 +3,10 @@
 struct ast *parse_condition(struct lexer *lexer, struct parser *parser,
                             enum TokenType type)
 {
-    //struct token *token = lexer_peek(lexer);
-    if(!type)
+    // struct token *token = lexer_peek(lexer);
+    if (!type)
         return NULL;
- 
+
     lexer_pop(lexer);
     struct ast *ast = parse_compound_list(lexer, parser);
     if (!ast)
