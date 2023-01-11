@@ -31,7 +31,7 @@ static struct ast *apply_operator_compound(struct ast *res, struct ast *left,
     if (op && (op->type == TOKEN_SEMICOLON || op->type == TOKEN_NEWLINE))
         res = build_operator_node(SEMICOLON, left, right);
 
-    // token_free(op); TODO
+    token_free(op); 
     return res;
 }
 

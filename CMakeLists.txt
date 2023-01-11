@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(42sh)
+project(42sh VERSION 1.0.0 LANGUAGES C)
 
 include_directories(src)
 add_compile_options(-std=c99)
@@ -8,8 +8,8 @@ add_compile_options(-Werror)
 add_compile_options(-Wall)
 add_compile_options(-Wextra)
 add_compile_options(-Wvla)
-#add_compile_options(-fsanitize=address)
-#add_link_options(-fsanitize=address)
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
 add_compile_options(-g)
 
 
@@ -54,4 +54,5 @@ src/others/tools.c
 src/others/tools.h
 
 src/main.c
+
 )
