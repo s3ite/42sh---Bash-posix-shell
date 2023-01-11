@@ -20,8 +20,9 @@ int main(int argc, char **argv)
             lexer_print(lexer);
             int rc = parse(lexer);
             lexer_destroy(lexer);
+            free(input);
             if(rc == RC_ERROR)
-             return RC_ERROR;
+                return RC_ERROR;
         }
     }
 
@@ -34,7 +35,7 @@ int main(int argc, char **argv)
     int rc = parse(lexer);
 
     lexer_destroy(lexer);
-
+    free(input);
     if (rc == RC_ERROR)
         return RC_ERROR;
 
