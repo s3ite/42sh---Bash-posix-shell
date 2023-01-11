@@ -98,6 +98,9 @@ int get_index(struct *variables_list list, char *name)
     return -1;
 }
 
+/**
+ * remove the variable from the list and resize  the list
+*/
 int remove_variable(struct variables_list *list, char *name)
 {
     int index = get_index(list, name);
@@ -108,6 +111,11 @@ int remove_variable(struct variables_list *list, char *name)
     list->items = realloc(list->items, list->size);
 
     return 0;
+}
+
+void free_variable_list(struct variables_list *list)
+{
+    free(list);
 }
 
 /**
