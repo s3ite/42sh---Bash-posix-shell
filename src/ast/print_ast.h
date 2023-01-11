@@ -9,5 +9,6 @@
 #include "ast.h"
 
 void print_ast(struct parser *parser);
+void print_ast_bis(struct ast *ast);
 
 #endif /* ! PRINT_AST */

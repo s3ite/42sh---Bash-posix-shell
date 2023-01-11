@@ -30,9 +30,9 @@ int parse(struct lexer *lexer)
     ast_exec(parser->ast);
 
     // representing the ast
-    // print_ast( parser);
+    print_ast_bis( parser->ast);
 
-    // parser_destroy(parser);
+    parser_free(parser);
 
     return RC_SUCCESS;
 }
@@ -48,29 +48,45 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
     return parse_command(lexer, parser);
 }
 
-void parser_destroy(struct parser *parser)
+
+
+void node_free(struct ast_node *nodes)
 {
-    struct ast *root = parser->ast;
-    struct ast_node *next = NULL;
-    struct ast_node *nodes = parser->nodes;
-    while (nodes != NULL)
+    if (nodes->next != NULL)
     {
-        struct ast *ast = nodes->ast;
-        if (nodes->next != NULL)
-        {
-            next = nodes->next;
-        }
-        if (ast && ast->node_type == SIMPLE_COMMAND)
-        {
-            free_ast_simple_command(ast);
-        }
-        // free(nodes->ast);
-        nodes = next;
+        node_free(nodes->next);
     }
-    if (root->node_type == SIMPLE_COMMAND)
+    ast_free(nodes->ast);
+    free(nodes);
+
+}
+
+void ast_free(struct ast *ast)
+{
+    printf("Ast type free : %d\n",ast->node_type);
+    if (ast && ast->node_type == SIMPLE_COMMAND)
     {
-        free_ast_simple_command(parser->ast);
+         free_ast_simple_command(ast);
+
     }
-    free(parser->nodes);
-    free(parser);
+    if (ast && ast->node_type == SHELL_COMMAND)
+    {
+        //TODO
+    }
+    if (ast && ast->node_type == OPERATOR)
+    {
+        struct operator_node *op = ast->node;
+        if (op->right != NULL)
+            ast_free(op->right);
+        if (op->left != NULL)
+            ast_free(op->left);
+    }
+}
+
+void parser_free(struct parser *parser)
+{
+    printf("Hit\n");
+    //ast_free(parser->ast);
+    node_free(parser->nodes);
+
 }

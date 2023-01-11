@@ -10,7 +10,7 @@
 static void cleanupData(struct parser *parser)
 {
     // Data to clean
-    parser_destroy(parser);
+    parser_free(parser);
 }
 
 void my_exit(struct parser *parser)

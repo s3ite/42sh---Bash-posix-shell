@@ -93,5 +93,4 @@ void free_ast_simple_command(struct ast *ast)
         return;
 
     free_simple_command(ast->node);
-    free(ast);
 }

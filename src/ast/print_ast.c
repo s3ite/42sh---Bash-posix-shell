@@ -43,39 +43,65 @@ const char *nodeTypeTable(struct ast *ast)
     return "UNKNOWN";
 }
 
-void print_ast(struct parser *parser)
+/*void print_ast(struct parser *parser)
 {
-    printf(" %s ", nodeTypeTable(parser->ast));
+    printf("root node %s ", nodeTypeTable(parser->ast));
     struct ast_node *node = NULL;
     node = parser->nodes;
-
+    printf("parser->nodes = %d",parser->nodes->ast->node_type);
     for (; node; node = node->next)
     {
         printf(" %s ", nodeTypeTable(node->ast));
     }
-}
+}*/
 
-/*
-const char *tokenTypeTable(struct token *token)
+
+void print_ast_bis(struct ast *ast)
 {
-  static const char *tokenTypes[] = {
-    [TOKEN_IF] = "TOKEN_IF",
-    [TOKEN_THEN] = "TOKEN_THEN",
-    [TOKEN_ELIF] = "TOKEN_ELIF",
-    [TOKEN_ELSE] = "TOKEN_ELSE",
-    [TOKEN_FI] = "TOKEN_FI",
-    [TOKEN_NEWLINE] = "TOKEN_NEWLINE",
-    [TOKEN_QUOTE] = "TOKEN_QUOTE",
-    [TOKEN_SEMICOLON] = "TOKEN_SEMICOLON",
-    [WORD] = "WORD",
-    [TOKEN_EOF] = "TOKEN_EOF",
-  };
+    if(!ast)
+        return;
 
-  return tokenTypes[token->type];
+    if(ast->node_type == OPERATOR)
+    {
+        struct operator_node *op = ast->node;
+        printf("Valeur opérator: ;\n");
+        if(op->left)
+            print_ast_bis(op->left);
+        if(op->right)
+            print_ast_bis(op->right);
+    }
+    if(ast->node_type == SIMPLE_COMMAND)
+    {
+        struct simple_command_node *node = ast->node;
+        printf("Commande:\n" );
+        dlist_print(node->prefix);
+        dlist_print(node->values);
+        printf("%s\n","");
+
+    }
+    if(ast->node_type == SHELL_COMMAND)
+    {
+        printf("-Shell Command \n");
+
+        struct shell_command_node *cmd = ast->node;
+        if(cmd->type == IF)
+        {
+            struct condition_if_node *node = cmd->node;
+            if(node->condition_c)
+                print_ast_bis(node->condition_c);
+            if(node->then_action)
+                print_ast_bis(node->then_action);
+            if(node->else_action)
+                print_ast_bis(node->else_action);
+        }
+
+
+    }
 }
 
 
-void print_ast(struct lexer *lexer) {
+/*void print_ast(struct lexer *lexer) 
+{
 
     for (size_t i = 0; i < lexer->size; i++) {
 
@@ -95,6 +121,5 @@ void print_ast(struct lexer *lexer) {
             printf("%s { ", tokenTypeTable(lexer->data[i]));
     }
 }
-
-
 */
+

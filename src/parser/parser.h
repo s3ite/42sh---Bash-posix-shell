@@ -22,7 +22,10 @@ int parse_input(struct lexer *lexer, struct parser *parser);
 struct ast *parse_list(struct lexer *lexer, struct parser *parser);
 struct ast *parse_and_or(struct lexer *lexer, struct parser *parser);
 struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser);
-void parser_destroy(struct parser *parser);
+
+void node_free(struct ast_node *nodes);
+void ast_free(struct ast *ast);
+void parser_free(struct parser *parser);
 
 struct ast *build_shell_command_node(enum shell_type type);
 
@@ -48,5 +51,6 @@ struct condition_if_node *build_condition_if_node(struct ast *condition,
                                                   struct ast *else_action);
 
 void free_ast_simple_command(struct ast *ast);
+void free_simple_command(struct simple_command_node *simple_command);
 
 #endif /* ! PARSER_H */
