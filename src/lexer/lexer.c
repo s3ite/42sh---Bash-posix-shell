@@ -59,15 +59,6 @@ struct lexer *lexer_resize(struct lexer *v, size_t n)
     return v;
 }
 
-void token_free(struct token *token)
-{
-    if(token)
-    {
-        if(token->value)
-            free(token->value);
-        free(token);
-    }
-}
 
 struct lexer *lexer_append(struct lexer *v, struct token *elt)
 {

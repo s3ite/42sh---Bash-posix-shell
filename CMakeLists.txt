@@ -8,8 +8,8 @@ add_compile_options(-Werror)
 add_compile_options(-Wall)
 add_compile_options(-Wextra)
 add_compile_options(-Wvla)
-add_compile_options(-fsanitize=address)
-add_link_options(-fsanitize=address)
+#add_compile_options(-fsanitize=address)
+#add_link_options(-fsanitize=address)
 add_compile_options(-g)
 
 
@@ -25,6 +25,7 @@ src/parse_command_line/parse_command_line.h
 src/parse_command_line/parse_command_line.c
 src/parser/parse_rule_if.c
 src/parser/parse_rule_else.c
+src/parser/parse_rule_elif.c
 
 src/parser/parse_compound_list.c
 src/built_in/boolean.c
