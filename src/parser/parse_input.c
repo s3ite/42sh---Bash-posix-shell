@@ -14,7 +14,6 @@ int parse_input(struct lexer *lexer, struct parser *parser)
         return RC_SUCCESS;
    
     struct ast *root = parse_list(lexer, parser);
-
     if(!root)
         return RC_ERROR;
 

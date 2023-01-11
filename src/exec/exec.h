@@ -12,6 +12,5 @@
 #include "../lexer/lexer.h"
 
 int run_command(char **cmd);
-int global_exec(struct parser *parser);
 
 #endif /*EXEC_H*/

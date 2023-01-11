@@ -83,7 +83,7 @@ struct ast_node{
 
 
 void ast_append(struct ast_node *list, struct ast *ast);
-
+int exec_if(struct shell_command_node *shell);
 struct ast_node *ast_list_init();
-
+int ast_exec(struct ast *node);
 #endif /* ! AST_H */

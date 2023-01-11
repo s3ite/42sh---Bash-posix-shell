@@ -1,21 +1,26 @@
 #include "exec.h"
 
-
 int run_command(char **cmd)
 {
-    pid_t pid = fork();
-   if (pid == 0) {
+    pid_t childID = fork();
+    if (childID == -1)
+        return 0;
+    if (childID == 0)
+    {
         execvp(cmd[0], cmd);
-        perror("Error executing command");
-        exit(EXIT_FAILURE);
-  } else if (pid > 0) {
-        int status;
-        waitpid(pid, &status, 0);
-        return WEXITSTATUS(status);
-  } else {
-        perror("Error calling fork");
-        exit(EXIT_FAILURE);
-  }
+        exit(1);
+    }
+    else
+    {
+        int status = 0;
+        waitpid(childID, &status, 0);
+        if (WIFEXITED(status))
+        {
+            int res = WEXITSTATUS(status);
+            return res;
+        }
+        return 1;
+    }
 }
 
 static void free_cmd(char **cmd)
@@ -49,11 +54,17 @@ static char **to_command(struct dlist *prefix,struct dlist *values)
     }
 
     for (; i < size && tmp2; ++i)
-    {
+    { 
         cmd[i] = strdup(tmp2->value);
         tmp2 = tmp2->next;
     }
 
+   /* printf("%s:", "Commande");
+    for(size_t k = 0; k < size; k++)
+    {
+        printf("%s ", cmd[k]);
+    } 
+    printf("\n");*/
     cmd[size] = NULL;
     return cmd;
 
@@ -67,34 +78,72 @@ static int simple_cmd_exec(struct ast *ast)
     struct dlist *prefix = cmd_nbode->prefix;
     struct dlist *values = cmd_nbode->values;
 
-    //struct dlist_item *head = prefix->head; 
     char **cmd = to_command(prefix, values);
 
-    int rc = run_command(cmd);
+    int rc = 125;
+    rc = run_command(cmd);
     free_cmd(cmd);
 
     return rc;
 }
 
-
-static int ast_exec(struct ast *node)
+static int exec_op(struct operator_node *op)
 {
-     if(node && node->node_type == SIMPLE_COMMAND)
-            simple_cmd_exec(node);
-      return RC_SUCCESS;
+    int res = 1;
+    if (op->left)
+        res = ast_exec(op->left);
+    if (op->right)
+        res = ast_exec(op->right);
+    return res;
 }
 
-int global_exec(struct parser *parser)
+static int shell_cmd_exec(struct shell_command_node *shell)
 {
-    struct ast *root = parser->ast;
-    ast_exec(root);
-    struct ast_node *nodes = parser->nodes;
-    while(nodes)
+    int rc = 0;
+    rc = exec_if(shell);
+    return rc;
+}
+
+
+int ast_exec(struct ast *node)
+{
+    int rc = 0;
+    if(node->node_type == SIMPLE_COMMAND)
     {
-      ast_exec(nodes->ast);
-      nodes = nodes->next;
+        rc = simple_cmd_exec(node);
     }
-
-    return RC_SUCCESS;
+    else if (node->node_type == SHELL_COMMAND)
+    {
+        struct shell_command_node *shell = node->node;
+        rc = shell_cmd_exec(shell);
+    }
+    else if(node->node_type == OPERATOR)
+    {
+        struct operator_node *op = node->node;
+        rc = exec_op(op);
+    }
+     return rc;
 }
+
+/*
+    IF EXEC
+*/
+
+int exec_if(struct shell_command_node *shell)
+{
+    int rc = 0;
+    int condition = 0;
+    struct condition_if_node *if_node = shell->node;
+    if(if_node->condition_c)
+        condition = ast_exec(if_node->condition_c);      
+    if(if_node->then_action && !condition)
+        rc = ast_exec(if_node->then_action);
+    if(if_node->else_action && condition )
+        rc = ast_exec(if_node->else_action);
+
+    return rc;
+
+}
+
+
 

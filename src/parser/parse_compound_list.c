@@ -30,19 +30,10 @@ static struct ast *apply_operator_compound(struct ast *res, struct ast *left, st
 {
     if (op && (op->type == TOKEN_SEMICOLON || op->type == TOKEN_NEWLINE))
         res = build_operator_node(SEMICOLON, left, right);
-
-    token_free(op);
+    
+    //token_free(op); TODO
     return res;
 }
-
-static int is_at_end(struct token *token)
-{
-    enum TokenType type = token->type;
-    int rc = type == TOKEN_THEN || type == TOKEN_ELIF || type == TOKEN_ELSE || type == TOKEN_FI;
-
-    return rc;
-}
-
 
 static struct token *consume(struct lexer *lexer)
 {
@@ -60,22 +51,25 @@ struct ast *parse_compound_list(struct lexer *lexer, struct parser *parser)
 
     struct ast *list = NULL;
     struct token *token = lexer_peek(lexer);
-    while(!is_at_end(token))
+
+    while(token->type != TOKEN_THEN && token->type != TOKEN_ELIF && token->type != TOKEN_ELSE & token->type != TOKEN_FI)
     {
         if (token->type != TOKEN_SEMICOLON && token->type != TOKEN_NEWLINE)
             return NULL;
-
+            
         struct token *copy = consume(lexer);
         token = lexer_peek(lexer);
-        if(is_at_end(token))
+        if(token->type == TOKEN_THEN || token->type == TOKEN_ELIF || token->type == TOKEN_ELSE || token->type == TOKEN_FI)
         {
+
             ast = apply_operator_compound(ast,ast, NULL, copy);
             break;
         }
         list = parse_and_or(lexer, parser);
         if(!list)
         {
-            token_free(copy);
+         
+          //  token_free(copy);
             return list;
         }
         ast_append(parser->nodes, list);

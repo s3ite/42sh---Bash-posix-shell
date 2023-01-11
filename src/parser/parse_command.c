@@ -1,7 +1,6 @@
 #include "parser.h"
 
 
-
 /*
  ** Name: parse_command
  ** Description: parse command
@@ -15,14 +14,18 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser)
     if(token->type == TOKEN_IF)
     {
         res = parse_shell_command(lexer,parser);
+        if(!res)
+            printf("%s\n", "parse_command null");
     }
     else if(token->type == WORD)
     {
         res = add_simple_commande(lexer,parser);
-
+        if(!res)
+            printf("%s\n", "add_simple_commande null");
     }
+    
+      if(!res)
+            printf("%s\n", "parse_command  end null");
     return res;
 
 }
-
-

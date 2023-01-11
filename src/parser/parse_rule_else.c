@@ -18,10 +18,10 @@ struct ast *parse_rule_else(struct lexer *lexer, struct parser *parser)
     {
         ast = build_shell_command_node(IF);
         ast_append(parser->nodes, ast);
-        ast = parse_rule_if(lexer,parser, ast);
+        ast = parse_rule_elif(lexer,parser, ast);
         if(!ast)
             return NULL;
     }
-    return NULL;
+    return ast;
 
 }
