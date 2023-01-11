@@ -52,10 +52,9 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 
 void node_free(struct ast_node *nodes)
 {
-    if (nodes->next != NULL)
-    {
-        node_free(nodes->next);
-    }
+    if (!nodes)
+        return;
+    node_free(nodes->next);
     ast_free(nodes->ast);
     free(nodes);
 
@@ -78,9 +77,8 @@ void ast_free(struct ast *ast)
         struct operator_node *op = ast->node;
         if (op->right != NULL)
             ast_free(op->right);
-        if (op->left != NULL)
-            ast_free(op->left);
     }
+    free(ast);
 }
 
 void parser_free(struct parser *parser)
@@ -88,5 +86,6 @@ void parser_free(struct parser *parser)
     printf("Hit\n");
     //ast_free(parser->ast);
     node_free(parser->nodes);
+    free(parser);
 
 }
