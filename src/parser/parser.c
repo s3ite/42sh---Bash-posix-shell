@@ -31,7 +31,7 @@ int parse(struct lexer *lexer)
 
 
     // representing the ast
-    print_ast( parser);
+   // print_ast( parser);
     
 
    // parser_destroy(parser);
