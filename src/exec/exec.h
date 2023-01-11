@@ -10,6 +10,8 @@
 #include "../ast/ast.h"
 #include "../parser/parser.h"
 #include "../lexer/lexer.h"
+#include "../built_in/built_in.h"
+
 
 int run_command(char **cmd);
 

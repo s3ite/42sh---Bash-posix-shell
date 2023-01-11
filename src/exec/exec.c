@@ -70,18 +70,56 @@ static char **to_command(struct dlist *prefix,struct dlist *values)
 
 }
 
+static size_t get_cmd_size(char **cmd)
+{
+    size_t size = 0;
+    while(cmd[size])
+        size++;
+    return size;
+}
+
+static int run_buildin(char **cmd)
+{
+    char *name = cmd[0];
+    int size = get_cmd_size(cmd);
+    if(strcmp("echo", name) == 0)
+    {   
+        my_echo(cmd,size,0);
+        return 1;
+    }
+    return 0;
+
+}
+
+static int is_buildin(char **cmd)
+{
+    char *name = cmd[0];
+    if(strcmp("echo", name) == 0)
+        return 1;
+    return 0;
+}
+
+
 static int simple_cmd_exec(struct ast *ast)
 {
 
     struct simple_command_node *cmd_nbode = ast->node;
-   
     struct dlist *prefix = cmd_nbode->prefix;
     struct dlist *values = cmd_nbode->values;
 
     char **cmd = to_command(prefix, values);
+    int rc = 0;//run_buildin(cmd);
 
-    int rc = 125;
-    rc = run_command(cmd);
+    if(is_buildin(cmd))
+    {
+        run_buildin(cmd);
+        free_cmd(cmd);
+        return 0;
+    }
+    else{
+        rc = run_command(cmd);
+    }
+
     free_cmd(cmd);
 
     return rc;
