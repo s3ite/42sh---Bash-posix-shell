@@ -7,5 +7,6 @@ int my_true(void);
 int my_false(void);
 
 void my_exit(struct parser *parser);
+void my_unset(void);
 
 #endif
