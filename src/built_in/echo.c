@@ -4,85 +4,87 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-void my_echo (struct simple_command_node simple_commande)
+#include "built_in.h"
+
+int my_echo(char **cmd, size_t arg_number, size_t index)
 {
-	struct str_list pref = simple_commande->prefix->head;
-	struct str_list val = simple_commande->values->head;
-	bool newline = true;
-  	bool escape = false;
-
-	if (pref->head->next != NULL)
-	{
-		if (strcmp(pref->next->value, "-n") == 0)
-		{
-			newline = false;
-		}
-		else if (strcmp(pref->next->value, "-e") == 0)
-		{
-			escape = true;
-		}
-		else if (strcmp(pref->next->value = "-E") == 0)
-		{
-			escape = false;
-		}
-	}
-	while (val->next != NULL)
-	{
-		fputs(val->value,stdout);
-		fputc(" ",stdout);
-	}
-	if (newline)
-	{
-		fputc(' ');
-	}
-}
-
-
-
-
-
-
-
-
-void echo(int argc, char *argv[]) {
-  bool newline = true;
-  bool escape = false;
-
-  for (int i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "-n") == 0) {
-      newline = false;
-    } else if (strcmp(argv[i], "-e") == 0) {
-      escape = true;
-    } else if (strcmp(argv[i], "-E") == 0) {
-      escape = false;
-    } else {
-      for (int j = 0; argv[i][j] != '\0'; j++) {
-        char ch = argv[i][j];
-        if (escape && ch == '\\') {
-          char next = argv[i][j + 1];
-          if (next == 'n') {
-            putchar('\n');
-            j++;
-          } else if (next == 't') {
-            putchar('\t');
-            j++;
-          } else {
-            putchar(ch);
-          }
-        } else {
-          putchar(ch);
+    int flag_e = 0;
+    int flag_n = 0;
+    size_t i = index + 1;
+    while (i < arg_number)
+    {
+        if (!strcmp("-n", cmd[i]))
+        {
+            flag_n = 1;
         }
-      }
-      putchar(' ');
+        else if (!strcmp("-e", cmd[i]))
+        {
+            flag_e = 1;
+        }
+        else if (!strcmp("-ne", cmd[i]))
+        {
+            flag_e = 1;
+            flag_n = 1;
+        }
+        else if (!strcmp("-en", cmd[i]))
+        {
+            flag_e = 1;
+            flag_n = 1;
+        }
+        else
+        {
+            break;
+        }
+        i++;
     }
-  }
-
-  if (newline) {
-    putchar('\n');
-  }
-}
-
-int main(int argc, char *argv[]) {
-  echo(argc, argv);
-  return 0;
+    size_t start = i;
+    while (i < arg_number)
+    {
+        if (i != start)
+        {
+            putchar(' ');
+        }
+        if (!flag_e)
+        {
+            printf("%s", cmd[i]);
+        }
+        else
+        {
+            for (size_t j = 0; cmd[i][j]; j++)
+            {
+                if (cmd[i][j] == '\\' && cmd[i][j + 1])
+                {
+                    if (cmd[i][j + 1] == 'n')
+                    {
+                        putchar('\n');
+                        j++;
+                    }
+                    else if (cmd[i][j + 1] == 't')
+                    {
+                        putchar('\t');
+                        j++;
+                    }
+                    else if (cmd[i][j + 1] == '\\')
+                    {
+                        printf("\\");
+                        j++;
+                    }
+                    else
+                    {
+                        putchar('\\');
+                    }
+                }
+                else
+                {
+                    putchar(cmd[i][j]);
+                }
+            }
+        }
+        i++;
+    }
+    if (!flag_n)
+    {
+        putchar('\n');
+    }
+    return 0;
 }
