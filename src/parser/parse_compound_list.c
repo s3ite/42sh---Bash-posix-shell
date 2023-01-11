@@ -68,10 +68,7 @@ struct ast *parse_compound_list(struct lexer *lexer, struct parser *parser)
         }
         list = parse_and_or(lexer, parser);
         if (!list)
-        {
-            //  token_free(copy);
             return list;
-        }
         ast_append(parser->nodes, list);
         ast = apply_operator_compound(ast, ast, list, copy);
         ast_append(parser->nodes, ast);
