@@ -22,7 +22,11 @@ int main(int argc, char **argv)
             lexer_destroy(lexer);
             free(input);
             if(rc == RC_ERROR)
+            {
+                free(str);
                 return RC_ERROR;
+            }
+            free(str);
         }
     }
 
