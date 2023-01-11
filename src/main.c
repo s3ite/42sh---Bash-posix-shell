@@ -15,13 +15,13 @@ int main(int argc, char **argv)
             fgets(str, 1024, stdin);
             str[strlen(str) - 1] = '\0';
 
-            struct lexer *lexer = lexer_init(10, input);
-            lexer = lexer_load(input, lexer);
+            struct lexer *lexer = lexer_init(10, str);
+            lexer = lexer_load(str, lexer);
             lexer_print(lexer);
-            // int rc = parse(lexer);
+            int rc = parse(lexer);
             lexer_destroy(lexer);
-            // if(rc == RC_ERROR)
-            // return RC_ERROR;
+            if(rc == RC_ERROR)
+             return RC_ERROR;
         }
     }
 
