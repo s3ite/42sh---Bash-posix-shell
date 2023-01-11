@@ -70,8 +70,9 @@ void ast_free(struct ast *ast)
     }
     if (ast && ast->node_type == SHELL_COMMAND)
     {
-        //struct condition_if_node *con = ast->node;
-        //TODO
+        struct shell_command_node *node  = ast->node;
+        free(node->node);
+        free(ast->node);
     }
     if (ast && ast->node_type == OPERATOR)
     {
