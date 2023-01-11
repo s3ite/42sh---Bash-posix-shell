@@ -2,7 +2,7 @@
 
 #include "parser.h"
 
-static struct ast *apply_operator(enum operator_type type, struct ast *left,
+static struct ast *build_operator_node(enum operator_type type, struct ast *left,
                                   struct ast *right)
 {
     struct ast *ast = malloc(sizeof(struct ast));
@@ -17,13 +17,6 @@ static struct ast *apply_operator(enum operator_type type, struct ast *left,
     return ast;
 }
 
-static struct ast *apply_operator_list(struct ast *res, struct ast *left,
-                                       struct ast *right, struct token *op)
-{
-    if (op && op->type == TOKEN_SEMICOLON)
-        res = apply_operator(SEMICOLON, left, right);
-    return res;
-}
 
 struct ast *parse_list(struct lexer *lexer, struct parser *parser)
 {
@@ -50,14 +43,13 @@ struct ast *parse_list(struct lexer *lexer, struct parser *parser)
                 return right;
             }
         }
-        res = apply_operator_list(res, res, right, op);
+        if (op && op->type == TOKEN_SEMICOLON)
+                res = build_operator_node(SEMICOLON, res, right);
+
         ast_append(parser->nodes, res);
         token = lexer_peek(lexer);
         token_free(op);
     }
     token = lexer_peek(lexer);
-    if (!token || (token->type != TOKEN_EOF && token->type != TOKEN_NEWLINE))
-        printf("%s\n", "bad terminaison");
-
     return res;
 }

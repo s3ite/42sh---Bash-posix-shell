@@ -3,12 +3,10 @@
 struct ast *parse_condition(struct lexer *lexer, struct parser *parser,
                             enum TokenType type)
 {
-    struct token *token = lexer_peek(lexer);
-    if (token->type != type)
-        printf("%s got %u but %u\n",
-               "Debug: Token type is different in parse_if: ", token->type,
-               type);
-
+    //struct token *token = lexer_peek(lexer);
+    if(!type)
+        return NULL;
+ 
     lexer_pop(lexer);
     struct ast *ast = parse_compound_list(lexer, parser);
     if (!ast)
