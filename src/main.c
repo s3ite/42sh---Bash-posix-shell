@@ -38,5 +38,5 @@ int main(int argc, char **argv)
     if(rc == RC_ERROR)
         return RC_ERROR;
 
-    return 1;
+    return 0;
 }

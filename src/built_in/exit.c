@@ -2,8 +2,8 @@
 
 #include <signal.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #include "built_in.h"
 
@@ -18,7 +18,7 @@ void my_exit(struct parser *parser)
     // on recupere le pid de l'instance actuelle
     pid_t shell_pid = getppid();
 
-    //catch des signaux et cleanup des donnnees / trap
+    // catch des signaux et cleanup des donnnees / trap
     signal(SIGINT, SIG_IGN);
     signal(SIGTERM, SIG_IGN);
     cleanupData(parser);

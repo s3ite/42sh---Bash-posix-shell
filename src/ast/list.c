@@ -1,7 +1,7 @@
 #include "list.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-
 
 struct dlist *dlist_init(void)
 {
@@ -13,7 +13,7 @@ struct dlist *dlist_init(void)
     return head;
 }
 
-int dlist_push_front(struct dlist *list, char* data)
+int dlist_push_front(struct dlist *list, char *data)
 {
     if (!data)
         return 0;
@@ -42,7 +42,6 @@ int dlist_push_front(struct dlist *list, char* data)
     list->size = dlist_size(list);
     return 1;
 }
-
 
 int dlist_push_back(struct dlist *list, char *data)
 {
@@ -75,7 +74,6 @@ int dlist_push_back(struct dlist *list, char *data)
     return 1;
 }
 
-
 size_t dlist_size(const struct dlist *list)
 {
     if (!list)
@@ -90,7 +88,6 @@ size_t dlist_size(const struct dlist *list)
     free(head);
     return res;
 }
-
 
 void dlist_print(const struct dlist *list)
 {

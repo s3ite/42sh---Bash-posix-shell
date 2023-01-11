@@ -1,9 +1,9 @@
+#include "lexer.h"
+
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stddef.h>
 #include <string.h>
-
-#include "lexer.h"
 
 struct lexer *lexer_init(size_t n, char *input)
 {
@@ -16,22 +16,23 @@ struct lexer *lexer_init(size_t n, char *input)
     v->capacity = n;
     v->size = 0;
     v->data = array;
-    v->input=input;
-    v->index=0;
+    v->input = input;
+    v->index = 0;
     return v;
 }
 
 void lexer_destroy(struct lexer *v)
 {
-    for(size_t i = 0; i<v->size;i++)
+    for (size_t i = 0; i < v->size; i++)
     {
-        if(v->data[i]->type == WORD)
+        if (v->data[i]->type == WORD)
         {
             free(v->data[i]->value);
         }
         free(v->data[i]);
     }
-    //free(v->input);  //mettre en commentaire si l'input du lexer est statique(test)
+    // free(v->input);  //mettre en commentaire si l'input du lexer est
+    // statique(test)
     free(v->data);
     free(v);
 }
@@ -59,7 +60,6 @@ struct lexer *lexer_resize(struct lexer *v, size_t n)
     return v;
 }
 
-
 struct lexer *lexer_append(struct lexer *v, struct token *elt)
 {
     if (v == NULL)
@@ -73,16 +73,16 @@ struct lexer *lexer_append(struct lexer *v, struct token *elt)
 
 void lexer_print(struct lexer *v)
 {
-    printf("input is: %s\n",v->input);
+    printf("input is: %s\n", v->input);
     printf("token list is: ");
-    for(size_t i = 0; i<v->size;i++)
+    for (size_t i = 0; i < v->size; i++)
     {
-        printf("%s ",v->data[i]->value);
+        printf("%s ", v->data[i]->value);
     }
     printf("\ntokentype list is: ");
-    for(size_t i = 0; i<v->size;i++)
+    for (size_t i = 0; i < v->size; i++)
     {
-        printf("%d ",(enum TokenType) v->data[i]->type);
+        printf("%d ", (enum TokenType)v->data[i]->type);
     }
     printf("\n");
 }
@@ -155,14 +155,14 @@ struct token *lexer_peek(struct lexer *v)
 struct token *lexer_pop(struct lexer *v)
 {
     struct token *ret = v->data[v->index];
-    v->index+=1;
+    v->index += 1;
     return ret;
 }
 
 struct token *token_init(char *value, enum TokenType type)
 {
     struct token *ret = ret = malloc(sizeof(struct token));
-    if(!ret)
+    if (!ret)
     {
         return NULL;
     }
@@ -174,45 +174,45 @@ struct token *token_init(char *value, enum TokenType type)
 int in(char c, char *delim)
 {
     size_t i = 0;
-    while(delim[i]!='\0' && delim[i]!=c)
+    while (delim[i] != '\0' && delim[i] != c)
     {
         i++;
     }
-    return (delim[i]==c || c=='\0');
+    return (delim[i] == c || c == '\0');
 }
 
-struct lexer *lexer_load (char *input, struct lexer *res)
+struct lexer *lexer_load(char *input, struct lexer *res)
 {
     int i = 0;
-    while(input[i] != '\0')
+    while (input[i] != '\0')
     {
-        if(strncmp(input + i,"#",1) == 0)
+        if (strncmp(input + i, "#", 1) == 0)
         {
-            while(*(input + i) != '\0' && *(input + i) != '\n')
+            while (*(input + i) != '\0' && *(input + i) != '\n')
             {
                 i++;
             }
         }
-        if(strncmp(input + i,";",1) == 0)
+        if (strncmp(input + i, ";", 1) == 0)
         {
             struct token *tok = token_init(";", TOKEN_SEMICOLON);
             res = lexer_append(res, tok);
             i += 1;
         }
-        else if(strncmp(input + i,"'",1) == 0)
+        else if (strncmp(input + i, "'", 1) == 0)
         {
             int j = 1;
-            while(*(input + i + j) != '\0' && *(input + i + j) != '\'')
+            while (*(input + i + j) != '\0' && *(input + i + j) != '\'')
             {
                 j++;
             }
-            if(*(input + i + j) == '\0')
+            if (*(input + i + j) == '\0')
             {
                 return NULL;
             }
             char *value = malloc(j + 1);
             strncpy(value, input + i + 1, j - 1);
-            if(j > 0)
+            if (j > 0)
             {
                 value[j - 1] = '\0';
             }
@@ -220,52 +220,58 @@ struct lexer *lexer_load (char *input, struct lexer *res)
             res = lexer_append(res, tok);
             i += j + 1;
         }
-        else if(strncmp(input + i,"\n",1) == 0)
+        else if (strncmp(input + i, "\n", 1) == 0)
         {
             struct token *tok = token_init("\n", TOKEN_NEWLINE);
             res = lexer_append(res, tok);
             i += 1;
         }
-        else if(strncmp(input + i,"if",2) == 0  && in(input[i+2]," \t\n;"))
+        else if (strncmp(input + i, "if", 2) == 0 && in(input[i + 2], " \t\n;"))
         {
             struct token *tok = token_init("if", TOKEN_IF);
             res = lexer_append(res, tok);
             i += 2;
         }
-        else if(strncmp(input + i,"fi",2) == 0  && in(input[i+2]," \t\n;"))
+        else if (strncmp(input + i, "fi", 2) == 0 && in(input[i + 2], " \t\n;"))
         {
             struct token *tok = token_init("fi", TOKEN_FI);
             res = lexer_append(res, tok);
             i += 2;
         }
-        else if(strncmp(input + i,"then",4) == 0  && in(input[i+4]," \t\n;"))
+        else if (strncmp(input + i, "then", 4) == 0
+                 && in(input[i + 4], " \t\n;"))
         {
             struct token *tok = token_init("then", TOKEN_THEN);
             res = lexer_append(res, tok);
             i += 4;
         }
-        else if(strncmp(input + i,"else",4) == 0  && in(input[i+4]," \t\n;"))
+        else if (strncmp(input + i, "else", 4) == 0
+                 && in(input[i + 4], " \t\n;"))
         {
             struct token *tok = token_init("else", TOKEN_ELSE);
             res = lexer_append(res, tok);
             i += 4;
         }
-        else if(strncmp(input + i,"elif",4) == 0  && in(input[i+4]," \t\n;"))
+        else if (strncmp(input + i, "elif", 4) == 0
+                 && in(input[i + 4], " \t\n;"))
         {
             struct token *tok = token_init("elif", TOKEN_ELIF);
             res = lexer_append(res, tok);
             i += 4;
         }
-        else if(!in(input[i]," \t"))
+        else if (!in(input[i], " \t"))
         {
             int j = 0;
-            while(!in(input[i + j],"; \t\n")) //*(input + i + j) != ';' && *(input + i + j) != '\n' && *(input + i + j) != ' ' && *(input + i + j) != '\0' 
+            while (!in(input[i + j],
+                       "; \t\n")) //*(input + i + j) != ';' && *(input + i + j)
+                                  //!= '\n' && *(input + i + j) != ' ' &&
+                                  //*(input + i + j) != '\0'
             {
                 j++;
             }
             char *value = malloc(j + 1);
             strncpy(value, input + i, j);
-            if(j > 0)
+            if (j > 0)
             {
                 value[j] = '\0';
             }
@@ -282,7 +288,6 @@ struct lexer *lexer_load (char *input, struct lexer *res)
     res = lexer_append(res, tok);
     return res;
 }
-
 
 /*int main(int argc,char **argv)
 {
