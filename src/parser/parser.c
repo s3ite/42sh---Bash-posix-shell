@@ -23,14 +23,12 @@ int parse(struct lexer *lexer)
 
     int rc = parse_input(lexer, parser);
 
-    if (rc == RC_ERROR) // TODO: Free all structures to avoid memory leak. Then
-                        // return error code.
+    if (rc == RC_ERROR) // TODO: Free all structures to avoid memory leak. Then// return error code.
         return RC_ERROR;
 
     ast_exec(parser->ast);
 
-    // representing the ast
-  //  print_ast_bis( parser->ast);
+   
 
     parser_free(parser);
 
@@ -47,7 +45,6 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 {
     return parse_command(lexer, parser);
 }
-
 
 
 void node_free(struct ast_node *nodes)

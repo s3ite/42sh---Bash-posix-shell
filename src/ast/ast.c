@@ -9,9 +9,7 @@
 void ast_append(struct ast_node *list, struct ast *ast)
 {
     if (!list->ast && !list->next)
-    {
         list->ast = ast;
-    }
     else
     {
         while (list)

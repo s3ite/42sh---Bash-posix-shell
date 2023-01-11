@@ -5,7 +5,7 @@ int run_command(char **cmd)
     pid_t childID = fork();
     if (childID == -1)
         return 0;
-    if (childID == 0)
+    if (!childID)
     {
         execvp(cmd[0], cmd);
         exit(1);
@@ -59,12 +59,6 @@ static char **to_command(struct dlist *prefix, struct dlist *values)
         tmp2 = tmp2->next;
     }
 
-    /* printf("%s:", "Commande");
-     for(size_t k = 0; k < size; k++)
-     {
-         printf("%s ", cmd[k]);
-     }
-     printf("\n");*/
     cmd[size] = NULL;
     return cmd;
 }

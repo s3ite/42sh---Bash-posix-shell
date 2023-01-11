@@ -46,24 +46,15 @@ struct simple_command_node *parse_simple_commande(struct lexer *lexer,
         lexer_pop(lexer);
         next_token = lexer_peek(lexer);
         if (next_token->type != WORD)
-        {
             break;
-        }
         else
-        {
             dlist_push_back(values, next_token->value);
-        }
     }
 
     struct simple_command_node *simple_command =
         malloc(sizeof(struct simple_command_node));
     simple_command->prefix = prefix;
     simple_command->values = values;
-
-    // printf("prefix\n");
-    // dlist_print(simple_command->prefix);
-    // printf("values\n");
-    // dlist_print(simple_command->values);
 
     return simple_command;
 }
