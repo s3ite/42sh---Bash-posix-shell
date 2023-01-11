@@ -9,12 +9,24 @@ int main(int argc, char **argv)
     char *input = parse_command_line(argc,argv);
     if(!input)
     {
-        return 1;
+        while(1)
+        {
+            char *str=malloc(1024);
+            printf( "42sh$ :");
+            fgets( str, 1024,stdin );
+            str[strlen(str)-1]='\0';
+
+            struct lexer *lexer = lexer_init(10, input);
+            lexer = lexer_load(input, lexer);
+            int rc = parse(lexer);
+            lexer_destroy(lexer);
+            if(rc == RC_ERROR)
+                return RC_ERROR;
+        }
     }
 
     struct lexer *lexer = lexer_init(10, input);
     lexer = lexer_load(input, lexer);
-
 
     int rc = parse(lexer);
     
