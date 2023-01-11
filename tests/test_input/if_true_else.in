@@ -1,0 +1,1 @@
+if true; then echo bonjour; else echo will never be printed; fi

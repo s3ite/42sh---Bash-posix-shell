@@ -6,22 +6,21 @@ struct ast *parse_rule_else(struct lexer *lexer, struct parser *parser)
 
     struct ast *ast = NULL;
 
-    if(token->type == TOKEN_ELSE)
+    if (token->type == TOKEN_ELSE)
     {
         lexer_pop(lexer);
         ast = parse_compound_list(lexer, parser);
-        if(!ast)
+        if (!ast)
             return ast;
-        ast_append(parser->nodes,ast);
+        ast_append(parser->nodes, ast);
     }
-    else if(token->type == TOKEN_ELIF)
+    else if (token->type == TOKEN_ELIF)
     {
         ast = build_shell_command_node(IF);
         ast_append(parser->nodes, ast);
-        ast = parse_rule_elif(lexer,parser, ast);
-        if(!ast)
+        ast = parse_rule_elif(lexer, parser, ast);
+        if (!ast)
             return NULL;
     }
     return ast;
-
 }

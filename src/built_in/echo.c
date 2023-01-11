@@ -1,9 +1,8 @@
-#include "../ast/ast.h"
-
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
+#include "../ast/ast.h"
 #include "built_in.h"
 
 int my_echo(char **cmd, size_t arg_number, size_t index)

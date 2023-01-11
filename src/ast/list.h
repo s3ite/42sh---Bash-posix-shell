@@ -6,17 +6,16 @@
 
 struct dlist
 {
-    struct dlist_item *head; 
+    struct dlist_item *head;
     struct dlist_item *tail;
     size_t size;
-
 };
 
-struct dlist_item 
+struct dlist_item
 {
-    char *value; 
-    struct dlist_item *next; 
-    struct dlist_item *prev; 
+    char *value;
+    struct dlist_item *next;
+    struct dlist_item *prev;
     int quote;
 };
 

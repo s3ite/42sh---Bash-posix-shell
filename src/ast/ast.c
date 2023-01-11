@@ -1,6 +1,5 @@
 #include "ast.h"
 
-
 /*
  ** Name: ast_append
  ** Description: append ast node to a given ast
@@ -9,17 +8,17 @@
  */
 void ast_append(struct ast_node *list, struct ast *ast)
 {
-    if(!list->ast && ! list->next)
+    if (!list->ast && !list->next)
     {
         list->ast = ast;
     }
     else
     {
-        while(list)
+        while (list)
         {
             if (list->ast == ast)
                 return;
-            if(!list->next)
+            if (!list->next)
                 break;
             list = list->next;
         }
@@ -31,8 +30,6 @@ void ast_append(struct ast_node *list, struct ast *ast)
     }
 }
 
-
-
 struct ast_node *ast_list_init()
 {
     struct ast_node *res = malloc(sizeof(struct ast_node));
@@ -42,4 +39,3 @@ struct ast_node *ast_list_init()
 
     return res;
 }
-

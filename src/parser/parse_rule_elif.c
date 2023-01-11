@@ -1,11 +1,9 @@
 #include "parser.h"
 
-
-
-
-struct ast *parse_rule_elif(struct lexer *lexer, struct parser *parser, struct ast *prev_ast)
+struct ast *parse_rule_elif(struct lexer *lexer, struct parser *parser,
+                            struct ast *prev_ast)
 {
-   struct ast *condition = parse_condition(lexer, parser, TOKEN_ELIF);
+    struct ast *condition = parse_condition(lexer, parser, TOKEN_ELIF);
     if (!condition)
         return NULL;
 
@@ -33,5 +31,4 @@ struct ast *parse_rule_elif(struct lexer *lexer, struct parser *parser, struct a
     struct shell_command_node *shell_cmd = prev_ast->node;
     shell_cmd->node = node;
     return prev_ast;
-
 }
