@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(42sh)
+project(42sh VERSION 1.0.0 LANGUAGES C)
 
 include_directories(src)
 add_compile_options(-std=c99)
@@ -54,4 +54,5 @@ src/others/tools.c
 src/others/tools.h
 
 src/main.c
+
 )

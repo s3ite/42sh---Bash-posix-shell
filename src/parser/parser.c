@@ -30,7 +30,7 @@ int parse(struct lexer *lexer)
     ast_exec(parser->ast);
 
     // representing the ast
-    print_ast_bis( parser->ast);
+  //  print_ast_bis( parser->ast);
 
     parser_free(parser);
 
@@ -62,7 +62,6 @@ void node_free(struct ast_node *nodes)
 
 void ast_free(struct ast *ast)
 {
-    printf("Ast type free : %d\n",ast->node_type);
     if (ast && ast->node_type == SIMPLE_COMMAND)
     {
          free_ast_simple_command(ast);
@@ -86,7 +85,6 @@ void ast_free(struct ast *ast)
 
 void parser_free(struct parser *parser)
 {
-    printf("Hit\n");
     //ast_free(parser->ast);
     node_free(parser->nodes);
     free(parser);

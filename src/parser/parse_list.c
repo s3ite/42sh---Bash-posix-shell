@@ -44,7 +44,8 @@ struct ast *parse_list(struct lexer *lexer, struct parser *parser)
         if (token && token->type != TOKEN_EOF && token->type != TOKEN_NEWLINE)
         {
             right = parse_and_or(lexer, parser);
-            if (!right){
+            if (!right)
+            {
                 token_free(op);
                 return right;
             }
