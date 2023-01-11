@@ -26,7 +26,7 @@ class TestCase:
 def diff(expected : str, actual : str) -> str:
     expected_lines = expected.splitlines(keepends=True)
     actual_lines = actual.splitlines(keepends=True)
-    return ''.join(unified_diff(expected_lines, actual_lines, fromfile="actual", tofile="expected"))
+    return ''.join(unified_diff(expected_lines, actual_lines, fromfile="expected", tofile="actual"))
 
 def run_shell(shell : str, test : str) -> subprocess.CompletedProcess:
     return subprocess.run([shell, test], capture_output=True, text=True)
@@ -66,4 +66,4 @@ if __name__ == "__main__":
             print(f"{OK_TAG} {file}")
             pass
         
-        print("\n\t===================================\t")
+        print("\t===================================\t\n")

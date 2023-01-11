@@ -6,7 +6,7 @@
 #include "built_in.h"
 
 int my_echo(char **cmd, size_t arg_number, size_t index)
-{
+{       
     int flag_e = 0;
     int flag_n = 0;
     size_t i = index + 1;
@@ -20,22 +20,27 @@ int my_echo(char **cmd, size_t arg_number, size_t index)
         {
             flag_e = 1;
         }
-        else if (!strcmp("-ne", cmd[i]))
+        else if (!strcmp("-ne", cmd[i]) || !strcmp("-en", cmd[i]))
         {
             flag_e = 1;
             flag_n = 1;
         }
-        else if (!strcmp("-en", cmd[i]))
+        else if (!strcmp("-E", cmd[i]))
+            flag_e = 0;
+        
+        else if (!strcmp("-nE", cmd[i]) || !strcmp("-En", cmd[i]))
         {
-            flag_e = 1;
-            flag_n = 1;
+                flag_n = 1;
+                flag_e = 0;
         }
+
         else
         {
             break;
         }
         i++;
     }
+
     size_t start = i;
     while (i < arg_number)
     {
@@ -81,6 +86,7 @@ int my_echo(char **cmd, size_t arg_number, size_t index)
         }
         i++;
     }
+
     if (!flag_n)
     {
         putchar('\n');

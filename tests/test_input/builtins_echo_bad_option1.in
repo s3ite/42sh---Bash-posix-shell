@@ -1,1 +1,1 @@
-echo -z "bonjour"
+echo -z bonjour
