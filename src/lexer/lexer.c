@@ -171,6 +171,12 @@ struct token *token_init(char *value, enum TokenType type)
     return ret;
 }
 
+void token_free(struct token *token)
+{
+    free(token->value);
+    free(token);
+}
+
 int in(char c, char *delim)
 {
     size_t i = 0;

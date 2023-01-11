@@ -44,12 +44,15 @@ struct ast *parse_list(struct lexer *lexer, struct parser *parser)
         if (token && token->type != TOKEN_EOF && token->type != TOKEN_NEWLINE)
         {
             right = parse_and_or(lexer, parser);
-            if (!right)
+            if (!right){
+                token_free(op);
                 return right;
+            }
         }
         res = apply_operator_list(res, res, right, op);
         ast_append(parser->nodes, res);
         token = lexer_peek(lexer);
+        token_free(op);
     }
     token = lexer_peek(lexer);
     if (!token || (token->type != TOKEN_EOF && token->type != TOKEN_NEWLINE))
