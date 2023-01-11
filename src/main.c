@@ -11,7 +11,7 @@ int main(int argc, char **argv)
         while (1)
         {
             char *str = malloc(1024);
-            printf("42sh$ :");
+            printf("42sh$ ");
             fgets(str, 1024, stdin);
             str[strlen(str) - 1] = '\0';
 
