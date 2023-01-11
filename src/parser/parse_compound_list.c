@@ -52,7 +52,7 @@ struct ast *parse_compound_list(struct lexer *lexer, struct parser *parser)
     struct ast *list = NULL;
     struct token *token = lexer_peek(lexer);
 
-    while(token->type != TOKEN_THEN && token->type != TOKEN_ELIF && token->type != TOKEN_ELSE & token->type != TOKEN_FI)
+    while(token->type != TOKEN_THEN && token->type != TOKEN_ELIF && token->type != TOKEN_ELSE && token->type != TOKEN_FI)
     {
         if (token->type != TOKEN_SEMICOLON && token->type != TOKEN_NEWLINE)
             return NULL;
