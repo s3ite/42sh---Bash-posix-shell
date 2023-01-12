@@ -76,6 +76,9 @@ void ast_free(struct ast *ast)
     free(ast);
 }
 
+/**
+ * Free the parser structure
+*/
 void parser_free(struct parser *parser)
 {
     // ast_free(parser->ast);
