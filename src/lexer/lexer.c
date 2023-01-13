@@ -87,44 +87,6 @@ void lexer_print(struct lexer *v)
     printf("\n");
 }
 
-struct lexer *lexer_reset(struct lexer *v, size_t n)
-{
-    struct lexer *newVect = lexer_resize(v, n);
-    v = newVect;
-    v->size = 0;
-    return v;
-}
-
-void shift(struct token **arr, int index, int size)
-{
-    while (size > index - 1)
-    {
-        arr[size + 1] = arr[size];
-        size--;
-    }
-}
-
-/*struct lexer *lexer_insert(struct lexer *v, size_t i, int elt)
-{
-    if (v == NULL)
-        return NULL;
-    if (i > v->size)
-        return NULL;
-    if (i == v->size)
-        return lexer_append(v, elt);
-    if (v->size >= v->capacity)
-    {
-        struct lexer *tmp = lexer_resize(v, v->capacity * 2);
-        if (!tmp)
-            return NULL;
-        v = tmp;
-    }
-    shift(v->data, i, v->size);
-    v->data[i] = elt;
-    v->size++;
-    return v;
-}*/
-
 static void left_shift(struct token **arr, int index, int size)
 {
     while (index < size - 1)
@@ -192,106 +154,142 @@ int in(char c, char *delim)
     return (delim[i] == c || c == '\0');
 }
 
+int is_redirection(char *str)
+{
+    char *redir_list[6]={">","<","<>",">>",">&","<&"};
+    size_t j = 0;
+    for (j; j < 6; j++)
+    {
+        size_t len_r = strlen(redir_list[j]);
+        if(strncmp(str, redir_list[j], len_r)==0)
+        {
+            break;
+        }
+        j++;
+    }
+    if(j < 6)
+    {
+        return j;
+    }
+    return 0;
+}
+
+enum TokenType get_token_type(char* str)
+{
+    if(str=="")
+    {
+        return TOKEN_EOF;
+    }
+    if(in(str[0]," \t"))
+    {
+        return -1;
+    }
+    char *tok_list[NUM_TOK-2]={"if","then","elif","else","fi","\n","while",";","do","done","until","!"};
+    size_t i=0;
+    if(is_redirection(str))
+    {
+        return TOKEN_REDIRECTION;
+    }
+    while(i<NUM_TOK-2)
+    {
+        size_t len = strlen(tok_list[i]);
+        if(strncmp(str, tok_list[i], len)==0 && in(str[len]," \t\n;'"))
+        {
+            break;
+        }
+        i++;
+    }
+    return (i==NUM_TOK-2)?NUM_TOK-1:i;
+}
+
+int handle_comment(char *input)
+{
+    int i = 0;
+    while (*(input + i) != '\0' && *(input + i) != '\n')
+    {
+        i++;
+    }
+    return i;
+}
+
+struct token *handle_quote(char *input)
+{
+    int j = 1;
+    while (*(input + j) != '\0' && *(input + j) != '\'')
+    {
+        j++;
+    }
+    if (*(input + j) == '\0')
+    {
+        return NULL;
+    }
+    char *value = malloc(j + 1);
+    strncpy(value, input + 1, j - 1);
+    if (j > 0)
+    {
+        value[j - 1] = '\0';
+    }
+    struct token *tok = token_init(value, WORD);
+    return tok;
+}
+
+struct token *handle_word(char *input)
+{
+    int j = 0;
+    while (!in(input[j],"; \t\n'"))
+    {
+        j++;
+    }
+    char *value = malloc(j + 1);
+    strncpy(value, input, j);
+    if (j > 0)
+    {
+        value[j] = '\0';
+    }
+    struct token *tok = token_init(value, WORD);
+    return tok;
+}
+
 struct lexer *lexer_load(char *input, struct lexer *res)
 {
     int i = 0;
     while (input[i] != '\0')
     {
-        if (strncmp(input + i, "#", 1) == 0)
+        if (strncmp(input + i, "#", 1) == 0) //gestion des commentaires
         {
-            while (*(input + i) != '\0' && *(input + i) != '\n')
-            {
-                i++;
-            }
+            i += handle_comment(input + i);
         }
-        if (strncmp(input + i, ";", 1) == 0)
+        else if (strncmp(input + i, "'", 1) == 0) //getsion des singles quotes
         {
-            struct token *tok = token_init(";", TOKEN_SEMICOLON);
-            res = lexer_append(res, tok);
-            i += 1;
-        }
-        else if (strncmp(input + i, "'", 1) == 0)
-        {
-            int j = 1;
-            while (*(input + i + j) != '\0' && *(input + i + j) != '\'')
-            {
-                j++;
-            }
-            if (*(input + i + j) == '\0')
-            {
+            struct token *tok = handle_quote(input + i);
+            if(!tok)
                 return NULL;
-            }
-            char *value = malloc(j + 1);
-            strncpy(value, input + i + 1, j - 1);
-            if (j > 0)
-            {
-                value[j - 1] = '\0';
-            }
-            struct token *tok = token_init(value, WORD);
             res = lexer_append(res, tok);
-            i += j + 1;
-        }
-        else if (strncmp(input + i, "\n", 1) == 0)
-        {
-            struct token *tok = token_init("\n", TOKEN_NEWLINE);
-            res = lexer_append(res, tok);
-            i += 1;
-        }
-        else if (strncmp(input + i, "if", 2) == 0 && in(input[i + 2], " \t\n;"))
-        {
-            struct token *tok = token_init("if", TOKEN_IF);
-            res = lexer_append(res, tok);
-            i += 2;
-        }
-        else if (strncmp(input + i, "fi", 2) == 0 && in(input[i + 2], " \t\n;"))
-        {
-            struct token *tok = token_init("fi", TOKEN_FI);
-            res = lexer_append(res, tok);
-            i += 2;
-        }
-        else if (strncmp(input + i, "then", 4) == 0
-                 && in(input[i + 4], " \t\n;"))
-        {
-            struct token *tok = token_init("then", TOKEN_THEN);
-            res = lexer_append(res, tok);
-            i += 4;
-        }
-        else if (strncmp(input + i, "else", 4) == 0
-                 && in(input[i + 4], " \t\n;"))
-        {
-            struct token *tok = token_init("else", TOKEN_ELSE);
-            res = lexer_append(res, tok);
-            i += 4;
-        }
-        else if (strncmp(input + i, "elif", 4) == 0
-                 && in(input[i + 4], " \t\n;"))
-        {
-            struct token *tok = token_init("elif", TOKEN_ELIF);
-            res = lexer_append(res, tok);
-            i += 4;
-        }
-        else if (!in(input[i], " \t"))
-        {
-            int j = 0;
-            while (!in(input[i + j],
-                       "; \t\n")) //*(input + i + j) != ';' && *(input + i + j)
-                                  //!= '\n' && *(input + i + j) != ' ' &&
-                                  //*(input + i + j) != '\0'
-            {
-                j++;
-            }
-            char *value = malloc(j + 1);
-            strncpy(value, input + i, j);
-            if (j > 0)
-            {
-                value[j] = '\0';
-            }
-            struct token *tok = token_init(value, WORD);
-            res = lexer_append(res, tok);
-            i += j;
+            i += strlen(tok->value) + 2;
         }
         else
         {
+            enum TokenType tok_type = get_token_type(input + i);
+            if(tok_type == WORD) //gestion des words
+            {
+                struct token *tok = handle_word(input + i);
+                res = lexer_append(res, tok);
+                i += strlen(tok->value);
+            }
+            else if (tok_type == TOKEN_REDIRECTION) //gestion des redirections
+            {
+                char *redir_list[6]={">","<","<>",">>",">&","<&"};
+                struct token *tok = token_init(redir_list[is_redirection(input)], TOKEN_REDIRECTION);
+                res = lexer_append(res, tok);
+                i += strlen(redir_list[is_redirection(input)]);
+            }
+            else if (tok_type != -1 && tok_type != TOKEN_EOF)// gestion tokens normaux
+            {
+                char *tok_list[NUM_TOK-2]={"if","then","elif","else","fi","\n","while",";","do","done","until","!"};
+                struct token *tok = token_init(tok_list[tok_type], tok_type);
+                res = lexer_append(res, tok);
+                i += strlen(tok_list[tok_type]);
+            }
             i++;
         }
     }
@@ -306,18 +304,9 @@ struct lexer *lexer_load(char *input, struct lexer *res)
     {
         struct lexer *a=lexer_init(10, argv[1]);
         a=lexer_load(argv[1],a);
-        if(a!=NULL)
-        {
+        if(a)
             lexer_print(a);
-            struct token *t = lexer_peek(a);
-            printf("%s\n",t->value);
-            t=lexer_peek(a);
-            printf("%s\n",t->value);
-            t=lexer_pop(a);
-            printf("%s\n",t->value);
-            t=lexer_peek(a);
-            printf("%s\n",t->value);
-            lexer_destroy(a);
-        }
+        else
+            printf("a est NULL\n");
     }
 }*/
