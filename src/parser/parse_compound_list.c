@@ -73,6 +73,7 @@ struct ast *parse_compound_list(struct lexer *lexer, struct parser *parser)
         ast_append(parser->nodes, list);
         ast = apply_operator_compound(ast, ast, list, copy);
         ast_append(parser->nodes, ast);
+        token = lexer_peek(lexer);
     }
 
     return ast;
