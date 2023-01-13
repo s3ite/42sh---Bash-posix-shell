@@ -61,7 +61,7 @@ void ast_free(struct ast *ast)
 {
     if (ast && ast->node_type == SIMPLE_COMMAND)
     {
-        free_ast_simple_command(ast);
+       free_ast_simple_command(ast);
     }
     if (ast && ast->node_type == SHELL_COMMAND)
     {
