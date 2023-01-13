@@ -6,28 +6,33 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NUM_TOK 17 //nombre de token sans le TOKEN_EOF(pour faciliter l'ajout de token)
+#define NUM_TOK 22 //TO_UPDATE:token
 
 enum TokenType
 {
-    TOKEN_IF = 0,
-    TOKEN_THEN = 1,
-    TOKEN_ELIF = 2,
-    TOKEN_ELSE = 3,
-    TOKEN_FI = 4,
-    TOKEN_NEWLINE = 5,
-    TOKEN_WHILE = 6,
-    TOKEN_SEMICOLON = 7,
-    TOKEN_DO = 8,
-    TOKEN_DONE = 9,
-    TOKEN_UNTIL = 10,
-    TOKEN_NEG = 11,
-    TOKEN_FOR = 12,
-    TOKEN_AND = 13,
-    TOKEN_OR = 14,
-    TOKEN_REDIRECTION = 15,
-    WORD =16,
-    TOKEN_EOF = 17,
+    TOKEN_SEMICOLON,
+    TOKEN_PIPELINE,
+    TOKEN_AND,
+    TOKEN_OR,// ^^^^^^^^token également séparateur^^^^^^^^
+    TOKEN_IF,
+    TOKEN_THEN,
+    TOKEN_ELIF,
+    TOKEN_ELSE,
+    TOKEN_FI,
+    TOKEN_NEWLINE,
+    TOKEN_WHILE,
+    TOKEN_DO,
+    TOKEN_DONE,
+    TOKEN_UNTIL,
+    TOKEN_NEG,
+    TOKEN_FOR,
+    TOKEN_OPEN_ACC,
+    TOKEN_CLOSE_ACC,
+    TOKEN_OPEN_PAR,
+    TOKEN_CLOSE_PAR,
+    TOKEN_REDIRECTION, //garder ces 3 tokens en dernier
+    WORD,
+    TOKEN_EOF,
     
 };
 
