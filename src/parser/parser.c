@@ -37,12 +37,15 @@ int parse(struct lexer *lexer)
 struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
 {
     struct ast *ast = parse_pipeline(lexer, parser);
+    ast_append(parser->nodes,ast);
     return ast;
 }
 
 struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 {
-    return parse_command(lexer, parser);
+    struct ast *ast = parse_command(lexer, parser);
+    ast_append(parser->nodes,ast);
+    return ast;
 }
 
 void node_free(struct ast_node *nodes)
@@ -64,16 +67,15 @@ void ast_free(struct ast *ast)
     {
         struct shell_command_node *node = ast->node;
         free(node->node);
-        free(ast->node);
+        free(node);
     }
     if (ast && ast->node_type == OPERATOR)
     {
         struct operator_node *op = ast->node;
-        if (op->right != NULL)
-            ast_free(op->right);
-        free(ast->node);
+        free(op);
     }
-    free(ast);
+    if(ast)
+        free(ast);
 }
 
 /**
@@ -81,7 +83,8 @@ void ast_free(struct ast *ast)
 */
 void parser_free(struct parser *parser)
 {
-    // ast_free(parser->ast);
+    //ast_free(parser->ast);
     node_free(parser->nodes);
     free(parser);
+
 }
