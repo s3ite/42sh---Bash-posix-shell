@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NUM_TOK 14 //nombre de token sans le TOKEN_EOF(pour faciliter l'ajout de token)
+#define NUM_TOK 17 //nombre de token sans le TOKEN_EOF(pour faciliter l'ajout de token)
 
 enum TokenType
 {
@@ -22,9 +22,12 @@ enum TokenType
     TOKEN_DONE = 9,
     TOKEN_UNTIL = 10,
     TOKEN_NEG = 11,
-    TOKEN_REDIRECTION = 12,
-    WORD = 13,
-    TOKEN_EOF = 14,
+    TOKEN_FOR = 12,
+    TOKEN_AND = 13,
+    TOKEN_OR = 14,
+    TOKEN_REDIRECTION = 15,
+    WORD =16,
+    TOKEN_EOF = 17,
     
 };
 
@@ -48,9 +51,6 @@ void lexer_destroy(struct lexer *v);
 struct lexer *lexer_resize(struct lexer *v, size_t n);
 struct lexer *lexer_append(struct lexer *v, struct token *elt);
 void lexer_print(struct lexer *v);
-struct lexer *lexer_reset(struct lexer *v, size_t n);
-void shift(struct token **arr, int index, int size);
-// struct lexer *lexer_insert(struct lexer *v, size_t i, int elt);
 struct lexer *lexer_remove(struct lexer *v, size_t i);
 struct token *lexer_pop(struct lexer *v);
 struct token *lexer_peek(struct lexer *v);

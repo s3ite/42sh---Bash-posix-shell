@@ -157,7 +157,7 @@ int is_redirection(char *str)
 {
     char *redir_list[6]={">","<","<>",">>",">&","<&"};
     size_t j = 0;
-    for (j; j < 6; j++)
+    for (j=0; j < 6; j++)
     {
         size_t len_r = strlen(redir_list[j]);
         if(strncmp(str, redir_list[j], len_r)==0)
@@ -173,9 +173,9 @@ int is_redirection(char *str)
     return 0;
 }
 
-enum TokenType get_token_type(char* str)
+int get_token_type(char* str)
 {
-    if(str=="")
+    if(strlen(str)==0)
     {
         return TOKEN_EOF;
     }
@@ -183,7 +183,7 @@ enum TokenType get_token_type(char* str)
     {
         return -1;
     }
-    char *tok_list[NUM_TOK-2]={"if","then","elif","else","fi","\n","while",";","do","done","until","!"};
+    char *tok_list[NUM_TOK-2]={"if","then","elif","else","fi","\n","while",";","do","done","until","!","for","&&","||"};
     size_t i=0;
     if(is_redirection(str))
     {
@@ -268,7 +268,7 @@ struct lexer *lexer_load(char *input, struct lexer *res)
         }
         else
         {
-            enum TokenType tok_type = get_token_type(input + i);
+            int tok_type = get_token_type(input + i);
             if(tok_type == WORD) //gestion des words
             {
                 struct token *tok = handle_word(input + i);
@@ -284,12 +284,13 @@ struct lexer *lexer_load(char *input, struct lexer *res)
             }
             else if (tok_type != -1 && tok_type != TOKEN_EOF)// gestion tokens normaux
             {
-                char *tok_list[NUM_TOK-2]={"if","then","elif","else","fi","\n","while",";","do","done","until","!"};
+                char *tok_list[NUM_TOK-2]={"if","then","elif","else","fi","\n","while",";","do","done","until","!","for","&&","||"};
                 struct token *tok = token_init(tok_list[tok_type], tok_type);
                 res = lexer_append(res, tok);
                 i += strlen(tok_list[tok_type]);
             }
-            i++;
+            else
+                i++;
         }
     }
     struct token *tok = token_init("\0", TOKEN_EOF);
@@ -297,7 +298,7 @@ struct lexer *lexer_load(char *input, struct lexer *res)
     return res;
 }
 
-/*int main(int argc,char **argv)
+int main(int argc,char **argv)
 {
     if(argc)
     {
@@ -308,4 +309,4 @@ struct lexer *lexer_load(char *input, struct lexer *res)
         else
             printf("a est NULL\n");
     }
-}*/
+}
