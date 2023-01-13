@@ -102,6 +102,7 @@ enum node_type
     SIMPLE_COMMAND,
     SHELL_COMMAND,
     OPERATOR,
+    REDIRECTION
 };
 
 /**

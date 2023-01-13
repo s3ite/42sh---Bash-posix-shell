@@ -27,6 +27,7 @@ int parse(struct lexer *lexer)
                         // Then// return error code.
         return RC_ERROR;
 
+    print_ast_bis(parser->ast);
     ast_exec(parser->ast);
 
     parser_free(parser);
