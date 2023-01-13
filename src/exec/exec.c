@@ -148,6 +148,25 @@ static int shell_cmd_exec(struct shell_command_node *shell)
     return rc;
 }
 
+
+/**
+ * execute REDIRECTION ast node
+ * Return Return code
+ */
+
+static int redir_exec(struct redirection_node *redirection)
+{
+    (void) redirection;
+    // execute input command
+    // TODO
+    printf("successfully executed REDIRECTION");
+    // call redirection function 
+    // TODO
+    
+    return 0;
+}
+
+
 int ast_exec(struct ast *node)
 {
     int rc = 0;
@@ -164,6 +183,11 @@ int ast_exec(struct ast *node)
     {
         struct operator_node *op = node->node;
         rc = exec_op(op);
+    }
+    else if (node->node_type == REDIRECTION)
+    {
+        struct redirection_node *redir = node->node;
+        rc = redir_exec(redir);
     }
     return rc;
 }
@@ -186,3 +210,5 @@ int exec_if(struct shell_command_node *shell)
 
     return rc;
 }
+
+

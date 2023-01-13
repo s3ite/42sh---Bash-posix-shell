@@ -155,9 +155,9 @@ int in(char c, char *delim)
 
 int is_redirection(char *str)
 {
-    char *redir_list[6]={">","<","<>",">>",">&","<&"};
+    char *redir_list[7]={">","<","<>",">>",">&","<&", ">|"};
     size_t j = 0;
-    for (j=0; j < 6; j++)
+    for (j=0; j < 7; j++)
     {
         size_t len_r = strlen(redir_list[j]);
         if(strncmp(str, redir_list[j], len_r)==0)
@@ -166,11 +166,8 @@ int is_redirection(char *str)
         }
         j++;
     }
-    if(j < 6)
-    {
-        return j;
-    }
-    return 0;
+    
+    return j < 7 ? 1 : 7; 
 }
 
 int get_token_type(char* str)
@@ -298,7 +295,9 @@ struct lexer *lexer_load(char *input, struct lexer *res)
     return res;
 }
 
+/*
 int main(int argc,char **argv)
+
 {
     if(argc)
     {
@@ -310,3 +309,4 @@ int main(int argc,char **argv)
             printf("a est NULL\n");
     }
 }
+*/

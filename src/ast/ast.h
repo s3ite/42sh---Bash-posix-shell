@@ -15,6 +15,20 @@ enum shell_type
     IF = 0,
 };
 
+
+enum redirection_type
+{
+    FD_OUT, // >
+    FD_OUT_APPEND, // >>
+    FD_OUT_NO_CLOBBER, // >|
+    FD_DUP_OUT, // >&
+
+    FD_IN, // <
+    FD_DUP_IN, // <&
+
+    FD_IO // <>    
+};
+
 struct simple_command_node
 {
     struct dlist *prefix; // commande & args
@@ -35,6 +49,14 @@ struct shell_command_node
 {
     enum shell_type type; //
     void *node;
+};
+
+struct redirection_node
+{
+    enum redirection_type type;
+    int io_number;
+    struct ast* command1;
+    struct ast* command2;
 };
 
 enum operator_type
