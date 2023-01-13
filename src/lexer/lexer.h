@@ -6,18 +6,26 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define NUM_TOK 14 //nombre de token sans le TOKEN_EOF(pour faciliter l'ajout de token)
+
 enum TokenType
 {
-    TOKEN_IF = 1,
-    TOKEN_THEN = 2,
-    TOKEN_ELIF = 3,
-    TOKEN_ELSE = 4,
-    TOKEN_FI = 5,
-    TOKEN_NEWLINE = 6,
-    TOKEN_QUOTE = 7,
-    TOKEN_SEMICOLON = 8,
-    WORD = 9,
-    TOKEN_EOF = 10,
+    TOKEN_IF = 0,
+    TOKEN_THEN = 1,
+    TOKEN_ELIF = 2,
+    TOKEN_ELSE = 3,
+    TOKEN_FI = 4,
+    TOKEN_NEWLINE = 5,
+    TOKEN_WHILE = 6,
+    TOKEN_SEMICOLON = 7,
+    TOKEN_DO = 8,
+    TOKEN_DONE = 9,
+    TOKEN_UNTIL = 10,
+    TOKEN_NEG = 11,
+    TOKEN_REDIRECTION = 12,
+    WORD = 13,
+    TOKEN_EOF = 14,
+    
 };
 
 struct token
