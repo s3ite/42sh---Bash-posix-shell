@@ -155,9 +155,9 @@ int in(char c, char *delim)
 
 int is_redirection(char *str)
 {
-    char *redir_list[6]={">","<","<>",">>",">&","<&"};
-    size_t j = 0;
-    for (j=0; j < 6; j++)
+    char *redir_list[7]={">|","<>",">>",">&","<&",">","<"};
+    int j = 0;
+    while(j<7)
     {
         size_t len_r = strlen(redir_list[j]);
         if(strncmp(str, redir_list[j], len_r)==0)
@@ -166,9 +166,9 @@ int is_redirection(char *str)
         }
         j++;
     }
-    if(j < 6)
+    if(j < 7)
     {
-        return j;
+        return j + 1;
     }
     return 0;
 }
@@ -235,7 +235,7 @@ struct token *handle_quote(char *input)
 struct token *handle_word(char *input)
 {
     int j = 0;
-    while (!in(input[j],"; \t\n'"))
+    while (!in(input[j],"; ><\t\n'"))
     {
         j++;
     }
@@ -277,10 +277,10 @@ struct lexer *lexer_load(char *input, struct lexer *res)
             }
             else if (tok_type == TOKEN_REDIRECTION) //gestion des redirections
             {
-                char *redir_list[6]={">","<","<>",">>",">&","<&"};
-                struct token *tok = token_init(redir_list[is_redirection(input)], TOKEN_REDIRECTION);
+                char *redir_list[7]={">|","<>",">>",">&","<&",">","<"};
+                struct token *tok = token_init(redir_list[is_redirection(input+i)-1], TOKEN_REDIRECTION);
                 res = lexer_append(res, tok);
-                i += strlen(redir_list[is_redirection(input)]);
+                i += strlen(redir_list[is_redirection(input+i)-1]);
             }
             else if (tok_type != -1 && tok_type != TOKEN_EOF)// gestion tokens normaux
             {
