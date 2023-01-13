@@ -10,6 +10,12 @@
 int parse_input(struct lexer *lexer, struct parser *parser)
 {
     struct token *token = lexer_peek(lexer);
+    while (token->type == TOKEN_NEWLINE)
+    {
+        lexer_pop(lexer);
+        token = lexer_peek(lexer);
+    }
+    token = lexer_peek(lexer);
     if (!token)
         return RC_SUCCESS;
 
