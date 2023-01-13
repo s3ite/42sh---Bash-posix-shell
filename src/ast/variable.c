@@ -1,6 +1,8 @@
 #include "variable.h"
 
+#include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * Init the variable list structure
@@ -22,7 +24,7 @@ struct variables_list *init_variables_list(void)
  *
  * @return 0 on succes, -1 on failure
  */
-int add_variable(struct *variables_list list, char *name, struct value value)
+int add_variable(struct variables_list *list, char *name, struct value value)
 {
     // check if the variable already exists
     int index = get_index(list, name);
@@ -42,7 +44,7 @@ int add_variable(struct *variables_list list, char *name, struct value value)
 
     list->size++;
     return 0;
-};
+}
 
 /**
  * replace a variable's value and or type
@@ -52,7 +54,7 @@ int add_variable(struct *variables_list list, char *name, struct value value)
  *
  * @return 0 on succes, -1 on failure
  */
-int replace_variable(struct *variables_list list, char *name,
+int replace_variable(struct variables_list *list, char *name,
                      struct value value)
 {
     // check if the variable already exists
@@ -68,25 +70,25 @@ int replace_variable(struct *variables_list list, char *name,
     list->items[index].value = value;
 
     return 0;
-};
+}
 
 /**
  * Shift the list to free the last item in the list and freed memory
  */
-void shift_variable(struct *variables_list list, int index)
+void shift_variable(struct variables_list *list, int index)
 {
     for (int i = index; i < list->size; i++)
     {
         list->items[i] = list->items[i + 1];
         list->items[i].index = i - 1;
     }
-};
+}
 
 /**
  * Search the index of the variable with the same name in the list
  * returns the index of the variable if found otherwise returns -1
  */
-int get_index(struct *variables_list list, char *name)
+int get_index(struct variables_list *list, char *name)
 {
     for (int i = 0; i < list->size; i++)
     {
@@ -122,16 +124,16 @@ void free_variable_list(struct variables_list *list)
 int get_number_items(struct variables_list *variables_list)
 {
     return variables_list->size;
-};
+}
 
-//========================================Special
-// Functions================================
+//========================Special Functions==========================
 /**
  * Get the variable a the index n
  */
 char *special_position(struct variables_list *list, int index)
 {
     (void)list;
+    (void)index;
     return NULL;
 }
 

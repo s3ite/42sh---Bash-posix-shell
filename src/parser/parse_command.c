@@ -15,18 +15,18 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser)
         res = parse_shell_command(lexer, parser);
         if (!res)
             exit(999);
-            //printf("%s\n", "parse_command null");
+        // printf("%s\n", "parse_command null");
     }
     else if (token->type == WORD)
     {
         res = add_simple_commande(lexer, parser);
         if (!res)
             exit(999);
-            //printf("%s\n", "add_simple_commande null");
+        // printf("%s\n", "add_simple_commande null");
     }
 
     if (!res)
         exit(999);
-        //printf("%s\n", "parse_command  end null");
+    // printf("%s\n", "parse_command  end null");
     return res;
 }

@@ -71,6 +71,9 @@ static size_t get_cmd_size(char **cmd)
     return size;
 }
 
+/**
+ * run builtin commands
+*/
 static int run_buildin(char **cmd)
 {
     char *name = cmd[0];
@@ -80,14 +83,26 @@ static int run_buildin(char **cmd)
         my_echo(cmd, size, 0);
         return 1;
     }
+    else if (strcmp("exit", name) == 0)
+    {
+        my_exit();
+        return 1;
+    }
+
     return 0;
 }
 
+/**
+ * return 1 if the command is a builtin command, 0 otherwise
+*/
 static int is_buildin(char **cmd)
 {
     char *name = cmd[0];
     if (strcmp("echo", name) == 0)
         return 1;
+    else if (strcmp("exit", name) == 0)
+        return 1;
+    
     return 0;
 }
 

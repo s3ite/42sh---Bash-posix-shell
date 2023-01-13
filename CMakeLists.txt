@@ -13,7 +13,7 @@ add_link_options(-fsanitize=address)
 add_compile_options(-g)
 
 
-add_executable(42SH
+add_executable(42sh
 src/ast/ast.c
 src/ast/ast.h
 

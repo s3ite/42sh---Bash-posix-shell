@@ -2,6 +2,12 @@
 
 struct ast *parse_start(struct lexer *lexer, struct parser *parser)
 {
+      struct token *token = lexer_peek(lexer);
+    while (token->type == TOKEN_NEWLINE)
+    {
+        lexer_pop(lexer);
+        token = lexer_peek(lexer);
+    }
     struct ast *ast = parse_and_or(lexer, parser);
     if (!ast)
         return ast;
@@ -31,15 +37,21 @@ static struct ast *apply_operator_compound(struct ast *res, struct ast *left,
     if (op && (op->type == TOKEN_SEMICOLON || op->type == TOKEN_NEWLINE))
         res = build_operator_node(SEMICOLON, left, right);
 
-    token_free(op); 
+    token_free(op);
     return res;
 }
 
-static struct token *consume(struct lexer *lexer)
+static struct token *clone(struct lexer *lexer)
 {
     struct token *token = lexer_peek(lexer);
     struct token *copy = token_init(token->value, token->type);
     lexer_pop(lexer);
+    token = lexer_peek(lexer);
+    while (token->type == TOKEN_NEWLINE)
+    {
+        lexer_pop(lexer);
+        token = lexer_peek(lexer);
+    }
     return copy;
 }
 
@@ -58,8 +70,8 @@ struct ast *parse_compound_list(struct lexer *lexer, struct parser *parser)
         if (token->type != TOKEN_SEMICOLON && token->type != TOKEN_NEWLINE)
             return NULL;
 
-        struct token *copy = consume(lexer);
-        
+        struct token *copy = clone(lexer);
+
         token = lexer_peek(lexer);
         if (token->type == TOKEN_THEN || token->type == TOKEN_ELIF
             || token->type == TOKEN_ELSE || token->type == TOKEN_FI)
@@ -73,6 +85,7 @@ struct ast *parse_compound_list(struct lexer *lexer, struct parser *parser)
         ast_append(parser->nodes, list);
         ast = apply_operator_compound(ast, ast, list, copy);
         ast_append(parser->nodes, ast);
+        token = lexer_peek(lexer);
     }
 
     return ast;

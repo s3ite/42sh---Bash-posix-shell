@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+/*
 int my_cd(char **argv)
 {
     char dir[4096] = { 0 };
@@ -51,3 +51,4 @@ int my_cd(char **argv)
 
     return 0;
 }
+*/
