@@ -14,5 +14,6 @@
 
 int run_command(char **cmd);
 int ast_exec(struct ast *node);
+int exec_wu(struct shell_command_node *shell);
 
 #endif /*EXEC_H*/
