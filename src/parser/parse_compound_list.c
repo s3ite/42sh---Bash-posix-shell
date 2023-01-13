@@ -41,7 +41,7 @@ static struct ast *apply_operator_compound(struct ast *res, struct ast *left,
     return res;
 }
 
-static struct token *consume(struct lexer *lexer)
+static struct token *clone(struct lexer *lexer)
 {
     struct token *token = lexer_peek(lexer);
     struct token *copy = token_init(token->value, token->type);
@@ -70,7 +70,7 @@ struct ast *parse_compound_list(struct lexer *lexer, struct parser *parser)
         if (token->type != TOKEN_SEMICOLON && token->type != TOKEN_NEWLINE)
             return NULL;
 
-        struct token *copy = consume(lexer);
+        struct token *copy = clone(lexer);
 
         token = lexer_peek(lexer);
         if (token->type == TOKEN_THEN || token->type == TOKEN_ELIF
