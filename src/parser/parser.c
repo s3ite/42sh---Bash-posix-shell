@@ -58,12 +58,13 @@ void ast_free(struct ast *ast)
 {
     if (ast && ast->node_type == SIMPLE_COMMAND)
     {
-        free_ast_simple_command(ast);
+       free_ast_simple_command(ast);
     }
     if (ast && ast->node_type == SHELL_COMMAND)
     {
         struct shell_command_node *node = ast->node;
-        free(node->node);
+        if(node->node != NULL)
+            ast_free(node->node);
         free(ast->node);
     }
     if (ast && ast->node_type == OPERATOR)
