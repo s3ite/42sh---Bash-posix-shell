@@ -5,14 +5,14 @@
 #include "../ast/print_ast.h"
 #include "../exec/exec.h"
 
-void set_rc(int res, struct global_var ret)
+void set_rc(int res, struct global_var *ret)
 {
     ret->rc = res;
 }
 
-int get_rc(struct global_var ret)
+int get_rc(struct global_var *ret)
 {
-    return err->rc;
+    return ret->rc;
 }
 
 /*
@@ -30,7 +30,9 @@ int parse(struct lexer *lexer)
         return RC_ERROR;
     parser->ast = NULL;
     parser->nodes = ast_list_init();
-    parser->ret=0;
+    parser->ret=malloc(sizeof(struct global_var));
+    if(parser->ret==NULL)
+        return RC_ERROR;
 
     int rc = parse_input(lexer, parser);
 
