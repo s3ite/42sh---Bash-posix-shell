@@ -16,19 +16,19 @@ enum loop
     WHILE = 2,
 };
 
+enum shell_type
+{
+    IF = 0,
+    WU = 1,
+};
+
 struct condition_wu
 {
     struct ast *condition;
     struct ast *body;
     enum loop type;
     // 0 = While
-    // 1 = Untile
-};
-
-enum shell_type
-{
-    IF = 0,
-    WU = 1,
+   // 1 = Untile
 };
 
 
@@ -51,8 +51,6 @@ struct simple_command_node
     struct dlist *values; // valeur après la cmd
     // struct red *red;  les redirections de la commande
 };
-
-
 
 union rules
 {

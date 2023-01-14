@@ -5,7 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct lexer *lexer_init(size_t n, char *input) {
+struct lexer *lexer_init(size_t n, char *input) 
+{
   struct lexer *v = malloc(sizeof(struct lexer));
 
   struct token **array = malloc(n * sizeof(struct token));
@@ -155,7 +156,7 @@ int get_token_type(char *str) {
   if (in(str[0], " \t")) {
     return -1;
   }
-  char *tok_list[NUM_TOK - 2] = {";","|", "if",  "&&",  "||",   "then", "elif", "else", "fi",    "\n",
+  char *tok_list[NUM_TOK - 2] = {";","|",   "&&",  "||", "if",  "then", "elif", "else", "fi",    "\n",
                                  "while",     "do",   "done", "until", "!",
                                  "for",         "{",     "}",
                                  "(",     ")"}; // TO_UPDATE:token
@@ -170,7 +171,7 @@ int get_token_type(char *str) {
             break;
         }
     }else{
-        if (strncmp(str, tok_list[i], len) == 0 && in(str[len], "; ><|\t\n'")) {
+        if (strncmp(str, tok_list[i], len) == 0 && in(str[len], "; ><|\t\n'\"$")) {
             break;
         }
     }
@@ -206,7 +207,7 @@ struct token *handle_quote(char *input) {
 
 struct token *handle_word(char *input) {
   int j = 0;
-  while (!in(input[j], "; ><|\t\n'")) {
+  while (!in(input[j], "; ><|\t\n'\"$")) {
     j++;
   }
   char *value = malloc(j + 1);
@@ -248,7 +249,7 @@ struct lexer *lexer_load(char *input, struct lexer *res) {
       } else if (tok_type != -1 &&
                  tok_type != TOKEN_EOF) // gestion tokens normaux
       {
-        char *tok_list[NUM_TOK - 2] = {";","|", "if",  "&&",  "||",   "then", "elif", "else", "fi",    "\n",
+        char *tok_list[NUM_TOK - 2] = {";","|",  "&&", "if", "||",   "then", "elif", "else", "fi",    "\n",
                                  "while",     "do",   "done", "until", "!",
                                  "for",         "{",     "}",
                                  "(",     ")"}; // TO_UPDATE:token
@@ -264,18 +265,13 @@ struct lexer *lexer_load(char *input, struct lexer *res) {
   return res;
 }
 
-/*
-int main(int argc,char **argv)
-
-{
-    if(argc)
-    {
-        struct lexer *a=lexer_init(10, argv[1]);
-        a=lexer_load(argv[1],a);
-        if(a)
-            lexer_print(a);
-        else
-            printf("a est NULL\n");
-    }
+int main(int argc, char **argv) {
+  if (argc) {
+    struct lexer *a = lexer_init(10, argv[1]);
+    a = lexer_load(argv[1], a);
+    if (a)
+      lexer_print(a);
+    else
+      printf("a est NULL\n");
+  }
 }
-*/

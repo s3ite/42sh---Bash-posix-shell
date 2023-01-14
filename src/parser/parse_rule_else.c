@@ -20,7 +20,7 @@ struct ast *parse_rule_else(struct lexer *lexer, struct parser *parser)
         ast_append(parser->nodes, ast);
         ast = parse_rule_elif(lexer, parser, ast);
         if (!ast)
-            return NULL;
+            return ast;
     }
     return ast;
 }

@@ -43,12 +43,11 @@ struct ast *parse_rule_if(struct lexer *lexer, struct parser *parser,
 struct ast *parse_rule_else(struct lexer *lexer, struct parser *parser);
 struct ast *parse_rule_elif(struct lexer *lexer, struct parser *parser,
                             struct ast *prev_ast);
-
-struct ast *parse_condition(struct lexer *lexer, struct parser *parser,
-                            enum TokenType type);
 struct condition_if_node *build_condition_if_node(struct ast *condition,
                                                   struct ast *then_action,
                                                   struct ast *else_action);
+struct ast *parse_rule_wu(struct lexer *lexer, struct parser *parser,
+                          struct ast *prev_ast);
 
 void free_ast_simple_command(struct ast *ast);
 void free_simple_command(struct simple_command_node *simple_command);

@@ -15,7 +15,6 @@ const char *tokenTypeTable(struct token *token)
         [TOKEN_ELSE] = "TOKEN_ELSE",
         [TOKEN_FI] = "TOKEN_FI",
         [TOKEN_NEWLINE] = "TOKEN_NEWLINE",
-        //[TOKEN_QUOTE] = "TOKEN_QUOTE",
         [TOKEN_SEMICOLON] = "TOKEN_SEMICOLON",
         [WORD] = "WORD",
         [TOKEN_EOF] = "TOKEN_EOF",

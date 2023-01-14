@@ -1,10 +1,14 @@
 #include "parser.h"
 
 
-struct ast *parse_condition(struct lexer *lexer, struct parser *parser,
-                            enum TokenType type)
+struct ast *parse_condition(struct lexer *lexer, struct parser *parser,enum TokenType type)
 {
 
+    struct token *t ;
+    if ((t = lexer_peek(lexer))->type != type )
+    {
+        return NULL;
+    }
     lexer_pop(lexer);
     struct ast *ast = parse_compound_list(lexer, parser);
     if (!ast)
@@ -21,7 +25,7 @@ struct condition_wu *build_condition_wu(struct ast *body, struct ast *condition,
     struct condition_wu *ast = malloc(sizeof(struct condition_wu));
     ast->condition = condition;
     ast->body = body;
-    ast->enum = loop;
+    ast->type = loop;
 
     return ast;
 }
@@ -32,19 +36,19 @@ struct ast *parse_rule_wu(struct lexer *lexer, struct parser *parser,
 
     struct token *token = lexer_peek(lexer);
     struct ast *cond = NULL;
-    enum loop tmp = NULL ;
+    enum loop tmp;
     enum shell_type type = WU;
 
     if (token->type == TOKEN_WHILE)
     {
         tmp = WHILE;
-        cond = parse_condition(lexer,parser,TOKEN_WHILE)
+        cond = parse_condition(lexer,parser,TOKEN_WHILE);
          
     }
-    else if (token->type = TOKEN_UNTIL)
+    else if (token->type == TOKEN_UNTIL)
     {
         tmp = UNTIL;
-        cond = parse_condition(lexer,parser,TOKEN_UNTIL)
+        cond = parse_condition(lexer,parser,TOKEN_UNTIL);
     }
 
     if (!cond)
@@ -52,7 +56,7 @@ struct ast *parse_rule_wu(struct lexer *lexer, struct parser *parser,
     if (!cond)
         return cond;
 
-    struct at *body = parse_condition(lexer,parser, TOKEN_DO)
+    struct ast *body = parse_condition(lexer,parser, TOKEN_DO);
 
     if (!body)
         printf("%s\n", "parse_rule_f right null");
