@@ -42,7 +42,7 @@ const char *nodeTypeTable(struct ast *ast)
     return "UNKNOWN";
 }
 
-/*void print_ast(struct parser *parser)
+void print_ast(struct parser *parser)
 {
     printf("root node %s ", nodeTypeTable(parser->ast));
     struct ast_node *node = NULL;
@@ -52,7 +52,7 @@ const char *nodeTypeTable(struct ast *ast)
     {
         printf(" %s ", nodeTypeTable(node->ast));
     }
-}*/
+}
 
 void print_ast_bis(struct ast *ast)
 {
@@ -93,26 +93,3 @@ void print_ast_bis(struct ast *ast)
         }
     }
 }
-
-/*void print_ast(struct lexer *lexer)
-{
-
-    for (size_t i = 0; i < lexer->size; i++) {
-
-        if (lexer->data[i]->type == TOKEN_SEMICOLON)
-            printf(" } ");
-
-        else if (lexer->data[i]->type == TOKEN_EOF)
-            continue;
-
-        else if (lexer->data[i]->type == TOKEN_NEWLINE || lexer->data[i]->type
-== TOKEN_FI) printf("\n");
-
-        else if (lexer->data[i]->type == WORD)
-            printf("COMMAND: %s ", lexer->data[i]->value);
-
-        else
-            printf("%s { ", tokenTypeTable(lexer->data[i]));
-    }
-}
-*/

@@ -22,12 +22,17 @@ def create_testcase_from_file(file : str) -> TestCase:
     return TestCase(file, process.stdout, process.stderr != "", process.returncode)
 
 
+
+
 if __name__ == "__main__":
-    test_repo = "./tests/test_input"
-    test_files = [join(test_repo, f) for f in sorted(listdir(test_repo), key=str.lower) if isfile(join(test_repo, f))]
-    test_cases = [create_testcase_from_file(f) for f in test_files]
+    test_directory = ["comment", "echo", "edge_case", "if", "script", "simple_command", "single_quote", "true_false", "redirection"]
 
-    test_dicts = [asdict(case) for case in test_cases]
+    for dir in sorted(test_directory): 
+        test_repo = "./tests/"+dir+"/"
+        test_files = [join(test_repo, file) for file in sorted(listdir(test_repo), key=str.lower) if isfile(join(test_repo, file))]
+        test_cases = [create_testcase_from_file(file) for file in test_files]
 
-    with open("./tests/data.yml", "w") as outfile:
-        yaml.dump(test_dicts, outfile)
+        test_dicts = [asdict(case) for case in test_cases]
+
+        with open("./tests/data.yml", "a+") as outfile:
+            yaml.dump(test_dicts, outfile)

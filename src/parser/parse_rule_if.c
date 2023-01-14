@@ -1,5 +1,22 @@
 #include "parser.h"
 
+struct ast *parse_condition(struct lexer *lexer, struct parser *parser,
+                            enum TokenType type)
+{
+    // struct token *token = lexer_peek(lexer);
+    if (!type)
+        return NULL;
+
+    lexer_pop(lexer);
+    struct ast *ast = parse_compound_list(lexer, parser);
+    if (!ast)
+        printf("%s\n", "empty");
+    if (!ast)
+        return ast;
+    ast_append(parser->nodes, ast);
+    return ast;
+}
+
 struct condition_if_node *build_condition_if_node(struct ast *condition,
                                                   struct ast *then_action,
                                                   struct ast *else_action)

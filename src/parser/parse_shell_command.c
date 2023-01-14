@@ -4,6 +4,7 @@
 
 #include "../ast/list.h"
 #include "parser.h"
+#include <err.h>
 
 struct ast *build_shell_command_node(enum shell_type type)
 {
