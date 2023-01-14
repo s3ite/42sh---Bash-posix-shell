@@ -271,6 +271,7 @@ struct lexer *lexer_load(char *input, struct lexer *res) {
   return res;
 }
 
+/*
 int main(int argc, char **argv) {
   if (argc) {
     struct lexer *a = lexer_init(10, argv[1]);

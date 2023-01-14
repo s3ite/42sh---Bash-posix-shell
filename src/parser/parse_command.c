@@ -16,12 +16,12 @@ struct ast *has_redirection(struct lexer *lexer, struct parser *parser, struct a
     return command1;
 }
 
-static struct ast * handle_shell_command(struct lexer *lexer, struct parser *parser)
+static struct ast *handle_shell_command(struct lexer *lexer, struct parser *parser)
 {
     struct ast *res = NULL;
 
     struct token *token = lexer_peek(lexer);
-    if (token->type == TOKEN_IF || token->type == TOKEN_WHILE)
+    if (token->type == TOKEN_IF || token->type == TOKEN_WHILE || token->type == TOKEN_UNTIL)
     {
         res = parse_shell_command(lexer, parser);
         if (!res)
@@ -43,12 +43,9 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser)
 {
     struct ast *res = NULL;
     struct token *token = lexer_peek(lexer);
-    if (token->type == TOKEN_IF || token->type == TOKEN_WHILE || token->type == TOKEN_UNTIL)
-    {
-        res = parse_shell_command(lexer, parser);
-        if (!res)
-            exit(999);
-    }
+    if ((res = handle_shell_command(lexer, parser)) != NULL)
+        return res;
+        
     else if (token->type == WORD)
     {
         res = add_simple_commande(lexer, parser);
