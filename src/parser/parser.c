@@ -36,17 +36,52 @@ int parse(struct lexer *lexer)
 
     return RC_SUCCESS;
 }
+/*
+static struct ast *build_operator_node(enum operator_type type,
+                                       struct ast *left, struct ast *right)
+{
+    struct ast *ast = malloc(sizeof(struct ast));
+    ast->node_type = OPERATOR;
+    ast->node = NULL;
+
+    struct operator_node *node = malloc(sizeof(struct operator_node));
+    node->type = type;
+    node->left = left;
+    node->right = right;
+
+    ast->node = node;
+    return ast;
+}
+
+static int is_condition_token(struct token *token)
+{
+    if(!token)
+        return 0;
+    return token->type == TOKEN_AND || token->type == TOKEN_OR;
+}*/
 
 struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
 {
     struct ast *ast = parse_pipeline(lexer, parser);
+    if(!ast)
+        return ast;
     ast_append(parser->nodes,ast);
+  /*  struct token *token = lexer_peek(token);
+
+    while(is_condition_token(token))
+    {
+
+        struct token *copy = token_init(token->value, token->type);
+        lexer_pop(lexer);
+
+    }*/
     return ast;
 }
 
 struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 {
     struct ast *ast = parse_command(lexer, parser);
+
     ast_append(parser->nodes,ast);
     return ast;
 }
