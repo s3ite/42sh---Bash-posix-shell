@@ -5,6 +5,16 @@
 #include "../ast/print_ast.h"
 #include "../exec/exec.h"
 
+void set_rc(int res, struct global_var ret)
+{
+    ret->rc = res;
+}
+
+int get_rc(struct global_var ret)
+{
+    return err->rc;
+}
+
 /*
  ** Name: parse
  ** Description: parse given string in lexer input / Entry function
@@ -20,6 +30,7 @@ int parse(struct lexer *lexer)
         return RC_ERROR;
     parser->ast = NULL;
     parser->nodes = ast_list_init();
+    parser->ret=0;
 
     int rc = parse_input(lexer, parser);
 
