@@ -1,1 +1,0 @@
-if echo condition ;then echo its_true; elif echo second; then echo second_fonctionne; else echo else_clause; fi;

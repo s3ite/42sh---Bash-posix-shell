@@ -162,7 +162,7 @@ static int shell_cmd_exec(struct shell_command_node *shell)
 
 static int redir_exec(struct redirection_node *redirection)
 {
-    printf("successfully executed REDIRECTION");
+    //printf("successfully executed REDIRECTION");
 
     redirection_exec_handler(redirection);
     return 0;

@@ -4,6 +4,7 @@
 
 #include "../ast/list.h"
 #include "parser.h"
+#include <err.h>
 
 struct ast *build_shell_command_node(enum shell_type type)
 {
@@ -27,12 +28,12 @@ struct ast *parse_cmd(struct lexer *lexer, struct parser *parser)
     {
         ast = build_shell_command_node(IF);
         if (!ast)
-            printf("%s\n", "pase_cmd ast null");
+            errx(999, "pase_cmd ast null");
 
         ast_append(parser->nodes, ast);
         ast = parse_rule_if(lexer, parser, ast);
         if (!ast)
-            printf("%s\n", "pase_cmd if null");
+            errx(999, "pase_cmd if null");
     }
 
     return ast;
@@ -51,7 +52,7 @@ struct ast *parse_shell_command(struct lexer *lexer, struct parser *parser)
     struct ast *ast = NULL;
     ast = parse_cmd(lexer, parser);
     if (!ast)
-        printf("%s\n", "parse_command null");
+        errx(999, "parse_command null");
 
     return ast;
 }

@@ -1,4 +1,6 @@
 #include "parser.h"
+#include <err.h>
+
 struct ast *has_redirection(struct lexer *lexer, struct parser *parser, struct ast *command1)
 {
     struct ast *redir = NULL;
@@ -23,8 +25,7 @@ static struct ast * handle_shell_command(struct lexer *lexer, struct parser *par
     {
         res = parse_shell_command(lexer, parser);
         if (!res)
-            exit(999);
-        // printf("%s\n", "parse_command null");
+            errx(999, "%s\n", "parse_command null");
     }
 
     res = has_redirection(lexer, parser, res);
@@ -51,14 +52,12 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser)
         res = add_simple_commande(lexer, parser);
         res = has_redirection(lexer, parser, res);
         if (!res)
-            exit(999);
-        // printf("%s\n", "add_simple_commande null");
+            errx(999,"add_simple_commande null" );
     }
 
     
 
     if (!res)
-        exit(999);
-    // printf("%s\n", "parse_command  end null");
+        errx(999, "parse_command  end null");
     return res;
 }

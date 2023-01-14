@@ -8,7 +8,7 @@ struct ast *parse_condition(struct lexer *lexer, struct parser *parser,
     lexer_pop(lexer);
     struct ast *ast = parse_compound_list(lexer, parser);
     if (!ast)
-        printf("%s\n", "empty");
+        errx(999, "empty");
     if (!ast)
         return ast;
     ast_append(parser->nodes, ast);
@@ -48,20 +48,20 @@ struct ast *parse_rule_wu(struct lexer *lexer, struct parser *parser,
     }
 
     if (!cond)
-        printf("%s\n", "parse_rule_f parse condition null");
+        errx(999, "parse_rule_f parse condition null");
     if (!cond)
         return cond;
 
     struct at *body = parse_condition(lexer,parser, TOKEN_DO)
 
     if (!body)
-        printf("%s\n", "parse_rule_f right null");
+        errx(999, "parse_rule_f right null");
     if (!body)
         return body;
 
     token = lexer_peek(lexer);
     if (token->type != TOKEN_DONE)
-        printf("%s got %ud\n", "parse_rule_f oken->type != TOKEN_DONE",
+        errx(999, "parse_rule_f oken->type != TOKEN_DONE",
                token->type);
     if (token->type != TOKEN_DONE)
         return NULL;

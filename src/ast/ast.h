@@ -49,6 +49,7 @@ struct simple_command_node
 {
     struct dlist *prefix; // commande & args
     struct dlist *values; // valeur après la cmd
+    
     // struct red *red;  les redirections de la commande
 };
 

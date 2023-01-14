@@ -14,7 +14,7 @@ void exit_program(int signo)
 {
   if (signo == SIGTERM)
   {
-    printf("End of the instance...");
+    //printf("End of the instance...");
 
     // catch des signaux et cleanup des donnnees / trap
     signal(SIGINT, SIG_IGN);
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
         while (1)
         {
             char *str = malloc(1024);
-            printf("42sh$ ");
+            //printf("42sh$ ");
             fgets(str, 1024, stdin);
             str[strlen(str) - 1] = '\0';
 
