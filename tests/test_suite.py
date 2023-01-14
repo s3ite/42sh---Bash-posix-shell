@@ -48,7 +48,7 @@ if __name__ == "__main__":
     parser.add_argument("--binary", required=True, type=Path)
     args = parser.parse_args()
 
-    binary_path = "build/42SH"
+    binary_path = "build/42sh"
     
     with open("./tests/data.yml", "r") as file:
         testsuite = [TestCase(**test) for test in yaml.safe_load(file)]
