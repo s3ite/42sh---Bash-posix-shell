@@ -19,20 +19,15 @@ struct ast *build_shell_command_node(enum shell_type type)
     return ast;
 }
 
-struct ast *parse_cmd(struct lexer *lexer, struct parser *parser)
+static struct ast *parse_cmd(struct lexer *lexer, struct parser *parser)
 {
     struct ast *ast = NULL;
     struct token *token = lexer_peek(lexer);
     if (token->type == TOKEN_IF)
     {
         ast = build_shell_command_node(IF);
-        if (!ast)
-            printf("%s\n", "pase_cmd ast null");
-
         ast_append(parser->nodes, ast);
         ast = parse_rule_if(lexer, parser, ast);
-        if (!ast)
-            printf("%s\n", "pase_cmd if null");
     }
 
     return ast;
@@ -50,8 +45,5 @@ struct ast *parse_shell_command(struct lexer *lexer, struct parser *parser)
 {
     struct ast *ast = NULL;
     ast = parse_cmd(lexer, parser);
-    if (!ast)
-        printf("%s\n", "parse_command null");
-
     return ast;
 }
