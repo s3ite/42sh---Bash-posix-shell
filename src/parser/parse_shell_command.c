@@ -30,10 +30,10 @@ static struct ast *parse_cmd(struct lexer *lexer, struct parser *parser)
         ast_append(parser->nodes, ast);
         ast = parse_rule_if(lexer, parser, ast);
     }
-    else if ((token->type == TOKEN_WHILE )|| (token->type == TOKEN_UNTIL))
+    else if (token->type == TOKEN_WHILE || token->type == TOKEN_UNTIL)
     {
         printf("TOKEN_WHILE\n");
-        ast = build_shell_command_node(WHILE);
+        ast = build_shell_command_node(WU);
         ast_append(parser->nodes, ast);
         ast = parse_rule_wu(lexer, parser, ast);
     }
