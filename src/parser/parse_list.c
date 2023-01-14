@@ -33,6 +33,8 @@ struct ast *parse_list(struct lexer *lexer, struct parser *parser)
     struct token *token = lexer_peek(lexer);
     while (token && (token->type == TOKEN_SEMICOLON))
     {
+        if(!token)
+            break;
         struct token *copy = token_init(NULL, token->type);
         struct ast *right = NULL;
 

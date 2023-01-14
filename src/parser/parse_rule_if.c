@@ -24,14 +24,16 @@ struct condition_if_node *build_condition_if_node(struct ast *condition,
 struct ast *parse_rule_if(struct lexer *lexer, struct parser *parser,
                           struct ast *prev_ast)
 {
-    struct ast *cond = NULL;//parse_condition(lexer, parser, TOKEN_IF);
+    if(!prev_ast)
+        return NULL;
+    struct ast *cond = NULL;
     lexer_pop(lexer);
     cond = parse_compound_list(lexer,parser);
     if (!cond)
         return cond;
     ast_append(parser->nodes, cond);
 
-    struct ast *right = NULL;//parse_condition(lexer, parser, TOKEN_THEN);
+    struct ast *right = NULL;
     lexer_pop(lexer);
     right = parse_compound_list(lexer, parser);
 
