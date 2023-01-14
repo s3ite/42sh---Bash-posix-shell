@@ -9,11 +9,20 @@
 #define RC_ERROR -1
 #define RC_SUCCESS 0
 
+struct global_var
+{
+    int rc;
+};
+
 struct parser
 {
     struct ast *ast;
     struct ast_node *nodes;
+    struct global_var ret;
 };
+
+void set_rc(int res, struct global_var ret);
+int get_rc(struct global_var ret);
 
 int parse(struct lexer *lexer);
 
