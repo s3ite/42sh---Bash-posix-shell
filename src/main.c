@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 
             struct lexer *lexer = lexer_init(10, str);
             lexer = lexer_load(str, lexer);
-            lexer_print(lexer);
+            //lexer_print(lexer);
             int rc = parse(lexer);
             lexer_destroy(lexer);
             free(input);
@@ -65,8 +65,8 @@ int main(int argc, char **argv)
     struct lexer *lexer = lexer_init(10, input);
     lexer = lexer_load(input, lexer);
 
-    // representation of the ast
-    // print_ast(lexer);
+    //lexer_print(lexer);
+
 
     int rc = parse(lexer);
 

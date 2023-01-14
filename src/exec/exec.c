@@ -1,4 +1,5 @@
 #include "exec.h"
+#include "../redirection/redirection.h"
 
 int run_command(char **cmd)
 {
@@ -161,13 +162,9 @@ static int shell_cmd_exec(struct shell_command_node *shell)
 
 static int redir_exec(struct redirection_node *redirection)
 {
-    (void) redirection;
-    // execute input command
-    // TODO
     printf("successfully executed REDIRECTION");
-    // call redirection function 
-    // TODO
-    
+
+    redirection_exec_handler(redirection);
     return 0;
 }
 

@@ -43,7 +43,7 @@ const char *nodeTypeTable(struct ast *ast)
     return "UNKNOWN";
 }
 
-/*void print_ast(struct parser *parser)
+void print_ast(struct parser *parser)
 {
     printf("root node %s ", nodeTypeTable(parser->ast));
     struct ast_node *node = NULL;
@@ -53,7 +53,7 @@ const char *nodeTypeTable(struct ast *ast)
     {
         printf(" %s ", nodeTypeTable(node->ast));
     }
-}*/
+}
 
 void print_ast_bis(struct ast *ast)
 {

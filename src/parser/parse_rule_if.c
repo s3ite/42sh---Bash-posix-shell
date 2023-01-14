@@ -1,4 +1,5 @@
 #include "parser.h"
+#include <err.h>
 
 struct ast *parse_condition(struct lexer *lexer, struct parser *parser,
                             enum TokenType type)
@@ -36,13 +37,13 @@ struct ast *parse_rule_if(struct lexer *lexer, struct parser *parser,
     struct ast *cond = parse_condition(lexer, parser, TOKEN_IF);
 
     if (!cond)
-        printf("%s\n", "parse_rule_f parse condition null");
+        errx(999, "parse_rule_f parse condition null");
     if (!cond)
         return cond;
 
     struct ast *right = parse_condition(lexer, parser, TOKEN_THEN);
     if (!right)
-        printf("%s\n", "parse_rule_f right null");
+        errx(999, "parse_rule_f right null");
     if (!right)
         return right;
 

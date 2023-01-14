@@ -27,7 +27,9 @@ int parse(struct lexer *lexer)
                         // Then// return error code.
         return RC_ERROR;
 
-    print_ast_bis(parser->ast);
+    //print_ast(parser);
+    //print_ast_bis(parser->ast);
+
     ast_exec(parser->ast);
 
     parser_free(parser);
@@ -74,6 +76,11 @@ void ast_free(struct ast *ast)
     {
         struct operator_node *op = ast->node;
         free(op);
+    }
+    if (ast && ast->node_type == REDIRECTION)
+    {
+        struct redirection_node *rd_node = ast->node;
+        free_ast_redirection(rd_node);
     }
     if(ast)
         free(ast);

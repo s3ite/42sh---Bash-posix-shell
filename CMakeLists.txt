@@ -8,8 +8,8 @@ add_compile_options(-Werror)
 add_compile_options(-Wall)
 add_compile_options(-Wextra)
 add_compile_options(-Wvla)
-add_compile_options(-fsanitize=address)
-add_link_options(-fsanitize=address)
+#add_compile_options(-fsanitize=address)
+#add_link_options(-fsanitize=address)
 add_compile_options(-g)
 
 
@@ -20,12 +20,16 @@ src/ast/ast.h
 src/ast/list.c
 src/ast/list.h
 
+src/redirection/redirection.c
+src/redirection/redirection.h
+
 src/ast/print_ast.c
 src/ast/print_ast.h
 
 src/built_in/built_in.h
 src/built_in/boolean.c
 src/built_in/exit.c
+src/built_in/echo.c
 
 src/parser/parser.c
 src/parser/parser.h
@@ -36,7 +40,7 @@ src/parser/parse_simple_commande.c
 src/parser/parse_rule_if.c
 src/parser/parse_rule_else.c
 src/parser/parse_rule_elif.c
-src/built_in/echo.c
+src/parser/parse_redirection.c
 
 src/parser/parse_command.c
 src/parser/parse_compound_list.c

@@ -1,8 +1,22 @@
 #include "parser.h"
+struct ast *has_redirection(struct lexer *lexer, struct parser *parser, struct ast *command1)
+{
+    struct ast *redir = NULL;
+    struct token *token = lexer_peek(lexer);
+
+    if (token->type == TOKEN_REDIRECTION)
+    {   
+        redir = parse_redirection(lexer, parser, command1);
+        if (redir)
+            return redir;
+    }
+
+    return command1;
+}
+
 static struct ast * handle_shell_command(struct lexer *lexer, struct parser *parser)
 {
     struct ast *res = NULL;
-    struct ast *redir = NULL;
 
     struct token *token = lexer_peek(lexer);
     if (token->type == TOKEN_IF)
@@ -13,23 +27,10 @@ static struct ast * handle_shell_command(struct lexer *lexer, struct parser *par
         // printf("%s\n", "parse_command null");
     }
 
-
-    // on peek a nouveau dans le lexer
-    token = lexer->data[lexer->index+1];
-    if (token->type == TOKEN_REDIRECTION)
-    {
-        // On pop la simple command
-        lexer_pop(lexer);
-        
-        //redir = parse_redirection(lexer, parser, res);
-
-        //if (redir)
-        //    return redir;
-        (void) redir;
-    }
-
+    res = has_redirection(lexer, parser, res);
     return res;
 }
+
 
 /*
  ** Name: parse_command
@@ -48,6 +49,7 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser)
     else if (token->type == WORD)
     {
         res = add_simple_commande(lexer, parser);
+        res = has_redirection(lexer, parser, res);
         if (!res)
             exit(999);
         // printf("%s\n", "add_simple_commande null");
