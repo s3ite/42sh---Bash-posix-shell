@@ -12,6 +12,5 @@
 #include "../parser/parser.h"
 
 int run_command(char **cmd);
-int exec_wu(struct shell_command_node *shell);
 
 #endif /*EXEC_H*/

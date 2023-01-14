@@ -6,34 +6,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NUM_TOK 22 //TO_UPDATE:token
-
 enum TokenType
 {
-    TOKEN_SEMICOLON,
-    TOKEN_PIPELINE,
-    TOKEN_AND,
-    TOKEN_OR,// ^^^^^^^^token également séparateur^^^^^^^^
-    TOKEN_IF,
-    TOKEN_THEN,
-    TOKEN_ELIF,
-    TOKEN_ELSE,
-    TOKEN_FI,
-    TOKEN_NEWLINE,
-    TOKEN_WHILE,
-    TOKEN_DO,
-    TOKEN_DONE,
-    TOKEN_UNTIL,
-    TOKEN_NEG,
-    TOKEN_FOR,
-    TOKEN_OPEN_ACC,
-    TOKEN_CLOSE_ACC,
-    TOKEN_OPEN_PAR,
-    TOKEN_CLOSE_PAR,
-    TOKEN_REDIRECTION, //garder ces 3 tokens en dernier
-    WORD,
-    TOKEN_EOF,
-    
+    TOKEN_IF = 1,
+    TOKEN_THEN = 2,
+    TOKEN_ELIF = 3,
+    TOKEN_ELSE = 4,
+    TOKEN_FI = 5,
+    TOKEN_NEWLINE = 6,
+    TOKEN_QUOTE = 7,
+    TOKEN_SEMICOLON = 8,
+    WORD = 9,
+    TOKEN_EOF = 10,
 };
 
 struct token
@@ -56,6 +40,9 @@ void lexer_destroy(struct lexer *v);
 struct lexer *lexer_resize(struct lexer *v, size_t n);
 struct lexer *lexer_append(struct lexer *v, struct token *elt);
 void lexer_print(struct lexer *v);
+struct lexer *lexer_reset(struct lexer *v, size_t n);
+void shift(struct token **arr, int index, int size);
+// struct lexer *lexer_insert(struct lexer *v, size_t i, int elt);
 struct lexer *lexer_remove(struct lexer *v, size_t i);
 struct token *lexer_pop(struct lexer *v);
 struct token *lexer_peek(struct lexer *v);

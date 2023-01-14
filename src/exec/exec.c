@@ -144,12 +144,7 @@ static int exec_op(struct operator_node *op)
 static int shell_cmd_exec(struct shell_command_node *shell)
 {
     int rc = 0;
-    if (shell->type == IF)
-        rc = exec_if(shell);
-    else if (shell->type == WU)
-    {
-        rc = exec_wu(shell);
-    }
+    rc = exec_if(shell);
     return rc;
 }
 
@@ -190,13 +185,4 @@ int exec_if(struct shell_command_node *shell)
         rc = ast_exec(if_node->else_action);
 
     return rc;
-}
-
-/*
-    WHILE OR UNTILE EXEC
-*/
-int exec_wu(struct shell_command_node *shell)
-{
-    (void) shell;
-    return 0;
 }
