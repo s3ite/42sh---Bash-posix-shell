@@ -230,8 +230,14 @@ struct lexer *lexer_load(char *input, struct lexer *res) {
       struct token *tok = handle_quote(input + i);
       if (!tok)
         return NULL;
+    if(strlen(tok->value)==0)
+    {
+        free(tok->value);
+        free(tok);
+        i+=2;
+    }else{
       res = lexer_append(res, tok);
-      i += strlen(tok->value) + 2;
+      i += strlen(tok->value) + 2;}
     } else {
       int tok_type = get_token_type(input + i);
       if (tok_type == WORD) // gestion des words
@@ -249,7 +255,7 @@ struct lexer *lexer_load(char *input, struct lexer *res) {
       } else if (tok_type != -1 &&
                  tok_type != TOKEN_EOF) // gestion tokens normaux
       {
-        char *tok_list[NUM_TOK - 2] = {";","|",  "&&", "if", "||",   "then", "elif", "else", "fi",    "\n",
+        char *tok_list[NUM_TOK - 2] = {";","|",  "&&",  "||",  "if", "then", "elif", "else", "fi",    "\n",
                                  "while",     "do",   "done", "until", "!",
                                  "for",         "{",     "}",
                                  "(",     ")"}; // TO_UPDATE:token
