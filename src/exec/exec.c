@@ -144,7 +144,17 @@ static int exec_op(struct operator_node *op)
 static int shell_cmd_exec(struct shell_command_node *shell)
 {
     int rc = 0;
-    rc = exec_if(shell);
+    if (shell->type == IF)
+       rc = exec_if(shell);
+   else if (shell->type == WU)
+    {
+        printf("WHILE/n");
+       struct condition_wu *wu = shell->node;
+       if (wu->type == WHILE)
+            rc = exec_w(shell);
+        else
+            rc = exec_u(shell);
+    }
     return rc;
 }
 
@@ -157,6 +167,7 @@ int ast_exec(struct ast *node)
     }
     else if (node->node_type == SHELL_COMMAND)
     {
+        printf("SHELL COMMANDE\n");
         struct shell_command_node *shell = node->node;
         rc = shell_cmd_exec(shell);
     }
@@ -185,4 +196,32 @@ int exec_if(struct shell_command_node *shell)
         rc = ast_exec(if_node->else_action);
 
     return rc;
+}
+
+int exec_w(struct shell_command_node *shell)
+{
+   
+    int body = 0;
+    struct condition_wu *wu_node = shell->node;
+    while ((ast_exec(wu_node->condition)) == 0)
+    {
+        body = ast_exec(wu_node->body);
+    }
+
+    return body;
+}
+/*
+    UNTIL 
+*/
+
+int exec_u(struct shell_command_node *shell)
+{
+    int body = 0;
+    struct condition_wu *wu_node = shell->node;
+    while ((ast_exec(wu_node->condition)) != 0)
+    {
+        body = ast_exec(wu_node->body);
+    }
+
+    return body;
 }
