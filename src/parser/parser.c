@@ -30,6 +30,7 @@ int parse(struct lexer *lexer)
         return RC_ERROR;
     parser->ast = NULL;
     parser->nodes = ast_list_init();
+    parser->ret=0;
 
     int rc = parse_input(lexer, parser);
 
