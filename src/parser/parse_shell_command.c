@@ -25,9 +25,17 @@ static struct ast *parse_cmd(struct lexer *lexer, struct parser *parser)
     struct token *token = lexer_peek(lexer);
     if (token->type == TOKEN_IF)
     {
+        printf("IF\n");
         ast = build_shell_command_node(IF);
         ast_append(parser->nodes, ast);
         ast = parse_rule_if(lexer, parser, ast);
+    }
+    else if ((token->type == TOKEN_WHILE )|| (token->type == TOKEN_UNTIL))
+    {
+        printf("TOKEN_WHILE\n");
+        ast = build_shell_command_node(WHILE);
+        ast_append(parser->nodes, ast);
+        ast = parse_rule_wu(lexer, parser, ast);
     }
 
     return ast;

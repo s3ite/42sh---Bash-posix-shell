@@ -10,9 +10,25 @@ struct condition_if_node
     struct ast *else_action; // Action si faux
 };
 
+enum loop 
+{
+    UNTIL = 1,
+    WHILE = 2,
+};
+
 enum shell_type
 {
     IF = 0,
+    WU = 1,
+};
+
+struct condition_wu
+{
+    struct ast *condition;
+    struct ast *body;
+    enum loop type;
+    // 0 = While
+   // 1 = Untile
 };
 
 struct simple_command_node

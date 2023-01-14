@@ -36,6 +36,7 @@ src/parser/parse_simple_commande.c
 src/parser/parse_rule_if.c
 src/parser/parse_rule_else.c
 src/parser/parse_rule_elif.c
+src/parser/parse_rule_wu.c
 src/built_in/echo.c
 
 src/parser/parse_command.c
