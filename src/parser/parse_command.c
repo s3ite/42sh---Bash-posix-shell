@@ -10,7 +10,7 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser)
 {
     struct ast *res = NULL;
     struct token *token = lexer_peek(lexer);
-    if (token->type == TOKEN_IF)
+    if (token->type == TOKEN_IF || token->type == TOKEN_WHILE)
     {
         res = parse_shell_command(lexer, parser);
         if (!res)
