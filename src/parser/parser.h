@@ -18,11 +18,11 @@ struct parser
 {
     struct ast *ast;
     struct ast_node *nodes;
-    struct global_var ret;
+    struct global_var *ret;
 };
 
-void set_rc(int res, struct global_var ret);
-int get_rc(struct global_var ret);
+void set_rc(int res, struct global_var *ret);
+int get_rc(struct global_var *ret);
 
 int parse(struct lexer *lexer);
 
