@@ -1,25 +1,47 @@
 #include "parser.h"
 
+
+/*
+ ** Name: parse_rule_elif
+ ** Description: parse rule else if
+ ** Param: @struct lexer * @struct parser *parser, struct ast *ast_prev
+ ** Return: builded ast
+ */
 struct ast *parse_rule_elif(struct lexer *lexer, struct parser *parser,
                             struct ast *prev_ast)
 {
-    struct ast *condition = parse_condition(lexer, parser, TOKEN_ELIF);
+    struct ast *condition = NULL;
+    lexer_pop(lexer);
+    condition = parse_compound_list(lexer,parser);
     if (!condition)
-        return NULL;
+        return condition;
+    ast_append(parser->nodes, condition);
 
-    struct ast *right = parse_condition(lexer, parser, TOKEN_THEN);
+
+    struct ast *right = NULL;
+    lexer_pop(lexer);
+    right = parse_compound_list(lexer,parser);
     if (!right)
-        return NULL;
+        return right;
+    ast_append(parser->nodes, right);
+   
 
     struct ast *wrong = NULL;
 
     struct token *token = lexer_peek(lexer);
-    if (token->type == TOKEN_ELIF || token->type == TOKEN_ELSE)
+    if (token->type == TOKEN_ELIF)//TODO
     {
         wrong = parse_rule_else(lexer, parser);
         if (!wrong)
-            return NULL;
+            return wrong;
 
+        ast_append(parser->nodes, wrong);
+    }
+    else if(token->type == TOKEN_ELSE) 
+    {
+        wrong = parse_rule_else(lexer, parser);
+        if (!wrong)
+            return wrong;
         ast_append(parser->nodes, wrong);
     }
 
