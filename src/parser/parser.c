@@ -30,12 +30,10 @@ int parse(struct lexer *lexer)
         return RC_ERROR;
     parser->ast = NULL;
     parser->nodes = ast_list_init();
-    parser->ret=malloc(sizeof(struct global_var));
-    if(parser->ret==NULL)
-        return RC_ERROR;
 
     int rc = parse_input(lexer, parser);
 
+    
     if (rc == RC_ERROR) // TODO: Free all structures to avoid memory leak.
                         // Then// return error code.
         return RC_ERROR;
@@ -43,17 +41,17 @@ int parse(struct lexer *lexer)
     //print_ast(parser);
     //print_ast_bis(parser->ast);
 
-    ast_exec(parser->ast);
+    rc = ast_exec(parser->ast);
 
     parser_free(parser);
 
-    return RC_SUCCESS;
+    return rc;
 }
 /*
 static struct ast *build_operator_node(enum operator_type type,
                                        struct ast *left, struct ast *right)
 {
-    struct ast *ast = malloc(sizeof(struct ast));
+    struct ast *ast = init_ast();
     ast->node_type = OPERATOR;
     ast->node = NULL;
 

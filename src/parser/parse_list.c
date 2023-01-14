@@ -5,7 +5,7 @@
 static struct ast *build_operator_node(enum operator_type type,
     struct ast *left, struct ast *right)
 {
-    struct ast *ast = malloc(sizeof(struct ast));
+    struct ast *ast = init_ast();
     ast->node_type = OPERATOR;  
 
     struct operator_node *node = malloc(sizeof(struct operator_node));

@@ -8,7 +8,7 @@
 int my_true(void);
 int my_false(void);
 
-void my_exit();
+int my_exit(void);
 void my_unset(void);
 
 int my_echo(char **cmd, size_t arg_number, size_t index);

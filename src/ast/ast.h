@@ -3,6 +3,13 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+
+struct RC
+{
+    int code;
+    char error[1024];
+};
+
 struct condition_if_node
 {
     struct ast *condition_c; // ast associé à la condition
@@ -112,6 +119,7 @@ struct ast
 {
     enum node_type node_type;
     void *node;
+    struct RC rc;
 };
 
 struct ast_node
@@ -120,6 +128,7 @@ struct ast_node
     struct ast_node *next;
 };
 
+struct ast* init_ast(void);
 void ast_append(struct ast_node *list, struct ast *ast);
 int exec_if(struct shell_command_node *shell);
 struct ast_node *ast_list_init();

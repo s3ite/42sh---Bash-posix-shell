@@ -103,7 +103,7 @@ struct ast *build_rd_input_node(struct token *token, struct redirection_node *rd
     else 
         return NULL;
 
-    struct ast *ast = malloc(sizeof(struct ast));
+    struct ast *ast = init_ast();
     ast->node_type = REDIRECTION;
     ast->node = rd_node;
 
@@ -127,7 +127,7 @@ struct ast *build_rd_output_node(struct token *token, struct redirection_node *r
     else 
         return NULL;
 
-    struct ast *ast = malloc(sizeof(struct ast));
+    struct ast *ast = init_ast();
     ast->node_type = REDIRECTION;
     ast->node = rd_node;
 
@@ -145,7 +145,7 @@ struct ast *build_rd_io_node(struct token *token,  struct redirection_node *rd_n
     else 
         return NULL;
     
-    struct ast *ast = malloc(sizeof(struct ast));
+    struct ast *ast = init_ast();
     ast->node_type = REDIRECTION;
     ast->node = rd_node;
 

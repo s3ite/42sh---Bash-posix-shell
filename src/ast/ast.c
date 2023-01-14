@@ -1,5 +1,13 @@
 #include "ast.h"
 
+
+struct ast* init_ast(void)
+{
+    struct ast* ast = malloc(sizeof(struct ast));
+    ast->rc.code = 0;
+    return ast;
+}
+
 /*
  ** Name: ast_append
  ** Description: append ast node to a given ast
@@ -27,6 +35,7 @@ void ast_append(struct ast_node *list, struct ast *ast)
         list->next = new_node;
     }
 }
+
 
 struct ast_node *ast_list_init()
 {

@@ -8,7 +8,7 @@
 
 struct ast *build_shell_command_node(enum shell_type type)
 {
-    struct ast *ast = malloc(sizeof(struct ast));
+    struct ast *ast = init_ast();
     ast->node_type = SHELL_COMMAND;
 
     struct shell_command_node *node = malloc(sizeof(struct shell_command_node));

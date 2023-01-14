@@ -3,13 +3,16 @@
 
 int run_command(char **cmd)
 {
+    int rc = 0;
     pid_t childID = fork();
     if (childID == -1)
         return 0;
     if (!childID)
     {
-        execvp(cmd[0], cmd);
-        exit(1);
+        rc = execvp(cmd[0], cmd);
+        if (rc == -1) 
+            exit(127);
+        exit(0);
     }
     else
     {
@@ -20,8 +23,10 @@ int run_command(char **cmd)
             int res = WEXITSTATUS(status);
             return res;
         }
-        return 1;
+        return 0;
     }
+
+    return rc;
 }
 
 static void free_cmd(char **cmd)
@@ -81,13 +86,11 @@ static int run_buildin(char **cmd)
     int size = get_cmd_size(cmd);
     if (strcmp("echo", name) == 0)
     {
-        my_echo(cmd, size, 0);
-        return 1;
+        return my_echo(cmd, size, 0);
     }
     else if (strcmp("exit", name) == 0)
     {
-        my_exit();
-        return 1;
+        return my_exit();
     }
 
     return 0;
@@ -118,8 +121,9 @@ static int simple_cmd_exec(struct ast *ast)
 
     if (is_buildin(cmd))
     {
-        run_buildin(cmd);
+        rc = run_buildin(cmd);
         free_cmd(cmd);
+
         return 0;
     }
     else
@@ -155,6 +159,7 @@ static int shell_cmd_exec(struct shell_command_node *shell)
         else
             rc = exec_u(shell);
     }
+
     return rc;
 }
 
@@ -176,6 +181,10 @@ static int redir_exec(struct redirection_node *redirection)
 int ast_exec(struct ast *node)
 {
     int rc = 0;
+
+    if (!node)
+        return 0;
+        
     if (node->node_type == SIMPLE_COMMAND)
     {
         rc = simple_cmd_exec(node);

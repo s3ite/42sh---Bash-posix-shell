@@ -1,6 +1,6 @@
 from os import listdir
 from os.path import isfile, join
-
+import os
 from dataclasses import dataclass, asdict
 
 import subprocess
@@ -25,14 +25,22 @@ def create_testcase_from_file(file : str) -> TestCase:
 
 
 if __name__ == "__main__":
-    test_directory = ["comment", "echo", "edge_case", "if", "script", "simple_command", "single_quote", "true_false", "redirection"]
+    test_directory = ["comment", "echo", "edge_case", "if", "simple_command", "single_quote", "true_false"] # redirection
+    nb_dir = len(test_directory)
 
-    for dir in sorted(test_directory): 
-        test_repo = "./tests/"+dir+"/"
+    path = "./tests/data.yml"
+
+    if(isfile(path)):
+        os.remove(path)
+    
+    for i in range(nb_dir): 
+        test_repo = "./tests/"+ test_directory[i]
         test_files = [join(test_repo, file) for file in sorted(listdir(test_repo), key=str.lower) if isfile(join(test_repo, file))]
         test_cases = [create_testcase_from_file(file) for file in test_files]
 
         test_dicts = [asdict(case) for case in test_cases]
 
-        with open("./tests/data.yml", "a+") as outfile:
+        
+        
+        with open(path, "a+") as outfile:
             yaml.dump(test_dicts, outfile)

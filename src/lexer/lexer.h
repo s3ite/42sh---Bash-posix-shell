@@ -33,7 +33,6 @@ enum TokenType
     TOKEN_REDIRECTION, //garder ces 3 tokens en dernier
     WORD,
     TOKEN_EOF,
-    
 };
 
 struct token

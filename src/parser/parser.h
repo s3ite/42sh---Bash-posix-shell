@@ -18,7 +18,6 @@ struct parser
 {
     struct ast *ast;
     struct ast_node *nodes;
-    struct global_var *ret;
 };
 
 void set_rc(int res, struct global_var *ret);

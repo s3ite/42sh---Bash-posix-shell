@@ -7,9 +7,10 @@
 
 #include "built_in.h"
 
-void my_exit()
+int my_exit(void)
 {
     pid_t shell_pid = getpid();
     
     kill(shell_pid, SIGTERM);
+    return 0;
 }
