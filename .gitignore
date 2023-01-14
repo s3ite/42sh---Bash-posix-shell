@@ -1,3 +1,4 @@
 .vscode
 build/
 tests/data.yml
+tests/42trash

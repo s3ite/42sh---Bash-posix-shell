@@ -1,1 +1,1 @@
-echo ligne 1 >> double
+echo ligne 1 >> tests/42trash/double

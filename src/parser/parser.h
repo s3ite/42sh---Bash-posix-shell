@@ -9,15 +9,13 @@
 #define RC_ERROR -1
 #define RC_SUCCESS 0
 
-struct global_var
-{
-    int rc;
+struct global_var {
+  int rc;
 };
 
-struct parser
-{
-    struct ast *ast;
-    struct ast_node *nodes;
+struct parser {
+  struct ast *ast;
+  struct ast_node *nodes;
 };
 
 void set_rc(int res, struct global_var *ret);
@@ -57,12 +55,11 @@ struct condition_if_node *build_condition_if_node(struct ast *condition,
 struct ast *parse_rule_wu(struct lexer *lexer, struct parser *parser,
                           struct ast *prev_ast);
 
-struct ast *parse_redirection(struct lexer *lexer, struct parser *parser, struct ast *cmd1);
-
+struct ast *parse_redirection(struct lexer *lexer, struct parser *parser,
+                              struct ast *cmd1);
 
 void free_ast_simple_command(struct ast *ast);
 void free_simple_command(struct simple_command_node *simple_command);
 void free_ast_redirection(struct redirection_node *rd_node);
-
 
 #endif /* ! PARSER_H */

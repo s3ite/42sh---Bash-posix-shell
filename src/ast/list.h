@@ -4,19 +4,17 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-struct dlist
-{
-    struct dlist_item *head;
-    struct dlist_item *tail;
-    size_t size;
+struct dlist {
+  struct dlist_item *head;
+  struct dlist_item *tail;
+  size_t size;
 };
 
-struct dlist_item
-{
-    char *value;
-    struct dlist_item *next;
-    struct dlist_item *prev;
-    int quote;
+struct dlist_item {
+  char *value;
+  struct dlist_item *next;
+  struct dlist_item *prev;
+  int quote;
 };
 
 struct dlist *dlist_init(void);

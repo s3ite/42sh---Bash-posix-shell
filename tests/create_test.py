@@ -25,7 +25,7 @@ def create_testcase_from_file(file : str) -> TestCase:
 
 
 if __name__ == "__main__":
-    test_directory = ["comment", "echo", "edge_case", "if", "simple_command", "single_quote", "true_false"] # redirection
+    test_directory = ["comment", "echo", "edge_case", "if", "simple_command", "single_quote", "true_false", "redirection"]
     nb_dir = len(test_directory)
 
     path = "./tests/data.yml"

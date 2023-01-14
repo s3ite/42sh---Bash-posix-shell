@@ -5,8 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct lexer *lexer_init(size_t n, char *input) 
-{
+struct lexer *lexer_init(size_t n, char *input) {
   struct lexer *v = malloc(sizeof(struct lexer));
 
   struct token **array = malloc(n * sizeof(struct token));
@@ -156,24 +155,25 @@ int get_token_type(char *str) {
   if (in(str[0], " \t")) {
     return -1;
   }
-  char *tok_list[NUM_TOK - 2] = {";","|",   "&&",  "||",  "\n","if",  "then", "elif", "else", "fi",   
-                                 "while",     "do",   "done", "until", "!",
-                                 "for",         "{",     "}",
-                                 "(",     ")"}; // TO_UPDATE:token
+  char *tok_list[NUM_TOK - 2] = {";",    "|",     "&&",   "||",  "\n",    "if",
+                                 "then", "elif",  "else", "fi",  "while", "do",
+                                 "done", "until", "!",    "for", "{",     "}",
+                                 "(",    ")"}; // TO_UPDATE:token
   size_t i = 0;
   if (is_redirection(str)) {
     return TOKEN_REDIRECTION;
   }
   while (i < NUM_TOK - 2) {
     size_t len = strlen(tok_list[i]);
-    if(i<5){
-        if (strncmp(str, tok_list[i], len) == 0) {
-            break;
-        }
-    }else{
-        if (strncmp(str, tok_list[i], len) == 0 && in(str[len], "; ><|\t\n'\"$")) {
-            break;
-        }
+    if (i < 5) {
+      if (strncmp(str, tok_list[i], len) == 0) {
+        break;
+      }
+    } else {
+      if (strncmp(str, tok_list[i], len) == 0 &&
+          in(str[len], "; ><|\t\n'\"$")) {
+        break;
+      }
     }
     i++;
   }
@@ -230,14 +230,14 @@ struct lexer *lexer_load(char *input, struct lexer *res) {
       struct token *tok = handle_quote(input + i);
       if (!tok)
         return NULL;
-    if(strlen(tok->value)==0)
-    {
+      if (strlen(tok->value) == 0) {
         free(tok->value);
         free(tok);
-        i+=2;
-    }else{
-      res = lexer_append(res, tok);
-      i += strlen(tok->value) + 2;}
+        i += 2;
+      } else {
+        res = lexer_append(res, tok);
+        i += strlen(tok->value) + 2;
+      }
     } else {
       int tok_type = get_token_type(input + i);
       if (tok_type == WORD) // gestion des words
@@ -255,10 +255,10 @@ struct lexer *lexer_load(char *input, struct lexer *res) {
       } else if (tok_type != -1 &&
                  tok_type != TOKEN_EOF) // gestion tokens normaux
       {
-        char *tok_list[NUM_TOK - 2] = {";","|",  "&&",  "||",  "\n", "if", "then", "elif", "else", "fi", 
-                                 "while",     "do",   "done", "until", "!",
-                                 "for",         "{",     "}",
-                                 "(",     ")"}; // TO_UPDATE:token
+        char *tok_list[NUM_TOK - 2] = {
+            ";",    "|",    "&&", "||",    "\n", "if",   "then",
+            "elif", "else", "fi", "while", "do", "done", "until",
+            "!",    "for",  "{",  "}",     "(",  ")"}; // TO_UPDATE:token
         struct token *tok = token_init(tok_list[tok_type], tok_type);
         res = lexer_append(res, tok);
         i += strlen(tok_list[tok_type]);

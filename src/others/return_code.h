@@ -16,6 +16,4 @@
 #define RC_EXPANSION_ERROR -1
 #define RC_COMMAND_NOT_FOUND 127
 
-
-
 #endif /* ! RETURN_CODE_H */

@@ -7,27 +7,25 @@
  ** @struct lexer; struct parser
  ** Return: Success code
  */
-int parse_input(struct lexer *lexer, struct parser *parser)
-{
-    struct token *token = lexer_peek(lexer);
+int parse_input(struct lexer *lexer, struct parser *parser) {
+  struct token *token = lexer_peek(lexer);
 
-    if (token->type == TOKEN_EOF)
-        return 0;
-        
-    while (token->type == TOKEN_NEWLINE)
-    {
-        lexer_pop(lexer);
-        token = lexer_peek(lexer);
-    }
+  if (token->type == TOKEN_EOF)
+    return 0;
+
+  while (token->type == TOKEN_NEWLINE) {
+    lexer_pop(lexer);
     token = lexer_peek(lexer);
-    if (!token)
-        return RC_SUCCESS;
-
-    struct ast *root = parse_list(lexer, parser);
-    if (!root)
-        return RC_ERROR;
-
-    parser->ast = root;
-
+  }
+  token = lexer_peek(lexer);
+  if (!token)
     return RC_SUCCESS;
+
+  struct ast *root = parse_list(lexer, parser);
+  if (!root)
+    return RC_ERROR;
+
+  parser->ast = root;
+
+  return RC_SUCCESS;
 }
