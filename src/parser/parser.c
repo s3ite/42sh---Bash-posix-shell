@@ -47,11 +47,12 @@ int parse(struct lexer *lexer)
 
     return rc;
 }
-/*
+
+
 static struct ast *build_operator_node(enum operator_type type,
                                        struct ast *left, struct ast *right)
 {
-    struct ast *ast = init_ast();
+    struct ast *ast = malloc(sizeof(struct ast));
     ast->node_type = OPERATOR;
     ast->node = NULL;
 
@@ -69,7 +70,8 @@ static int is_condition_token(struct token *token)
     if(!token)
         return 0;
     return token->type == TOKEN_AND || token->type == TOKEN_OR;
-}*/
+}
+
 
 struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
 {
@@ -77,15 +79,42 @@ struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
     if(!ast)
         return ast;
     ast_append(parser->nodes,ast);
-  /*  struct token *token = lexer_peek(token);
+    struct token *token = lexer_peek(lexer);
+
+    struct ast *pipe = NULL;
 
     while(is_condition_token(token))
     {
+        if(!token)
+            break;
 
-        struct token *copy = token_init(token->value, token->type);
+        struct token *copy = token_init(token->value,token->type);
+
         lexer_pop(lexer);
+        token = lexer_peek(lexer);
 
-    }*/
+        if((pipe=parse_pipeline(lexer,parser)) == NULL)
+        {
+            token_free(copy);
+            return pipe;
+        }
+        ast_append(parser->nodes, pipe);
+
+        if(copy->type == TOKEN_OR)
+        {
+            ast = build_operator_node(OR, ast, pipe);
+            ast_append(parser->nodes, ast);
+        }
+        if(copy->type == TOKEN_AND)
+        {
+            ast = build_operator_node(AND, ast, pipe);
+            ast_append(parser->nodes, ast);
+        }
+        token = lexer_peek(lexer);
+        token_free(copy);
+    }
+    if(!ast)
+        return NULL;
     return ast;
 }
 

@@ -138,12 +138,35 @@ static int simple_cmd_exec(struct ast *ast)
 
 static int exec_op(struct operator_node *op)
 {
-    int res = 1;
-    if (op->left)
-        res = ast_exec(op->left);
-    if (op->right)
-        res = ast_exec(op->right);
-    return res;
+    if(op->type == SEMICOLON)
+    {
+        int res = 1;
+        if (op->left)
+            res = ast_exec(op->left);
+        if (op->right)
+            res = ast_exec(op->right);
+        return res;
+    }
+    else if (op->type == OR)
+    {
+        int left = 0;
+        int right = 0;
+        if(op->left)
+            left = ast_exec(op->left);
+        if(op->right)
+            right = ast_exec(op->right);
+        return !left || !right;
+    }
+    else if(op->type == AND)
+    {
+        if(!op->left || !op->right)
+            return 1;
+        int left = ast_exec(op->left);
+        if(left)
+            return left;
+        return ast_exec(op->right);
+    }
+    return 0;
 }
 
 static int shell_cmd_exec(struct shell_command_node *shell)
