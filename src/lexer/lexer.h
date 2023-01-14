@@ -13,13 +13,13 @@ enum TokenType
     TOKEN_SEMICOLON,
     TOKEN_PIPELINE,
     TOKEN_AND,
-    TOKEN_OR,// ^^^^^^^^token également séparateur^^^^^^^^
+    TOKEN_OR,
+    TOKEN_NEWLINE,// ^^^^^^^^token également séparateur^^^^^^^^
     TOKEN_IF,
     TOKEN_THEN,
     TOKEN_ELIF,
     TOKEN_ELSE,
-    TOKEN_FI,
-    TOKEN_NEWLINE,
+    TOKEN_FI, 
     TOKEN_WHILE,
     TOKEN_DO,
     TOKEN_DONE,
@@ -33,6 +33,7 @@ enum TokenType
     TOKEN_REDIRECTION, //garder ces 3 tokens en dernier
     WORD,
     TOKEN_EOF,
+    
 };
 
 struct token
