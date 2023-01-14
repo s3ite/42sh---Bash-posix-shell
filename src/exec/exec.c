@@ -149,7 +149,6 @@ static int shell_cmd_exec(struct shell_command_node *shell)
        rc = exec_if(shell);
    else if (shell->type == WU)
     {
-        printf("WHILE/n");
        struct condition_wu *wu = shell->node;
        if (wu->type == WHILE)
             rc = exec_w(shell);
@@ -183,7 +182,6 @@ int ast_exec(struct ast *node)
     }
     else if (node->node_type == SHELL_COMMAND)
     {
-        printf("SHELL COMMANDE\n");
         struct shell_command_node *shell = node->node;
         rc = shell_cmd_exec(shell);
     }

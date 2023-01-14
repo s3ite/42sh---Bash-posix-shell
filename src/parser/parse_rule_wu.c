@@ -12,8 +12,6 @@ struct ast *parse_condition(struct lexer *lexer, struct parser *parser,enum Toke
     lexer_pop(lexer);
     struct ast *ast = parse_compound_list(lexer, parser);
     if (!ast)
-        errx(999, "empty");
-    if (!ast)
         return ast;
     ast_append(parser->nodes, ast);
     return ast;
@@ -51,22 +49,18 @@ struct ast *parse_rule_wu(struct lexer *lexer, struct parser *parser,
         cond = parse_condition(lexer,parser,TOKEN_UNTIL);
     }
 
-    if (!cond)
-        errx(999, "parse_rule_f parse condition null");
+
     if (!cond)
         return cond;
 
     struct ast *body = parse_condition(lexer,parser, TOKEN_DO);
 
-    if (!body)
-        errx(999, "parse_rule_f right null");
+  
     if (!body)
         return body;
 
     token = lexer_peek(lexer);
-    if (token->type != TOKEN_DONE)
-        errx(999, "parse_rule_f oken->type != TOKEN_DONE",
-               token->type);
+
     if (token->type != TOKEN_DONE)
         return NULL;
     lexer_pop(lexer);

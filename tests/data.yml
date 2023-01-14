@@ -1,0 +1,408 @@
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_args.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_bad_option1.in
+  stderr: false
+  stdout: '-z bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_bad_option2.in
+  stderr: false
+  stdout: '. bonjour
+
+    '
+- exit_code: 2
+  file: ./tests/test_input/builtins_echo_big_arg.in
+  stderr: true
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_e.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_E.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_e_backslash1.in
+  stderr: false
+  stdout: ' bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_E_backslash1.in
+  stderr: false
+  stdout: ' bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_e_backslash2.in
+  stderr: false
+  stdout: ' -e  bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_E_backslash2.in
+  stderr: false
+  stdout: ' -E  bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_E_backslash3.in
+  stderr: false
+  stdout: " bonjour \n"
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_e_backslash3.in
+  stderr: false
+  stdout: ' -e  bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_EeE.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_eEe.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_empty.in
+  stderr: false
+  stdout: '
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_many_args.in
+  stderr: false
+  stdout: 'bonjour bonjour bonjour bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_many_e_E1.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_many_e_E2.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_mix_options.in
+  stderr: false
+  stdout: bonjour
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_mix_options2.in
+  stderr: false
+  stdout: -P bonjour
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_n.in
+  stderr: false
+  stdout: bonjour
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_simple.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/builtins_echo_two_echos.in
+  stderr: false
+  stdout: 'echo
+
+    '
+- exit_code: 1
+  file: ./tests/test_input/builtins_true_false_false.in
+  stderr: false
+  stdout: ''
+- exit_code: 1
+  file: ./tests/test_input/builtins_true_false_false_args.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/builtins_true_false_indecisive1.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/builtins_true_false_indecisive2.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/builtins_true_false_quoted_builtin.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/builtins_true_false_true.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/builtins_true_false_true_args
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/comment_inline.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/comment_just_a_comment.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/comment_not_first.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/comment_quoted.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/comment_shebang.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/comment_space.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/comments_escaped.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/if_and_commands.in
+  stderr: false
+  stdout: 'true
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/if_bad.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/if_border_effects.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/if_cp_list_bad_sep.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/if_cp_list_big_bodies.in
+  stderr: false
+  stdout: 'a
+
+    b
+
+    c
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/if_cp_list_many_conds.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/if_cp_list_mix_separators.in
+  stderr: false
+  stdout: 'a echo b
+
+    c
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/if_cp_list_multiline.in
+  stderr: false
+  stdout: 'a
+
+    b
+
+    c
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/if_false.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/if_false_else.in
+  stderr: false
+  stdout: 'success
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/if_if.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/if_integer_comparaison.in
+  stderr: false
+  stdout: 'true
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/if_true.in
+  stderr: false
+  stdout: 'true
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/if_true_else.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/no_args.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/script_list_number.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/script_tower.in
+  stderr: false
+  stdout: ''
+- exit_code: 2
+  file: ./tests/test_input/simple_command_big_arg1.in
+  stderr: true
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/simple_command_big_arg2.in
+  stderr: false
+  stdout: '.
+
+    ..
+
+    .git
+
+    .gitignore
+
+    .vscode
+
+    CMakeLists.txt
+
+    README.md
+
+    build
+
+    src
+
+    tests
+
+    '
+- exit_code: 1
+  file: ./tests/test_input/simple_command_empty.in
+  stderr: true
+  stdout: ''
+- exit_code: 127
+  file: ./tests/test_input/simple_command_not_existant1.in
+  stderr: true
+  stdout: ''
+- exit_code: 127
+  file: ./tests/test_input/simple_command_not_existant2.in
+  stderr: true
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/simple_command_one_arg.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/simple_command_space.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/simple_command_two_args.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/simple_command_weird_args.in
+  stderr: false
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/single_quote_empty.in
+  stderr: false
+  stdout: '
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/single_quote_empty_quote.in
+  stderr: false
+  stdout: '"bonjour"
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/single_quote_keyword1.in
+  stderr: false
+  stdout: 'if true; then echo bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/single_quote_keyword2.in
+  stderr: false
+  stdout: 'pwd
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/single_quote_multiple_quotes.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/single_quote_quote_command.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/single_quote_quote_reserved_word.in
+  stderr: false
+  stdout: 'pwd
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/single_quote_simple_quote.in
+  stderr: false
+  stdout: 'bonjour
+
+    '
+- exit_code: 0
+  file: ./tests/test_input/single_quote_spaces_as_arg.in
+  stderr: false
+  stdout: "                  \n"
+- exit_code: 0
+  file: ./tests/test_input/single_quote_spaces_in_arg.in
+  stderr: false
+  stdout: 'bonjour le monde
+
+    '
+- exit_code: 2
+  file: ./tests/test_input/single_quote_unterminated_quote.in
+  stderr: true
+  stdout: ''
+- exit_code: 0
+  file: ./tests/test_input/special_test.in
+  stderr: false
+  stdout: 'condition
+
+    its_true
+
+    '
