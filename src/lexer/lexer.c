@@ -188,6 +188,24 @@ int handle_comment(char *input) {
   return i;
 }
 
+char *strnappend(char *str1,char *str2,int n)
+{
+  if(n==0 || str2 == NULL || str1 == NULL)
+  {
+    return str1;
+  }
+  int i = strlen(str1);
+  str1=realloc(str1, 1+ i + n);
+  int j = 0;
+  while(j<n)
+  {
+    str1[i+j]=str2[j];
+    j++;
+  }
+  str1[i+j]='\0';
+  return str1;
+}
+
 struct token *handle_quote(char *input) {
   int j = 1;
   while (*(input + j) != '\0' && *(input + j) != '\'') {
@@ -200,6 +218,13 @@ struct token *handle_quote(char *input) {
   strncpy(value, input + 1, j - 1);
   if (j > 0) {
     value[j - 1] = '\0';
+    int k=0;
+    while(!in(*(input + j + k +1),"; ><|\t\n'\"$"))
+    {
+      k++;
+      
+    }
+    value=strnappend(value,input+j+1,k);
   }
   struct token *tok = token_init(value, WORD);
   return tok;
