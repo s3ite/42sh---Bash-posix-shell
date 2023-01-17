@@ -12,8 +12,6 @@ int in(char c, char *delim) {
   while (delim[i] != '\0' && delim[i] != c) {
     i++;
   }
-  if(delim[i] == c)
-    printf("%c\n",delim[i]);
   return (delim[i] == c || c == '\0');
 }
 
