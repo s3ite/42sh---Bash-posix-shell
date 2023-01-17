@@ -8,9 +8,12 @@ int run_command(char **cmd) {
     return 0;
   if (!childID) {
     rc = execvp(cmd[0], cmd);
-    if (rc == -1)
-      exit(127);
-    exit(0);
+    if(errno == EACCES)
+      err(EACCES, "Error while executing cmd: %s", cmd[0]);
+    else if(errno == ENOENT)
+      err(ENOENT, "Error while executing cmd: %s", cmd[0]);
+    else
+      err(0, "Error while executing cmd: %s", cmd[0]);
   } else {
     int status = 0;
     waitpid(childID, &status, 0);
@@ -18,7 +21,7 @@ int run_command(char **cmd) {
       int res = WEXITSTATUS(status);
       return res;
     }
-    return 0;
+    return 1;
   }
 
   return rc;
@@ -115,8 +118,7 @@ static int simple_cmd_exec(struct ast *ast) {
   if (is_buildin(cmd)) {
     rc = run_buildin(cmd);
     free_cmd(cmd);
-
-    return 0;
+    return rc;
   } else {
     rc = run_command(cmd);
   }
