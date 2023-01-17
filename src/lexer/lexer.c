@@ -12,6 +12,8 @@ int in(char c, char *delim) {
   while (delim[i] != '\0' && delim[i] != c) {
     i++;
   }
+  if(delim[i] == c)
+    printf("%c\n",delim[i]);
   return (delim[i] == c || c == '\0');
 }
 
@@ -89,6 +91,36 @@ char *strnappend(char *str1,char *str2,int n)
   return str1;
 }
 
+char *remove_backslash(char *str)
+{
+  int i = strlen(str);
+  char *ret=malloc(i + 1);
+  int j=0;
+  int k=0;
+  while(str[j]!='\0')  
+  {
+    if(str[j]=='\\')
+    {
+      j++;
+      if(str[j]=='\\')
+      {
+        ret[k]=str[j];
+        k++;
+        j++;
+      }
+    }
+    else
+    {
+      ret[k]=str[j];
+      k++;
+      j++;
+    }
+  }
+  ret[k]='\0';
+  free(str);
+  return ret;
+}
+
 struct token *handle_quote(char *input) {
   int j = 1;
   while (*(input + j) != '\0' && *(input + j) != '\'') {
@@ -102,7 +134,7 @@ struct token *handle_quote(char *input) {
   if (j > 0) {
     value[j - 1] = '\0';
     int k=0;
-    while(!in(*(input + j + k +1),"; ><|\t\n'\"$"))
+    while(!in(*(input + j + k +1),"; ><|\t\n'\"$"))// fix 
     {
       k++;
     }
@@ -114,7 +146,16 @@ struct token *handle_quote(char *input) {
 
 struct token *handle_word(char *input) {
   int j = 0;
-  while (!in(input[j], "; ><|\t\n'\"$")) {
+  int escaped=0;
+  while (!(escaped==0 && in(input[j], "; ><|\t\n'\"$"))) {
+    if(input[j]=='\\')
+    {
+      escaped=1;
+    }
+    else
+    {
+      escaped=0;
+    }
     j++;
   }
   char *value = malloc(j + 1);
@@ -129,7 +170,14 @@ struct token *handle_word(char *input) {
 struct lexer *lexer_load(char *input, struct lexer *res) {
   int i = 0;
   while (input[i] != '\0') {
-    if (strncmp(input + i, "#", 1) == 0) // gestion des commentaires
+    if (strncmp(input + i, "\\", 1) == 0) // gestion des commentaires
+    {
+      struct token *tok = handle_word(input + i +1);
+      res = lexer_append(res, tok);
+      i += strlen(tok->value) + 1;
+      tok->value=remove_backslash(tok->value);
+    }
+    else if (strncmp(input + i, "#", 1) == 0) // gestion des commentaires
     {
       i += handle_comment(input + i);
     } else if (strncmp(input + i, "'", 1) == 0) // getsion des singles quotes
@@ -152,6 +200,7 @@ struct lexer *lexer_load(char *input, struct lexer *res) {
         struct token *tok = handle_word(input + i);
         res = lexer_append(res, tok);
         i += strlen(tok->value);
+        tok->value=remove_backslash(tok->value);
       } else if (tok_type == TOKEN_REDIRECTION) // gestion des redirections
       {
         char *redir_list[7] = {">|", "<>", ">>", ">&", "<&", ">", "<"};
