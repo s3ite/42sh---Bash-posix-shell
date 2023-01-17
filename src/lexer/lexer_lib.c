@@ -72,13 +72,6 @@ void lexer_print(struct lexer *v) {
   printf("\n");
 }
 
-static void left_shift(struct token **arr, int index, int size) {
-  while (index < size - 1) {
-    arr[index] = arr[index + 1];
-    index++;
-  }
-}
-
 struct token *lexer_peek(struct lexer *v) {
   return v->data[v->index];
 }
