@@ -64,6 +64,8 @@ int main(int argc, char **argv)
 
     struct lexer *lexer = lexer_init(10, input);
     lexer = lexer_load(input, lexer);
+    if(!lexer)
+        return 2;//erreur lors du lexing
 
     //lexer_print(lexer);
 

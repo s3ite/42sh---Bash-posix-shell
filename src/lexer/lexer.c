@@ -5,124 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct lexer *lexer_init(size_t n, char *input) {
-  struct lexer *v = malloc(sizeof(struct lexer));
 
-  struct token **array = malloc(n * sizeof(struct token));
-  if (v == NULL || array == NULL)
-    return NULL;
-
-  v->capacity = n;
-  v->size = 0;
-  v->data = array;
-  v->input = input;
-  v->index = 0;
-  return v;
-}
-
-void lexer_destroy(struct lexer *v) {
-  for (size_t i = 0; i < v->size; i++) {
-    if (v->data[i]->type == WORD) {
-      free(v->data[i]->value);
-    }
-    free(v->data[i]);
-  }
-  // free(v->input);  //mettre en commentaire si l'input du lexer est
-  // statique(test)
-  free(v->data);
-  free(v);
-}
-
-struct lexer *lexer_resize(struct lexer *v, size_t n) {
-  if (n == 0)
-    return v;
-  if (v == NULL)
-    return NULL;
-  if (n == v->capacity)
-    return v;
-
-  struct token **mem = realloc(v->data, n * sizeof(struct token));
-  if (mem == NULL)
-    return NULL;
-  v->capacity = n;
-  v->data = mem;
-
-  if (n < v->size) {
-    v->size = n;
-    return v;
-  }
-  return v;
-}
-
-struct lexer *lexer_append(struct lexer *v, struct token *elt) {
-  if (v == NULL)
-    return v;
-  if (v->size > v->capacity - 1)
-    v = lexer_resize(v, v->capacity * 2);
-  v->data[v->size] = elt;
-  v->size += 1;
-  return v;
-}
-
-void lexer_print(struct lexer *v) {
-  printf("input is: %s\n", v->input);
-  printf("token list is: ");
-  for (size_t i = 0; i < v->size; i++) {
-    printf("%s ", v->data[i]->value);
-  }
-  printf("\ntokentype list is: ");
-  for (size_t i = 0; i < v->size; i++) {
-    printf("%d ", (enum TokenType)v->data[i]->type);
-  }
-  printf("\n");
-}
-
-static void left_shift(struct token **arr, int index, int size) {
-  while (index < size - 1) {
-    arr[index] = arr[index + 1];
-    index++;
-  }
-}
-
-struct lexer *lexer_remove(struct lexer *v, size_t i) {
-  if (!v)
-    return NULL;
-  if (i >= v->size)
-    return NULL;
-  left_shift(v->data, i, v->size);
-  v->size--;
-  if (v->size <= v->capacity / 2)
-    v = lexer_resize(v, v->capacity / 2);
-  return v;
-}
-
-struct token *lexer_peek(struct lexer *v) {
-  return v->data[v->index];
-}
-
-struct token *lexer_pop(struct lexer *v) {
-  struct token *ret = v->data[v->index];
-  v->index += 1;
-  return ret;
-}
-
-struct token *token_init(char *value, enum TokenType type) {
-  struct token *ret = ret = malloc(sizeof(struct token));
-  if (!ret) {
-    return NULL;
-  }
-  ret->type = type;
-  ret->value = value;
-  return ret;
-}
-
-void token_free(struct token *token) {
-  if (token) {
-    if (token->type == WORD && token->value)
-      free(token->value);
-    free(token);
-  }
-}
 
 int in(char c, char *delim) {
   size_t i = 0;
@@ -188,6 +71,54 @@ int handle_comment(char *input) {
   return i;
 }
 
+char *strnappend(char *str1,char *str2,int n)
+{
+  if(n==0 || str2 == NULL || str1 == NULL)
+  {
+    return str1;
+  }
+  int i = strlen(str1);
+  str1=realloc(str1, 1+ i + n);
+  int j = 0;
+  while(j<n)
+  {
+    str1[i+j]=str2[j];
+    j++;
+  }
+  str1[i+j]='\0';
+  return str1;
+}
+
+char *remove_backslash(char *str)
+{
+  int i = strlen(str);
+  char *ret=malloc(i + 1);
+  int j=0;
+  int k=0;
+  while(str[j]!='\0')  
+  {
+    if(str[j]=='\\')
+    {
+      j++;
+      if(str[j]=='\\')
+      {
+        ret[k]=str[j];
+        k++;
+        j++;
+      }
+    }
+    else
+    {
+      ret[k]=str[j];
+      k++;
+      j++;
+    }
+  }
+  ret[k]='\0';
+  free(str);
+  return ret;
+}
+
 struct token *handle_quote(char *input) {
   int j = 1;
   while (*(input + j) != '\0' && *(input + j) != '\'') {
@@ -200,6 +131,12 @@ struct token *handle_quote(char *input) {
   strncpy(value, input + 1, j - 1);
   if (j > 0) {
     value[j - 1] = '\0';
+    int k=0;
+    while(!in(*(input + j + k +1),"; ><|\t\n'\"$"))// fix 
+    {
+      k++;
+    }
+    value=strnappend(value,input+j+1,k);
   }
   struct token *tok = token_init(value, WORD);
   return tok;
@@ -207,7 +144,16 @@ struct token *handle_quote(char *input) {
 
 struct token *handle_word(char *input) {
   int j = 0;
-  while (!in(input[j], "; ><|\t\n'\"$")) {
+  int escaped=0;
+  while (!(escaped==0 && in(input[j], "; ><|\t\n'\"$"))) {
+    if(input[j]=='\\')
+    {
+      escaped=1;
+    }
+    else
+    {
+      escaped=0;
+    }
     j++;
   }
   char *value = malloc(j + 1);
@@ -222,7 +168,14 @@ struct token *handle_word(char *input) {
 struct lexer *lexer_load(char *input, struct lexer *res) {
   int i = 0;
   while (input[i] != '\0') {
-    if (strncmp(input + i, "#", 1) == 0) // gestion des commentaires
+    if (strncmp(input + i, "\\", 1) == 0) // gestion des commentaires
+    {
+      struct token *tok = handle_word(input + i +1);
+      res = lexer_append(res, tok);
+      i += strlen(tok->value) + 1;
+      tok->value=remove_backslash(tok->value);
+    }
+    else if (strncmp(input + i, "#", 1) == 0) // gestion des commentaires
     {
       i += handle_comment(input + i);
     } else if (strncmp(input + i, "'", 1) == 0) // getsion des singles quotes
@@ -245,6 +198,7 @@ struct lexer *lexer_load(char *input, struct lexer *res) {
         struct token *tok = handle_word(input + i);
         res = lexer_append(res, tok);
         i += strlen(tok->value);
+        tok->value=remove_backslash(tok->value);
       } else if (tok_type == TOKEN_REDIRECTION) // gestion des redirections
       {
         char *redir_list[7] = {">|", "<>", ">>", ">&", "<&", ">", "<"};

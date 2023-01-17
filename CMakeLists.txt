@@ -53,6 +53,7 @@ src/parse_command_line/parse_command_line.c
 src/exec/exec.c
 src/exec/exec.h
 
+src/lexer/lexer_lib.c
 src/lexer/lexer.c
 src/lexer/lexer.h
 
