@@ -7,7 +7,8 @@ int run_command(char **cmd) {
   if (childID == -1)
     return 0;
   if (!childID) {
-    rc = execvp(cmd[0], cmd);
+    execvp(cmd[0], cmd);
+    //printf("Value of exevpc:%d \n", value);
     if(errno == EACCES)
       err(EACCES, "Error while executing cmd: %s", cmd[0]);
     else if(errno == ENOENT)

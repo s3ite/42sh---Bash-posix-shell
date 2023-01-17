@@ -76,7 +76,6 @@ int main(int argc, char **argv)
     lexer_destroy(lexer);
     free(input);
     if (rc == RC_ERROR)
-        return RC_ERROR;
-
+        return 2;
     return rc;
 }
