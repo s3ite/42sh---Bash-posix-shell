@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../ast/list.h"
 #include "parser.h"
@@ -97,13 +98,13 @@ struct ast *build_rd_input_node(struct token *token,
  */
 struct ast *build_rd_output_node(struct token *token,
                                  struct redirection_node *rd_node) {
-  if (check_simple_input(token->value, '>'))
+  if (strcmp(token->value, ">") == 0)
     rd_node->type = FD_OUT;
-  else if (check_complex_input(token->value, ">>"))
+  else if (strcmp(token->value, ">>") == 0)
     rd_node->type = FD_OUT_APPEND;
-  else if (check_complex_input(token->value, ">|"))
+  else if (strcmp(token->value, ">|") == 0)
     rd_node->type = FD_OUT_NO_CLOBBER;
-  else if (check_complex_input(token->value, ">&"))
+  else if (strcmp(token->value, ">&") == 0)
     rd_node->type = FD_DUP_OUT;
   else
     return NULL;

@@ -1,8 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "../ast/list.h"
 #include "parser.h"
+
+static bool is_command_operator(struct token * token)
+{
+    return token->type == TOKEN_REDIRECTION;
+}
+
 
 /**
  * Arg1 :  struct provide by the lexer
@@ -28,6 +35,11 @@ struct simple_command_node *parse_simple_commande(struct lexer *lexer,
   dlist_push_front(prefix, next_token->value);
 
   next_token = lexer_peek(lexer);
+
+  if (is_command_operator(next_token)) {
+    lexer_pop(lexer);
+    next_token = lexer_peek(lexer);
+  }
 
   // Si 1er toker est un args -> ajouter dans prefix
   if (next_token->value[0] == '-') {

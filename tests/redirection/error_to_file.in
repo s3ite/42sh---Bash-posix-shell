@@ -1,0 +1,1 @@
+echoo false_command 2> tests/42trash/error2.log; echo Hello World

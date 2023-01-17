@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <strings.h>
 
 void exit_program(int signo)
 {
@@ -43,7 +44,7 @@ int main(int argc, char **argv)
         while (1)
         {
             char *str = malloc(1024);
-            //printf("42sh$ ");
+            printf("42sh$ ");
             fgets(str, 1024, stdin);
             str[strlen(str) - 1] = '\0';
 
@@ -61,7 +62,7 @@ int main(int argc, char **argv)
             free(str);
         }
     }
-
+    
     struct lexer *lexer = lexer_init(10, input);
     lexer = lexer_load(input, lexer);
 

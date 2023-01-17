@@ -1,0 +1,1 @@
+cat < tests/42trash/DONT_DELETE/cat_file
