@@ -77,6 +77,12 @@ static int run_buildin(char **cmd) {
   } else if (strcmp("exit", name) == 0) {
     return my_exit();
   }
+  else if (strcmp("true", name) == 0) {
+    return my_true();
+  }
+  else if (strcmp("false", name) == 0) {
+    return my_false();
+  }
 
   return 0;
 }
@@ -89,6 +95,10 @@ static int is_buildin(char **cmd) {
   if (strcmp("echo", name) == 0)
     return 1;
   else if (strcmp("exit", name) == 0)
+    return 1;
+  else if (strcmp("true", name) == 0)
+    return 1;
+  else if (strcmp("false", name) == 0)
     return 1;
 
   return 0;
