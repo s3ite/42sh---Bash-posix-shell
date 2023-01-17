@@ -25,7 +25,6 @@ int parse(struct lexer *lexer) {
   parser->nodes = ast_list_init();
 
   int rc = parse_input(lexer, parser);
-
   if (!rc) // TODO: Free all structures to avoid memory leak.   // Then// return error code.
   {
     struct token *token = lexer_peek(lexer);
@@ -38,6 +37,7 @@ int parse(struct lexer *lexer) {
   }
 
   rc = ast_exec(parser->ast);
+
 
   parser_free(parser);
 

@@ -2,30 +2,27 @@
 #include "../redirection/redirection.h"
 
 int run_command(char **cmd) {
-  int rc = 0;
+  int status;
   pid_t childID = fork();
   if (childID == -1)
     return 0;
   if (!childID) {
     execvp(cmd[0], cmd);
-    //printf("Value of exevpc:%d \n", value);
     if(errno == EACCES)
-      err(EACCES, "Error while executing cmd: %s", cmd[0]);
+      err(126, "Error while executing cmd: %s", cmd[0]);
     else if(errno == ENOENT)
-      err(ENOENT, "Error while executing cmd: %s", cmd[0]);
+    {
+      err(127, "Error while executing cmd (unknown): %s", cmd[0]);
+    }
     else
       err(0, "Error while executing cmd: %s", cmd[0]);
-  } else {
-    int status = 0;
-    waitpid(childID, &status, 0);
-    if (WIFEXITED(status)) {
-      int res = WEXITSTATUS(status);
-      return res;
-    }
-    return 1;
+  } else 
+  {
+      if (waitpid(childID, &status, 0) != childID) 
+            return -1;
   }
 
-  return rc;
+  return WEXITSTATUS(status);
 }
 
 static void free_cmd(char **cmd) {
