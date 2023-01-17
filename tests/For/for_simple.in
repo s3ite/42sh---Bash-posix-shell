@@ -1,0 +1,1 @@
+for f in file*; do echo $f:; cat $f; done
