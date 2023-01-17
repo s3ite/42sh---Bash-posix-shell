@@ -48,16 +48,20 @@ struct lexer {
   size_t size;
 };
 
+//from lexer_lib.c
 struct lexer *lexer_init(size_t n, char *input);
 void lexer_destroy(struct lexer *v);
 struct lexer *lexer_resize(struct lexer *v, size_t n);
 struct lexer *lexer_append(struct lexer *v, struct token *elt);
 void lexer_print(struct lexer *v);
-struct lexer *lexer_remove(struct lexer *v, size_t i);
 struct token *lexer_pop(struct lexer *v);
 struct token *lexer_peek(struct lexer *v);
-
-struct lexer *lexer_load(char *input, struct lexer *res);
 struct token *token_init(char *value, enum TokenType type);
 void token_free(struct token *token);
+
+//from lexer.c
+struct lexer *lexer_load(char *input, struct lexer *res);
+
+
+
 #endif /* LEXER.H */
