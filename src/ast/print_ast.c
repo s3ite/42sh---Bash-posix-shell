@@ -65,7 +65,7 @@ void print_ast_bis(struct ast *ast) {
   if (ast->node_type == SIMPLE_COMMAND) {
     struct simple_command_node *node = ast->node;
     printf("Commande:\n");
-    dlist_print(node->prefix);
+    dlist_print(node->args);
     dlist_print(node->values);
     printf("%s\n", "");
   }

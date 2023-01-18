@@ -44,11 +44,18 @@ enum redirection_type {
   FD_IO // <>
 };
 
-struct simple_command_node {
-  struct dlist *prefix; // commande & args
-  struct dlist *values; // valeur après la cmd
 
-  // struct red *red;  les redirections de la commande
+struct redirection_node {
+  enum redirection_type type;
+  int io_number;
+  char *word;
+};
+
+
+struct simple_command_node {
+  struct dlist *args; // commande & args
+  struct dlist *values; // valeur après la cmd
+  struct ast *prefix; // redirection && assignement 
 };
 
 union rules {
@@ -62,13 +69,6 @@ union rules {
 struct shell_command_node {
   enum shell_type type; //
   void *node;
-};
-
-struct redirection_node {
-  enum redirection_type type;
-  int io_number;
-  struct ast *command1;
-  struct ast *command2;
 };
 
 enum operator_type { AND = 0, OR, BITAND, SEMICOLON };
@@ -88,7 +88,9 @@ enum node_type {
   SIMPLE_COMMAND,
   SHELL_COMMAND,
   OPERATOR,
-  REDIRECTION
+  PREFIX,
+  REDIRECTION,
+  ELEMENT,
 };
 
 /**
@@ -98,7 +100,6 @@ enum node_type {
 struct ast {
   enum node_type node_type;
   void *node;
-  struct RC rc;
 };
 
 struct ast_node {

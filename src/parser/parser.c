@@ -25,15 +25,19 @@ int parse(struct lexer *lexer) {
   parser->nodes = ast_list_init();
 
   int rc = parse_input(lexer, parser);
-
-  if (rc == RC_ERROR) // TODO: Free all structures to avoid memory leak.
-                      // Then// return error code.
-    return RC_ERROR;
-
-  // print_ast(parser);
-  // print_ast_bis(parser->ast);
+  if (!rc) // TODO: Free all structures to avoid memory leak.   // Then// return error code.
+  {
+    struct token *token = lexer_peek(lexer);
+    if(token->type == TOKEN_EOF)
+    {
+      fprintf(stderr, "Invalid grammar: GET EOF\n");
+      parser_free(parser);
+      return RC_ERROR;
+    }
+  }
 
   rc = ast_exec(parser->ast);
+
 
   parser_free(parser);
 

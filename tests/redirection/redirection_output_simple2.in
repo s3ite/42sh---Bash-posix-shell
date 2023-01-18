@@ -1,1 +1,1 @@
-#ls > tests/42trash/simple2
+ls ./ > tests/42trash/simple2

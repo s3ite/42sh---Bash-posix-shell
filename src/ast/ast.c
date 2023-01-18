@@ -2,7 +2,6 @@
 
 struct ast *init_ast(void) {
   struct ast *ast = malloc(sizeof(struct ast));
-  ast->rc.code = 0;
   return ast;
 }
 

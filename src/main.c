@@ -1,4 +1,4 @@
-#define _POSIX_SOURCE
+#define _POSIX_SOURCE 
 #include "exec/exec.h"
 #include "lexer/lexer.h"
 #include "parse_command_line/parse_command_line.h"
@@ -9,9 +9,17 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <strings.h>
+
+#include "./ast/variable.h"
+#include <stdlib.h>
+
+
+struct variables_list *variables_list;
 
 void exit_program(int signo)
 {
+  variables_list = malloc(sizeof(struct variables_list));
   if (signo == SIGTERM)
   {
     //printf("End of the instance...");
@@ -24,8 +32,8 @@ void exit_program(int signo)
     pid_t shell_pid = getpid();
 
     // free of datas allocated
-    //TODO:
-
+    free(variables_list);
+    
     // on envoie un SIGQUIT au shell
     kill(shell_pid, SIGQUIT);
   }
@@ -34,7 +42,7 @@ void exit_program(int signo)
 int main(int argc, char **argv)
 {
     if (signal(SIGTERM, exit_program) == SIG_ERR)
-      printf("\ncan't catch SIGTERM\n");
+      fprintf(stderr, "\ncan't catch SIGTERM\n");
 
 
     char *input = parse_command_line(argc, argv);
@@ -43,7 +51,7 @@ int main(int argc, char **argv)
         while (1)
         {
             char *str = malloc(1024);
-            //printf("42sh$ ");
+            printf("42sh$ ");
             fgets(str, 1024, stdin);
             str[strlen(str) - 1] = '\0';
 
@@ -56,6 +64,7 @@ int main(int argc, char **argv)
             if(rc == RC_ERROR)
             {
                 free(str);
+                free(variables_list);
                 return RC_ERROR;
             }
             free(str);
@@ -66,9 +75,12 @@ int main(int argc, char **argv)
     lexer = lexer_load(new_input, lexer);
 
     if(!lexer)
+    {
+      free(variables_list);
         return 2;//erreur lors du lexing
+    }
 
-    //lexer_print(lexer);
+    lexer_print(lexer);
 
 
     int rc = parse(lexer);
@@ -79,5 +91,6 @@ int main(int argc, char **argv)
     if (rc == RC_ERROR)
         return RC_ERROR;
 
+    free(variables_list);
     return rc;
 }

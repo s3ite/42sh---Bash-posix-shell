@@ -1,0 +1,1 @@
+sort < tests/42trash/DONT_DELETE/input > tests/42trash/DONT_DELETE/output

@@ -1,20 +1,6 @@
 #include "parser.h"
 #include <err.h>
 
-struct ast *has_redirection(struct lexer *lexer, struct parser *parser,
-                            struct ast *command1) {
-  struct ast *redir = NULL;
-  struct token *token = lexer_peek(lexer);
-
-  if (token->type == TOKEN_REDIRECTION) {
-    redir = parse_redirection(lexer, parser, command1);
-    if (redir)
-      return redir;
-  }
-
-  return command1;
-}
-
 static struct ast *handle_shell_command(struct lexer *lexer,
                                         struct parser *parser) {
   struct ast *res = NULL;
@@ -24,10 +10,9 @@ static struct ast *handle_shell_command(struct lexer *lexer,
       token->type == TOKEN_UNTIL) {
     res = parse_shell_command(lexer, parser);
     if (!res)
-      errx(999, "%s\n", "parse_command null");
+      fprintf(stderr, "parse_command null");
   }
 
-  res = has_redirection(lexer, parser, res);
   return res;
 }
 
@@ -45,12 +30,30 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser) {
 
   else if (token->type == WORD) {
     res = add_simple_commande(lexer, parser);
-    res = has_redirection(lexer, parser, res);
     if (!res)
-      errx(999, "add_simple_commande null");
+      fprintf(stderr, "parse_command null");
+  }
+
+  // Redirection des parses commands
+  // lexer_pop(lexer);
+  token = lexer_peek(lexer);
+
+  if (token->type == TOKEN_EOF || token->type == TOKEN_SEMICOLON)
+    return res;
+
+  while(token->type == TOKEN_REDIRECTION)
+  {
+      struct ast *res = parse_redirection(lexer, parser);
+      if(!res)
+      {
+        fprintf(stderr,"Error parse_command");
+        return NULL;
+      } 
+      ast_append(parser->nodes, res);
+      token = lexer_peek(lexer);
   }
 
   if (!res)
-    errx(999, "parse_command  end null");
+    fprintf(stderr, "parse_command null");
   return res;
 }

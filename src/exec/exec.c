@@ -2,29 +2,27 @@
 #include "../redirection/redirection.h"
 
 int run_command(char **cmd) {
-  int rc = 0;
+  int status;
   pid_t childID = fork();
   if (childID == -1)
     return 0;
   if (!childID) {
-    rc = execvp(cmd[0], cmd);
+    execvp(cmd[0], cmd);
     if(errno == EACCES)
-      err(EACCES, "Error while executing cmd: %s", cmd[0]);
+      err(126, "Error while executing cmd: %s", cmd[0]);
     else if(errno == ENOENT)
-      err(ENOENT, "Error while executing cmd: %s", cmd[0]);
+    {
+      err(127, "Error while executing cmd (unknown): %s", cmd[0]);
+    }
     else
       err(0, "Error while executing cmd: %s", cmd[0]);
-  } else {
-    int status = 0;
-    waitpid(childID, &status, 0);
-    if (WIFEXITED(status)) {
-      int res = WEXITSTATUS(status);
-      return res;
-    }
-    return 1;
+  } else 
+  {
+      if (waitpid(childID, &status, 0) != childID) 
+            return -1;
   }
 
-  return rc;
+  return WEXITSTATUS(status);
 }
 
 static void free_cmd(char **cmd) {
@@ -36,13 +34,13 @@ static void free_cmd(char **cmd) {
   free(cmd);
 }
 
-static char **to_command(struct dlist *prefix, struct dlist *values) {
-  if (!prefix || !values)
+static char **to_command(struct dlist *args, struct dlist *values) {
+  if (!args || !values)
     return NULL;
 
-  size_t size = dlist_size(prefix) + dlist_size(values);
+  size_t size = dlist_size(args) + dlist_size(values);
 
-  struct dlist_item *tmp1 = prefix->head;
+  struct dlist_item *tmp1 = args->head;
   struct dlist_item *tmp2 = values->head;
 
   char **cmd = malloc(sizeof(char *) * (size + 1));
@@ -93,7 +91,7 @@ static int run_buildin(char **cmd) {
 /**
  * return 1 if the command is a builtin command, 0 otherwise
  */
-static int is_buildin(char **cmd) {
+static int is_builtin(char **cmd) {
   char *name = cmd[0];
   if (strcmp("echo", name) == 0)
     return 1;
@@ -109,13 +107,19 @@ static int is_buildin(char **cmd) {
 
 static int simple_cmd_exec(struct ast *ast) {
   struct simple_command_node *cmd_nbode = ast->node;
-  struct dlist *prefix = cmd_nbode->prefix;
+  struct dlist *args = cmd_nbode->args;
   struct dlist *values = cmd_nbode->values;
 
-  char **cmd = to_command(prefix, values);
+  struct ast *prefix = cmd_nbode->prefix;
+  if (prefix && prefix->node_type == REDIRECTION){
+    struct redirection_node *rd_node = prefix->node;
+    redirection_exec_handler(rd_node);
+  }
+
+  char **cmd = to_command(args, values);
   int rc = 0; // run_buildin(cmd);
 
-  if (is_buildin(cmd)) {
+  if (is_builtin(cmd)) {
     rc = run_buildin(cmd);
     free_cmd(cmd);
     return rc;
@@ -166,21 +170,10 @@ static int shell_cmd_exec(struct shell_command_node *shell) {
     else
       rc = exec_u(shell);
   }
-
+  
   return rc;
 }
 
-/**
- * execute REDIRECTION ast node
- * Return Return code
- */
-
-static int redir_exec(struct redirection_node *redirection) {
-  // printf("successfully executed REDIRECTION");
-
-  redirection_exec_handler(redirection);
-  return 0;
-}
 
 int ast_exec(struct ast *node) {
   int rc = 0;
@@ -196,9 +189,6 @@ int ast_exec(struct ast *node) {
   } else if (node->node_type == OPERATOR) {
     struct operator_node *op = node->node;
     rc = exec_op(op);
-  } else if (node->node_type == REDIRECTION) {
-    struct redirection_node *redir = node->node;
-    rc = redir_exec(redir);
   }
   return rc;
 }

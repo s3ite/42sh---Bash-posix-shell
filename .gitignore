@@ -1,4 +1,8 @@
 .vscode
+.clang-format
+
 build/
 tests/data.yml
+
 tests/42trash
+tests/42trash_criterion

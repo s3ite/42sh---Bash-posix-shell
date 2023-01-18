@@ -1,1 +1,1 @@
-#echo bonjour > tests/42trash/simple
+echo bonjour > tests/42trash/simple
