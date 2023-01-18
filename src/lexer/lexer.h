@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NUM_TOK 22 // TO_UPDATE:token
+#define NUM_TOK 23 // TO_UPDATE:token
 
 enum TokenType
 {
@@ -14,6 +14,7 @@ enum TokenType
     TOKEN_OR,
     TOKEN_AND,
     TOKEN_PIPELINE,
+    TOKEN_NEG,
     TOKEN_NEWLINE, // ^^^^^^^^token également séparateur^^^^^^^^
     TOKEN_IF,
     TOKEN_THEN,
@@ -24,12 +25,12 @@ enum TokenType
     TOKEN_DO,
     TOKEN_DONE,
     TOKEN_UNTIL,
-    TOKEN_NEG,
     TOKEN_FOR,
     TOKEN_OPEN_ACC,
     TOKEN_CLOSE_ACC,
     TOKEN_OPEN_PAR,
     TOKEN_CLOSE_PAR,
+    TOKEN_IN,
     TOKEN_REDIRECTION, // garder ces 3 tokens en dernier
     WORD,
     TOKEN_EOF,

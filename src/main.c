@@ -77,7 +77,11 @@ int main(int argc, char **argv)
     if(!lexer)
     {
       free(variables_list);
-        return 2;//erreur lors du lexing
+      free(input);
+      free(new_input);
+      fprintf(stderr, "%s", "Syntax error: Unterminated quoted string\n");
+      //printf("Syntax error: Unterminated quoted string");
+      return 2;//erreur lors du lexing
     }
 
     //lexer_print(lexer);

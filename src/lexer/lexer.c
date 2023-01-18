@@ -46,9 +46,9 @@ int get_token_type(char *str)
         return -1;
     }
     char *tok_list[NUM_TOK - 2] = {
-        ";",    "||",   "&&", "|",     "\n", "if",   "then",
+        ";",    "||",   "&&", "|", "!",     "\n", "if",   "then",
         "elif", "else", "fi", "while", "do", "done", "until",
-        "!",    "for",  "{",  "}",     "(",  ")"
+           "for",  "{",  "}",     "(",  ")","in"
     }; // TO_UPDATE:token
     size_t i = 0;
     if (is_redirection(str))
@@ -58,7 +58,7 @@ int get_token_type(char *str)
     while (i < NUM_TOK - 2)
     {
         size_t len = strlen(tok_list[i]);
-        if (i < 5)
+        if (i < 6)
         {
             if (strncmp(str, tok_list[i], len) == 0)
             {
@@ -85,6 +85,8 @@ int handle_comment(char *input)
     {
         i++;
     }
+    if(*(input + i) == '\n')
+      i++;
     return i;
 }
 
@@ -209,7 +211,10 @@ struct lexer *lexer_load(char *input, struct lexer *res)
         {
             struct token *tok = handle_quote(input + i);
             if (!tok)
+            {
+                lexer_destroy(res);
                 return NULL;
+            }
             if (strlen(tok->value) == 0)
             {
                 free(tok->value);
@@ -247,9 +252,9 @@ struct lexer *lexer_load(char *input, struct lexer *res)
                      && tok_type != TOKEN_EOF) // gestion tokens normaux
             {
                 char *tok_list[NUM_TOK - 2] = {
-                    ";",    "||",   "&&", "|",     "\n", "if",   "then",
+                    ";",    "||",   "&&", "|", "!",    "\n", "if",   "then",
                     "elif", "else", "fi", "while", "do", "done", "until",
-                    "!",    "for",  "{",  "}",     "(",  ")"
+                        "for",  "{",  "}",     "(",  ")","in"
                 }; // TO_UPDATE:token
                 struct token *tok = token_init(tok_list[tok_type], tok_type);
                 res = lexer_append(res, tok);
