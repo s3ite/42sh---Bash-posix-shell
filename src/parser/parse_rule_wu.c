@@ -60,7 +60,7 @@ struct ast *parse_rule_wu(struct lexer *lexer, struct parser *parser,
         return NULL;
     lexer_pop(lexer);
 
-    struct condition_wu *while_node = build_condition_wu(cond, body, tmp);
+    struct condition_wu *while_node = build_condition_wu(body, cond, tmp);
     struct shell_command_node *shell_node = prev_ast->node;
     shell_node->node = while_node;
     shell_node->type = type;

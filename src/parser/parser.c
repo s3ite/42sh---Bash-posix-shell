@@ -121,9 +121,24 @@ struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
 
 struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 {
-    struct ast *ast = parse_command(lexer, parser);
+   
+    int neg = 0;
+    struct token *token = lexer_peek(lexer);
+    if(token && token->type == TOKEN_NEG)
+        lexer_pop(lexer);
 
+    struct ast *ast = parse_command(lexer, parser);
+    if (!ast)
+        return ast;
     ast_append(parser->nodes, ast);
+
+    if(neg)
+    {
+        ast = build_operator_node(OR, ast, NULL);
+        ast_append(parser->nodes, ast);
+    }
+
+
     return ast;
 }
 
