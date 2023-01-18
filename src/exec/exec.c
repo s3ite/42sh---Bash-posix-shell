@@ -174,9 +174,11 @@ static int exec_op(struct operator_node *op)
         int right = 0;
         if (op->left)
             left = ast_exec(op->left);
+        if(!left)
+            return left;
         if (op->right)
             right = ast_exec(op->right);
-        return !left || !right;
+        return right;
     }
     else if (op->type == AND)
     {
