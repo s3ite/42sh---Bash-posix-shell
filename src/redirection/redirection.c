@@ -50,29 +50,13 @@ int fd_out(struct redirection_node *rd_node, bool append, char *path) {
   // case of >>
   if (append)
   lseek(STDOUT_FILENO, 0, SEEK_END);
-
-  // execute command 1
-  ast_exec(rd_node->command1);
-  fflush(stdout);
-
-  // restore STDOUT_FILENO
-  new_out = dup2(save_stdout, io_fd);
-  if (new_out == -1) {
-    close(save_stdout);
-    return 1; // error
-  }
-
-  // close stdout duplicate as stdout's file descriptor was retrieved in
-  if (close(save_stdout) == -1)
-    return 1; // error
-
   return 0;
 }
 
 /**
  * Gestion de redirection <
  */
-int fd_in(struct redirection_node *rd_node, char *path, bool append) {
+int fd_in(struct redirection_node *rd_node, char *path) {
   int io_fd = rd_node->io_number == -1 ? STDIN_FILENO : rd_node->io_number;
 
   int file_fd = open(path, O_RDONLY);
@@ -102,24 +86,6 @@ int fd_in(struct redirection_node *rd_node, char *path, bool append) {
     close(save_stdin);
     return 1; // error
   }
-
-  // case of >>
-  if (append)
-    lseek(io_fd, 0, SEEK_END);
-
-  // execute command 1
-  ast_exec(rd_node->command1);
-
-  // restore STDIN_FILENO
-  new_in = dup2(save_stdin, io_fd);
-  if (new_in == -1) {
-    close(save_stdin);
-    return 1; // error
-  }
-
-  // close stdout duplicate as stdout's file descriptor was retrieved in
-  if (close(save_stdin) == -1)
-    return 1; // error
 
   return 0;
 }
@@ -194,22 +160,6 @@ int fd_io(struct redirection_node *rd_node, char *path)
     return 1; // error
   }
 
-  // execute command 1
-  ast_exec(rd_node->command1);
-
-  // restore STDIN_FILENO
-  new_in = dup2(save_stdin, io_fd);
-  new_in = dup2(save_stdout, STDOUT_FILENO);
-
-  if (new_in == -1) {
-    close(save_stdin);
-    close(save_stdout);
-    return 1; // error
-  }
-
-  // close stdout duplicate as stdout's file descriptor was retrieved in
-  if (close(save_stdin) == -1 || close(save_stdout) == -1)
-    return 1; // error    
   return 0;
 }
 /**
@@ -217,8 +167,9 @@ int fd_io(struct redirection_node *rd_node, char *path)
  * @input : value of the execution the last commands (input)
  */
 int redirection_exec_handler(struct redirection_node *rd_node) {
-  struct simple_command_node *tmp = rd_node->command2->node;
-  char *path = tmp->prefix->head->value;
+  char *path = rd_node->word;
+
+  fflush(stdout);
 
   // >
   if (rd_node->type == FD_OUT || rd_node->type == FD_OUT_NO_CLOBBER)
@@ -237,7 +188,7 @@ int redirection_exec_handler(struct redirection_node *rd_node) {
 
   // <
   if (rd_node->type == FD_IN)
-    return fd_in(rd_node, path, false);
+    return fd_in(rd_node, path);
   // <>
   if (rd_node->type == FD_IO)
     return fd_io(rd_node, path);
