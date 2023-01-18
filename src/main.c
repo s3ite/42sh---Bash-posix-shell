@@ -86,11 +86,6 @@ int main(int argc, char **argv)
 
     lexer_destroy(lexer);
     free(input);
-    if (rc == RC_ERROR)
-    {
-      free(variables_list);
-        return RC_ERROR;
-    }
 
     free(variables_list);
     return rc;
