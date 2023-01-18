@@ -38,7 +38,7 @@ int get_token_type(char *str) {
   if (in(str[0], " \t")) {
     return -1;
   }
-  char *tok_list[NUM_TOK - 2] = {";",    "|",     "&&",   "||",  "\n",    "if",
+  char *tok_list[NUM_TOK - 2] = {";",    "||",     "&&",   "|",  "\n",    "if",
                                  "then", "elif",  "else", "fi",  "while", "do",
                                  "done", "until", "!",    "for", "{",     "}",
                                  "(",    ")"}; // TO_UPDATE:token
@@ -132,7 +132,7 @@ struct token *handle_quote(char *input) {
   if (j > 0) {
     value[j - 1] = '\0';
     int k=0;
-    while(!in(*(input + j + k +1),"; ><|\t\n'\"$"))// fix 
+    while(!in(*(input + j + k +1),"; ><|\t\n'\"$"))
     {
       k++;
     }
@@ -144,8 +144,8 @@ struct token *handle_quote(char *input) {
 
 struct token *handle_word(char *input) {
   int j = 0;
-  int escaped=0;
-  while (!(escaped==0 && in(input[j], "; ><|\t\n'\"$"))) {
+  int escaped=(input[j]=='\\');
+  while (input[j]!='\0'&&!(escaped==0 && in(input[j], "; ><|\t\n'\"$"))) {
     if(input[j]=='\\')
     {
       escaped=1;
@@ -168,11 +168,11 @@ struct token *handle_word(char *input) {
 struct lexer *lexer_load(char *input, struct lexer *res) {
   int i = 0;
   while (input[i] != '\0') {
-    if (strncmp(input + i, "\\", 1) == 0) // gestion des commentaires
+    if (strncmp(input + i, "\\", 1) == 0) // gestion des backslash
     {
-      struct token *tok = handle_word(input + i +1);
+      struct token *tok = handle_word(input + i);
       res = lexer_append(res, tok);
-      i += strlen(tok->value) + 1;
+      i += strlen(tok->value);
       tok->value=remove_backslash(tok->value);
     }
     else if (strncmp(input + i, "#", 1) == 0) // gestion des commentaires
@@ -210,7 +210,7 @@ struct lexer *lexer_load(char *input, struct lexer *res) {
                  tok_type != TOKEN_EOF) // gestion tokens normaux
       {
         char *tok_list[NUM_TOK - 2] = {
-            ";",    "|",    "&&", "||",    "\n", "if",   "then",
+            ";",    "||",    "&&", "|",    "\n", "if",   "then",
             "elif", "else", "fi", "while", "do", "done", "until",
             "!",    "for",  "{",  "}",     "(",  ")"}; // TO_UPDATE:token
         struct token *tok = token_init(tok_list[tok_type], tok_type);

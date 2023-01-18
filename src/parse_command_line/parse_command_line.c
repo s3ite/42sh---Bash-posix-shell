@@ -15,6 +15,29 @@ int get_file_size(FILE *f) {
   return res;
 }
 
+char *remove_escaped_newline(char *input)
+{
+  size_t l=strlen(input);
+  char *ret=malloc(l+1);
+  size_t i = 0;
+  size_t k = 0;
+  while(input[i]!='\0')
+  {
+    if(input[i]=='\\'&&input[i+1]=='\n')
+    {
+      i+=2;
+    }
+    else
+    {
+      ret[k]=input[i];
+      i++;
+      k++;
+    }
+  }
+  ret[k]='\0';
+  return ret;
+}
+
 char *parse_command_line(int argc, char **argv) {
   if (argc >= 3) {
     int opt;

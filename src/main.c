@@ -70,9 +70,10 @@ int main(int argc, char **argv)
             free(str);
         }
     }
-    
-    struct lexer *lexer = lexer_init(10, input);
-    lexer = lexer_load(input, lexer);
+    char *new_input=remove_escaped_newline(input);
+    struct lexer *lexer = lexer_init(10, new_input);
+    lexer = lexer_load(new_input, lexer);
+
     if(!lexer)
     {
       free(variables_list);
@@ -86,6 +87,9 @@ int main(int argc, char **argv)
 
     lexer_destroy(lexer);
     free(input);
+    free(new_input);
+    if (rc == RC_ERROR)
+        return RC_ERROR;
 
     free(variables_list);
     return rc;
