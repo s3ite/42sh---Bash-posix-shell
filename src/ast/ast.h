@@ -3,108 +3,126 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-struct RC {
-  int code;
-  char error[1024];
+struct RC
+{
+    int code;
+    char error[1024];
 };
 
-struct condition_if_node {
-  struct ast *condition_c; // ast associé à la condition
-  struct ast *then_action; // action si autorisée
-  struct ast *else_action; // Action si faux
+struct condition_if_node
+{
+    struct ast *condition_c; // ast associé à la condition
+    struct ast *then_action; // action si autorisée
+    struct ast *else_action; // Action si faux
 };
 
-enum loop {
-  UNTIL = 1,
-  WHILE = 2,
+enum loop
+{
+    UNTIL = 1,
+    WHILE = 2,
 };
 
-enum shell_type {
-  IF = 0,
-  WU = 1,
+enum shell_type
+{
+    IF = 0,
+    WU = 1,
 };
 
-struct condition_wu {
-  struct ast *condition;
-  struct ast *body;
-  enum loop type;
-  // 0 = While
-  // 1 = Untile
+struct condition_wu
+{
+    struct ast *condition;
+    struct ast *body;
+    enum loop type;
+    // 0 = While
+    // 1 = Untile
 };
 
-enum redirection_type {
-  FD_OUT,            // >
-  FD_OUT_APPEND,     // >>
-  FD_OUT_NO_CLOBBER, // >|
-  FD_DUP_OUT,        // >&
+enum redirection_type
+{
+    FD_OUT, // >
+    FD_OUT_APPEND, // >>
+    FD_OUT_NO_CLOBBER, // >|
+    FD_DUP_OUT, // >&
 
-  FD_IN,     // <
-  FD_DUP_IN, // <&
+    FD_IN, // <
+    FD_DUP_IN, // <&
 
-  FD_IO // <>
+    FD_IO // <>
 };
 
-
-struct redirection_node {
-  enum redirection_type type;
-  int io_number;
-  char *word;
+struct redirection_node
+{
+    enum redirection_type type;
+    int io_number;
+    char *word;
 };
 
-
-struct simple_command_node {
-  struct dlist *args; // commande & args
-  struct dlist *values; // valeur après la cmd
-  struct ast *prefix; // redirection && assignement 
+struct simple_command_node
+{
+    struct dlist *args; // commande & args
+    struct dlist *values; // valeur après la cmd
+    struct ast *prefix; // redirection && assignement
 };
 
-union rules {
-  struct condition_if_node if_condition;
-  // struct rule_for rule_for;
-  // struct rule_while rule_while;
-  // struct rule_until rule_until;
-  // struct rule_case rule_case;
+union rules
+{
+    struct condition_if_node if_condition;
+    // struct rule_for rule_for;
+    // struct rule_while rule_while;
+    // struct rule_until rule_until;
+    // struct rule_case rule_case;
 };
 
-struct shell_command_node {
-  enum shell_type type; //
-  void *node;
+struct shell_command_node
+{
+    enum shell_type type; //
+    void *node;
 };
 
-enum operator_type { AND = 0, OR, BITAND, SEMICOLON };
-
-struct operator_node {
-  enum operator_type type;
-  struct ast *left;
-  struct ast *right;
+enum operator_type
+{
+    AND = 0,
+    OR,
+    BITAND,
+    SEMICOLON
 };
 
-enum node_type {
-  INPUT,
-  LISTE,
-  AND_OR,
-  PIPELINE,
-  COMMAND,
-  SIMPLE_COMMAND,
-  SHELL_COMMAND,
-  OPERATOR,
-  PREFIX,
-  REDIRECTION,
-  ELEMENT,
+struct operator_node
+{
+    enum operator_type type;
+    struct ast *left;
+    struct ast *right;
+};
+
+enum node_type
+{
+    INPUT,
+    LISTE,
+    AND_OR,
+    PIPELINE,
+    COMMAND,
+    SIMPLE_COMMAND,
+    SHELL_COMMAND,
+    OPERATOR,
+    PREFIX,
+    REDIRECTION,
+    ELEMENT,
 };
 
 /**
  * node_type = type du noeud de l'ast
  * node = value du noeud de l'ast
  */
-struct ast {
-  enum node_type node_type;
-  void *node;
+struct ast
+{
+    enum node_type node_type;
+    void *node;
 };
 
-struct ast_node {
-  struct ast *ast;
-  struct ast_node *next;
+struct ast_node
+{
+    struct ast *ast;
+    struct ast_node *next;
 };
 
 struct ast *init_ast(void);

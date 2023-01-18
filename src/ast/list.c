@@ -3,110 +3,120 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct dlist *dlist_init(void) {
-  struct dlist *head = malloc(sizeof(struct dlist));
-  head->size = 0;
-  head->head = NULL;
-  head->tail = NULL;
+struct dlist *dlist_init(void)
+{
+    struct dlist *head = malloc(sizeof(struct dlist));
+    head->size = 0;
+    head->head = NULL;
+    head->tail = NULL;
 
-  return head;
+    return head;
 }
 
-int dlist_push_front(struct dlist *list, char *data) {
-  if (!data)
-    return 0;
+int dlist_push_front(struct dlist *list, char *data)
+{
+    if (!data)
+        return 0;
 
-  struct dlist_item *newhead = malloc(sizeof(struct dlist_item));
-  if (!newhead)
-    return 0;
+    struct dlist_item *newhead = malloc(sizeof(struct dlist_item));
+    if (!newhead)
+        return 0;
 
-  newhead->value = data;
-  newhead->prev = NULL;
+    newhead->value = data;
+    newhead->prev = NULL;
 
-  if (!list->head) {
-    newhead->next = NULL;
+    if (!list->head)
+    {
+        newhead->next = NULL;
 
+        list->head = newhead;
+        list->tail = newhead;
+        list->size = dlist_size(list);
+        return 1;
+    }
+    newhead->next = list->head;
+
+    list->head->prev = newhead;
     list->head = newhead;
-    list->tail = newhead;
+
     list->size = dlist_size(list);
     return 1;
-  }
-  newhead->next = list->head;
-
-  list->head->prev = newhead;
-  list->head = newhead;
-
-  list->size = dlist_size(list);
-  return 1;
 }
 
-int dlist_push_back(struct dlist *list, char *data) {
-  if (!data)
-    return 0;
+int dlist_push_back(struct dlist *list, char *data)
+{
+    if (!data)
+        return 0;
 
-  struct dlist_item *newlast = malloc(sizeof(struct dlist_item));
-  if (!newlast)
-    return 0;
+    struct dlist_item *newlast = malloc(sizeof(struct dlist_item));
+    if (!newlast)
+        return 0;
 
-  newlast->value = data;
-  newlast->next = NULL;
+    newlast->value = data;
+    newlast->next = NULL;
 
-  if (!list->head) {
-    newlast->prev = NULL;
+    if (!list->head)
+    {
+        newlast->prev = NULL;
 
-    list->head = newlast;
+        list->head = newlast;
+        list->tail = newlast;
+        list->size = dlist_size(list);
+        return 1;
+    }
+
+    newlast->prev = list->tail;
+
+    list->tail->next = newlast;
     list->tail = newlast;
+
     list->size = dlist_size(list);
     return 1;
-  }
-
-  newlast->prev = list->tail;
-
-  list->tail->next = newlast;
-  list->tail = newlast;
-
-  list->size = dlist_size(list);
-  return 1;
 }
 
-size_t dlist_size(const struct dlist *list) {
-  if (!list)
-    return 0;
+size_t dlist_size(const struct dlist *list)
+{
+    if (!list)
+        return 0;
 
-  struct dlist_item *head = list->head;
-  int res = 0;
+    struct dlist_item *head = list->head;
+    int res = 0;
 
-  for (; head; head = head->next)
-    res++;
+    for (; head; head = head->next)
+        res++;
 
-  free(head);
-  return res;
+    free(head);
+    return res;
 }
 
-void dlist_print(const struct dlist *list) {
-  if (list->size == 0)
-    return;
+void dlist_print(const struct dlist *list)
+{
+    if (list->size == 0)
+        return;
 
-  struct dlist_item *index = list->head;
+    struct dlist_item *index = list->head;
 
-  while (index) {
-    printf("%s\n", index->value);
-    index = index->next;
-  }
+    while (index)
+    {
+        printf("%s\n", index->value);
+        index = index->next;
+    }
 }
 
-void free_dlist(struct dlist *list) {
-  struct dlist_item *tmpindex = list->head;
+void free_dlist(struct dlist *list)
+{
+    struct dlist_item *tmpindex = list->head;
 
-  for (; list->head;) {
-    tmpindex = list->head;
-    list->head = list->head->next;
+    for (; list->head;)
+    {
+        tmpindex = list->head;
+        list->head = list->head->next;
 
-    free(tmpindex);
-  }
-  list->head = NULL;
-  list->tail = NULL;
-  list->size = 0;
+        free(tmpindex);
+    }
+    list->head = NULL;
+    list->tail = NULL;
+    list->size = 0;
 
-  free(list);
+    free(list);
 }

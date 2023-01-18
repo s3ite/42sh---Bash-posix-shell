@@ -8,47 +8,50 @@
 
 #define NUM_TOK 22 // TO_UPDATE:token
 
-enum TokenType {
-  TOKEN_SEMICOLON,
-  TOKEN_OR,
-  TOKEN_AND,
-  TOKEN_PIPELINE,
-  TOKEN_NEWLINE, // ^^^^^^^^token également séparateur^^^^^^^^
-  TOKEN_IF,
-  TOKEN_THEN,
-  TOKEN_ELIF,
-  TOKEN_ELSE,
-  TOKEN_FI,
-  TOKEN_WHILE,
-  TOKEN_DO,
-  TOKEN_DONE,
-  TOKEN_UNTIL,
-  TOKEN_NEG,
-  TOKEN_FOR,
-  TOKEN_OPEN_ACC,
-  TOKEN_CLOSE_ACC,
-  TOKEN_OPEN_PAR,
-  TOKEN_CLOSE_PAR,
-  TOKEN_REDIRECTION, // garder ces 3 tokens en dernier
-  WORD,
-  TOKEN_EOF,
-  
+enum TokenType
+{
+    TOKEN_SEMICOLON,
+    TOKEN_OR,
+    TOKEN_AND,
+    TOKEN_PIPELINE,
+    TOKEN_NEWLINE, // ^^^^^^^^token également séparateur^^^^^^^^
+    TOKEN_IF,
+    TOKEN_THEN,
+    TOKEN_ELIF,
+    TOKEN_ELSE,
+    TOKEN_FI,
+    TOKEN_WHILE,
+    TOKEN_DO,
+    TOKEN_DONE,
+    TOKEN_UNTIL,
+    TOKEN_NEG,
+    TOKEN_FOR,
+    TOKEN_OPEN_ACC,
+    TOKEN_CLOSE_ACC,
+    TOKEN_OPEN_PAR,
+    TOKEN_CLOSE_PAR,
+    TOKEN_REDIRECTION, // garder ces 3 tokens en dernier
+    WORD,
+    TOKEN_EOF,
+
 };
 
-struct token {
-  enum TokenType type;
-  char *value;
+struct token
+{
+    enum TokenType type;
+    char *value;
 };
 
-struct lexer {
-  char *input;
-  struct token **data;
-  size_t index;
-  size_t capacity;
-  size_t size;
+struct lexer
+{
+    char *input;
+    struct token **data;
+    size_t index;
+    size_t capacity;
+    size_t size;
 };
 
-//from lexer_lib.c
+// from lexer_lib.c
 struct lexer *lexer_init(size_t n, char *input);
 void lexer_destroy(struct lexer *v);
 struct lexer *lexer_resize(struct lexer *v, size_t n);
@@ -59,9 +62,7 @@ struct token *lexer_peek(struct lexer *v);
 struct token *token_init(char *value, enum TokenType type);
 void token_free(struct token *token);
 
-//from lexer.c
+// from lexer.c
 struct lexer *lexer_load(char *input, struct lexer *res);
-
-
 
 #endif /* LEXER.H */

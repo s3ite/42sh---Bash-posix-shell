@@ -1,3 +1,4 @@
 #include "built_in.h"
 
-void my_unset(void) {}
+void my_unset(void)
+{}
