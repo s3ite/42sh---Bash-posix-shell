@@ -1,0 +1,2 @@
+echo Hello, World! > tests/42trash_criterion/expected/echo2
+echo Hello, World! >> tests/42trash_criterion/expected/echo2

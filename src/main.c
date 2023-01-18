@@ -80,7 +80,7 @@ int main(int argc, char **argv)
         return 2;//erreur lors du lexing
     }
 
-    lexer_print(lexer);
+    //lexer_print(lexer);
 
 
     int rc = parse(lexer);

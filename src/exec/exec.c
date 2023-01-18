@@ -106,6 +106,7 @@ static int is_builtin(char **cmd) {
 }
 
 static int simple_cmd_exec(struct ast *ast) {
+  int rc = 0;
   struct simple_command_node *cmd_nbode = ast->node;
   struct dlist *args = cmd_nbode->args;
   struct dlist *values = cmd_nbode->values;
@@ -113,11 +114,13 @@ static int simple_cmd_exec(struct ast *ast) {
   struct ast *prefix = cmd_nbode->prefix;
   if (prefix && prefix->node_type == REDIRECTION){
     struct redirection_node *rd_node = prefix->node;
-    redirection_exec_handler(rd_node);
+    rc = redirection_exec_handler(rd_node);
+
+    if (rc != 0) // Error handling
+      return rc;
   }
 
   char **cmd = to_command(args, values);
-  int rc = 0; // run_buildin(cmd);
 
   if (is_builtin(cmd)) {
     rc = run_buildin(cmd);

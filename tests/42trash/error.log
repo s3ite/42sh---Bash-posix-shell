@@ -1,0 +1,1 @@
+./tests/redirection/redirection_output_diff_fd.in: line 1: echoo: command not found

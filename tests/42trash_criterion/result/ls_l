@@ -1,0 +1,22 @@
+total 148
+drwxr-xr-x 3 s3ite s3ite  4096 Jan 17 13:46 42trash
+drwxr-xr-x 4 s3ite s3ite  4096 Jan 17 12:10 42trash_criterion
+-rwxr-xr-x 1 s3ite s3ite 59656 Jan 18 15:19 check
+drwxr-xr-x 2 s3ite s3ite  4096 Jan 14 18:04 comment
+-rw-r--r-- 1 s3ite s3ite  1376 Jan 18 14:43 create_test.py
+-rw-r--r-- 1 s3ite s3ite  8505 Jan 18 13:50 data.yml
+drwxr-xr-x 2 s3ite s3ite  4096 Jan 17 20:33 echo
+drwxr-xr-x 2 s3ite s3ite  4096 Jan 17 20:33 edge_case
+drwxr-xr-x 2 s3ite s3ite  4096 Jan 17 20:33 empty
+drwxr-xr-x 2 s3ite s3ite  4096 Jan 17 20:33 For
+drwxr-xr-x 2 s3ite s3ite  4096 Jan 14 19:19 if
+-rw-r--r-- 1 s3ite s3ite   256 Jan 17 20:33 Makefile
+drwxr-xr-x 3 s3ite s3ite  4096 Jan 18 14:43 redirection
+drwxr-xr-x 2 s3ite s3ite  4096 Jan 17 20:33 script
+drwxr-xr-x 2 s3ite s3ite  4096 Jan 14 19:19 simple_command
+drwxr-xr-x 2 s3ite s3ite  4096 Jan 14 18:04 single_quote
+-rw-r--r-- 1 s3ite s3ite   449 Jan 11 19:48 Tests.c
+-rw-r--r-- 1 s3ite s3ite  1993 Jan 17 20:33 Tests_redirection.c
+-rw-r--r-- 1 s3ite s3ite  1940 Jan 14 20:34 test_suite.py
+drwxr-xr-x 2 s3ite s3ite  4096 Jan 14 19:19 true_false
+drwxr-xr-x 2 s3ite s3ite  4096 Jan 17 20:57 variable
