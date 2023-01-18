@@ -8,9 +8,9 @@ add_compile_options(-Werror)
 add_compile_options(-Wall)
 add_compile_options(-Wextra)
 add_compile_options(-Wvla)
-#add_compile_options(-fsanitize=address)
-#add_link_options(-fsanitize=address)
-#add_compile_options(-g)
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
+add_compile_options(-g)
 
 
 add_executable(42sh
@@ -42,7 +42,7 @@ src/parser/parse_rule_else.c
 src/parser/parse_rule_elif.c
 src/parser/parse_redirection.c
 src/parser/parse_rule_wu.c
-src/built_in/echo.c
+src/parser/parse_prefix.c
 
 src/parser/parse_command.c
 src/parser/parse_compound_list.c

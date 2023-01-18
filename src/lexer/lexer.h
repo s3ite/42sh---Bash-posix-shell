@@ -10,9 +10,9 @@
 
 enum TokenType {
   TOKEN_SEMICOLON,
-  TOKEN_PIPELINE,
-  TOKEN_AND,
   TOKEN_OR,
+  TOKEN_AND,
+  TOKEN_PIPELINE,
   TOKEN_NEWLINE, // ^^^^^^^^token également séparateur^^^^^^^^
   TOKEN_IF,
   TOKEN_THEN,
