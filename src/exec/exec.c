@@ -100,9 +100,9 @@ static int run_buildin(char **cmd)
     {
         return my_false();
     }
-    else if (strcmp("cmd", name) == 0)
+    else if (strcmp("cd", name) == 0)
     {
-        return my_cd(cmd);
+        return my_cd(cmd, size);
     }
 
     return 0;
