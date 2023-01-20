@@ -12,8 +12,7 @@ static struct ast *handle_shell_command(struct lexer *lexer,
         || token->type == TOKEN_UNTIL)
     {
         res = parse_shell_command(lexer, parser);
-        if (!res)
-            fprintf(stderr, "parse_command null");
+      
     }
 
     return res;

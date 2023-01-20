@@ -21,34 +21,33 @@ int get_rc(struct global_var *ret)
  ** @struct lexer *
  ** Return: Success code
  */
-int parse(struct lexer *lexer)
+struct parser *parse(struct lexer *lexer)
 {
     // Check for eof or newline
 
     struct parser *parser = malloc(sizeof(struct parser));
     if (!parser)
-        return RC_ERROR;
+        return NULL;
     parser->ast = NULL;
     parser->nodes = ast_list_init();
 
     int rc = parse_input(lexer, parser);
-    if (!rc) // TODO: Free all structures to avoid memory leak.   // Then//
-             // return error code.
+    if (!rc) 
     {
         struct token *token = lexer_peek(lexer);
         if (token->type == TOKEN_EOF)
         {
             fprintf(stderr, "Invalid grammar: GET EOF\n");
-            parser_free(parser);
-            return RC_ERROR;
+            node_free(parser->nodes);
+            free(parser);
+            return NULL;
         }
+        fprintf(stderr, "42sh: syntax error near unexpected token %s\n", token->value); 
+        node_free(parser->nodes);
+        free(parser);
+        return NULL;
     }
-
-    rc = ast_exec(parser->ast);
-
-    parser_free(parser);
-
-    return rc;
+    return parser;
 }
 
 static struct ast *build_operator_node(enum operator_type type,
@@ -208,6 +207,8 @@ void ast_free(struct ast *ast)
 void parser_free(struct parser *parser)
 {
     // ast_free(parser->ast);
+    if(!parser)
+        return;
     node_free(parser->nodes);
     free(parser);
 }

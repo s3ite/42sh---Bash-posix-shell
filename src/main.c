@@ -52,30 +52,7 @@ int main(int argc, char **argv)
       //printf("The command line syntax is: 42sh [OPTIONS] [SCRIPT] [ARGUMENTS ...]\n");
       return 2;
     }
-    /*if (!input)
-    {
-        while (1)
-        {
-            char *str = malloc(1024);
-            printf("42sh$ ");
-            fgets(str, 1024, stdin);
-            str[strlen(str) - 1] = '\0';
-
-            struct lexer *lexer = lexer_init(10, str);
-            lexer = lexer_load(str, lexer);
-            //lexer_print(lexer);
-            int rc = parse(lexer);
-            lexer_destroy(lexer);
-            free(input);
-            if(rc == RC_ERROR)
-            {
-                free(str);
-                free(variables_list);
-                return RC_ERROR;
-            }
-            free(str);
-        }
-    }*/
+  
     char *new_input=remove_escaped_newline(input);
     struct lexer *lexer = lexer_init(10, new_input);
     lexer = lexer_load(new_input, lexer);
@@ -89,17 +66,22 @@ int main(int argc, char **argv)
       return 2;//erreur lors du lexing
     }
 
-    //lexer_print(lexer);
 
-
-    int rc = parse(lexer);
-
+    int rc = 0;
+    struct parser *parser = parse(lexer);
+    if(parser)
+    {
+      rc = ast_exec(parser->ast);
+    }
+    else
+    {
+      rc = 2;
+    }
     lexer_destroy(lexer);
+    parser_free(parser);
     free(input);
     free(new_input);
-    if (rc == RC_ERROR)
-        return RC_ERROR;
-
+  
     free(variables_list);
     return rc;
 }
