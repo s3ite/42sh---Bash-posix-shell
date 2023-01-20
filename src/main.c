@@ -69,9 +69,13 @@ int main(int argc, char **argv)
     int rc = 0;
     struct parser *parser = parse(lexer);
     if(parser)
+    {
       rc = ast_exec(parser->ast);
+    }
     else
+    {
       rc = 2;
+    }
     lexer_destroy(lexer);
     parser_free(parser);
     free(input);

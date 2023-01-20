@@ -38,14 +38,15 @@ struct parser *parse(struct lexer *lexer)
         if (token->type == TOKEN_EOF)
         {
             fprintf(stderr, "Invalid grammar: GET EOF\n");
-            parser_free(parser);
+            node_free(parser->nodes);
+            free(parser);
             return NULL;
         }
+        fprintf(stderr, "42sh: syntax error near unexpected token %s\n", token->value); 
+        node_free(parser->nodes);
+        free(parser);
+        return NULL;
     }
-
-    //rc = ast_exec(parser->ast);
-   // parser_free(parser);
-
     return parser;
 }
 
@@ -206,6 +207,8 @@ void ast_free(struct ast *ast)
 void parser_free(struct parser *parser)
 {
     // ast_free(parser->ast);
+    if(!parser)
+        return;
     node_free(parser->nodes);
     free(parser);
 }
