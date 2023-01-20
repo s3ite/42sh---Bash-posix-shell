@@ -46,9 +46,9 @@ int get_token_type(char *str)
         return -1;
     }
     char *tok_list[NUM_TOK - 3] = {
-        ";",    "||",   "&&", "|", "!",     "\n", "if",   "then",
+        ";",    "||",   "&&", "|", "!",     "\n",  "{",  "}",     "(",  ")","if",   "then",
         "elif", "else", "fi", "while", "do", "done", "until",
-           "for",  "{",  "}",     "(",  ")","in"
+           "for", "in"
     }; // TO_UPDATE:token
     size_t i = 0;
     if (is_redirection(str))
@@ -58,7 +58,7 @@ int get_token_type(char *str)
     while (i < NUM_TOK - 3)
     {
         size_t len = strlen(tok_list[i]);
-        if (i < 6)
+        if (i < 10)
         {
             if (strncmp(str, tok_list[i], len) == 0)
             {
@@ -68,7 +68,7 @@ int get_token_type(char *str)
         else
         {
             if (strncmp(str, tok_list[i], len) == 0
-                && in(str[len], "; ><|\t\n'\"$"))
+                && in(str[len], "; ><|\t\n'\"$(){}"))
             {
                 break;
             }
@@ -164,7 +164,7 @@ struct token *handle_quote(char *input)
     {
         value[j - 1] = '\0';
         int k = 0;
-        while (!in(*(input + j + k + 1), "; ><|\t\n'\"$"))
+        while (!in(*(input + j + k + 1), "; ><|\t\n'\"$(){}"))
         {
             k++;
         }
@@ -178,7 +178,7 @@ struct token *handle_word(char *input)
 {
     int j = 0;
     int escaped = (input[j] == '\\');
-    while (input[j] != '\0' && !(escaped == 0 && in(input[j], "; ><|\t\n'\"$")))
+    while (input[j] != '\0' && !(escaped == 0 && in(input[j], "; ><|\t\n'\"$(){}")))
     {
         if (input[j] == '\\')
         {
@@ -393,10 +393,10 @@ struct lexer *lexer_load(char *input, struct lexer *res)
                      && tok_type != TOKEN_EOF) // gestion tokens "normaux"
             {
                 char *tok_list[NUM_TOK - 3] = {
-                    ";",    "||",   "&&", "|", "!",    "\n", "if",   "then",
+                    ";",    "||",   "&&", "|", "!",     "\n",  "{",  "}",     "(",  ")","if",   "then",
                     "elif", "else", "fi", "while", "do", "done", "until",
-                        "for",  "{",  "}",     "(",  ")","in"
-                }; // TO_UPDATE:token
+                    "for", "in"
+            }; // TO_UPDATE:token
                 struct token *tok = token_init(tok_list[tok_type], tok_type);
                 res = lexer_append(res, tok);
                 i += strlen(tok_list[tok_type]);

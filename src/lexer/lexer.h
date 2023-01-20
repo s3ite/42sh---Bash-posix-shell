@@ -15,7 +15,11 @@ enum TokenType
     TOKEN_AND,
     TOKEN_PIPELINE,
     TOKEN_NEG,
-    TOKEN_NEWLINE, // ^^^^^^^^token également séparateur^^^^^^^^
+    TOKEN_NEWLINE,
+    TOKEN_OPEN_ACC,
+    TOKEN_CLOSE_ACC,
+    TOKEN_OPEN_PAR,
+    TOKEN_CLOSE_PAR, // ^^^^^^^^token également séparateur^^^^^^^^
     TOKEN_IF,
     TOKEN_THEN,
     TOKEN_ELIF,
@@ -26,10 +30,6 @@ enum TokenType
     TOKEN_DONE,
     TOKEN_UNTIL,
     TOKEN_FOR,
-    TOKEN_OPEN_ACC,
-    TOKEN_CLOSE_ACC,
-    TOKEN_OPEN_PAR,
-    TOKEN_CLOSE_PAR,
     TOKEN_IN,
     TOKEN_REDIRECTION, // garder ces 4 tokens en dernier
     WORD,
