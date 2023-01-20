@@ -84,7 +84,8 @@ enum operator_type
     AND = 0,
     OR,
     BITAND,
-    SEMICOLON
+    SEMICOLON,
+    NEG
 };
 
 struct operator_node

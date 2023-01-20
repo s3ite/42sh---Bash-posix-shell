@@ -124,8 +124,10 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
    
     int neg = 0;
     struct token *token = lexer_peek(lexer);
-    if(token && token->type == TOKEN_NEG)
+    if(token && token->type == TOKEN_NEG){
         lexer_pop(lexer);
+        neg = 1;
+    }
 
     struct ast *ast = parse_command(lexer, parser);
     if (!ast)
@@ -134,7 +136,7 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 
     if(neg)
     {
-        ast = build_operator_node(OR, ast, NULL);
+        ast = build_operator_node(NEG, ast, NULL);
         ast_append(parser->nodes, ast);
     }
 

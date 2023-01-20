@@ -168,6 +168,18 @@ static int exec_op(struct operator_node *op)
             res = ast_exec(op->right);
         return res;
     }
+    else if (op->type == NEG)
+    {
+        if(op->left)
+        {
+            return !ast_exec(op->left);
+        }
+        if(op->right)
+        {
+            return !ast_exec(op->right);
+        }
+        return 1;
+    }
     else if (op->type == OR)
     {
         int left = 0;
