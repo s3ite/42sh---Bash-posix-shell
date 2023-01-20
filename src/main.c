@@ -48,7 +48,7 @@ int main(int argc, char **argv)
     char *input = parse_command_line(argc, argv);
     if(!input)
     {
-      printf("mauvais arg\n");
+      printf("The command line syntax is: 42sh [OPTIONS] [SCRIPT] [ARGUMENTS ...]\n");
       return 2;
     }
   
