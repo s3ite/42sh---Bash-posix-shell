@@ -134,6 +134,29 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
         return ast;
     ast_append(parser->nodes, ast);
 
+    token = lexer_peek(lexer);
+    while(token && token->type == PIPELINE)
+    {
+        token = lexer_pop(lexer);
+        token = lexer_peek(lexer);
+        while (token->type == TOKEN_NEWLINE)
+        {
+            lexer_pop(lexer);
+            token = lexer_peek(lexer);
+        }
+
+        struct ast *next_cmd = parse_command(lexer, parser);
+        if(!next_cmd)
+            return next_cmd;
+        ast_append(parser->nodes, next_cmd);
+        ast = build_operator_node(PIPE, ast, next_cmd);
+        ast_append(parser->nodes, ast);
+
+        token = lexer_peek(lexer);
+        if(!token)
+            break;
+    }
+
     if(neg)
     {
         ast = build_operator_node(NEG, ast, NULL);

@@ -100,6 +100,10 @@ static int run_buildin(char **cmd)
     {
         return my_false();
     }
+    else if (strcmp("cmd", name) == 0)
+    {
+        return my_cd(cmd);
+    }
 
     return 0;
 }
@@ -117,6 +121,8 @@ static int is_builtin(char **cmd)
     else if (strcmp("true", name) == 0)
         return 1;
     else if (strcmp("false", name) == 0)
+        return 1;
+    else if (strcmp("cd", name) == 0)
         return 1;
 
     return 0;

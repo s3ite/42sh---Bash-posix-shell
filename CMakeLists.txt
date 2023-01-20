@@ -30,6 +30,7 @@ src/built_in/built_in.h
 src/built_in/boolean.c
 src/built_in/exit.c
 src/built_in/echo.c
+src/built_in/cd.c
 
 src/parser/parser.c
 src/parser/parser.h
