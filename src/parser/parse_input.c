@@ -29,6 +29,6 @@ int parse_input(struct lexer *lexer, struct parser *parser)
         return 0;
 
     parser->ast = root;
-
+  
     return 1;
 }
