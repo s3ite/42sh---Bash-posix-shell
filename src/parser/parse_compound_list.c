@@ -66,7 +66,8 @@ struct ast *parse_compound_list(struct lexer *lexer, struct parser *parser)
 
     while (token->type != TOKEN_THEN && token->type != TOKEN_ELIF
            && token->type != TOKEN_ELSE && token->type != TOKEN_FI
-           && token->type != TOKEN_DO && token->type != TOKEN_DONE && token->type != TOKEN_CLOSE_ACC&& token->type != TOKEN_CLOSE_PAR)
+           && token->type != TOKEN_DO && token->type != TOKEN_DONE
+           && token->type != TOKEN_CLOSE_ACC && token->type != TOKEN_CLOSE_PAR)
     {
         if (token->type != TOKEN_SEMICOLON && token->type != TOKEN_NEWLINE)
             return NULL;
@@ -76,7 +77,8 @@ struct ast *parse_compound_list(struct lexer *lexer, struct parser *parser)
         token = lexer_peek(lexer);
         if (token->type == TOKEN_THEN || token->type == TOKEN_ELIF
             || token->type == TOKEN_ELSE || token->type == TOKEN_FI
-            || token->type == TOKEN_DO || token->type == TOKEN_DONE|| token->type == TOKEN_CLOSE_ACC|| token->type == TOKEN_CLOSE_PAR)
+            || token->type == TOKEN_DO || token->type == TOKEN_DONE
+            || token->type == TOKEN_CLOSE_ACC || token->type == TOKEN_CLOSE_PAR)
         {
             ast = apply_operator_compound(ast, ast, NULL, copy);
             break;

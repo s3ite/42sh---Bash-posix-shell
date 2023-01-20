@@ -2,6 +2,7 @@
 #define AST_H
 #include <stddef.h>
 #include <stdlib.h>
+
 #include "../lexer/lexer.h"
 
 struct RC
@@ -22,7 +23,6 @@ enum loop
     UNTIL = 1,
     WHILE = 2,
 };
-
 
 enum shell_type
 {

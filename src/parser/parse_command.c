@@ -8,10 +8,11 @@ static struct ast *handle_shell_command(struct lexer *lexer,
     struct ast *res = NULL;
 
     struct token *token = lexer_peek(lexer);
-    if (token->type == TOKEN_IF || token->type == TOKEN_WHILE || token->type == TOKEN_UNTIL || token->type == TOKEN_OPEN_ACC || token->type == TOKEN_OPEN_PAR)
+    if (token->type == TOKEN_IF || token->type == TOKEN_WHILE
+        || token->type == TOKEN_UNTIL || token->type == TOKEN_OPEN_ACC
+        || token->type == TOKEN_OPEN_PAR)
     {
         res = parse_shell_command(lexer, parser);
-    
     }
     return res;
 }
