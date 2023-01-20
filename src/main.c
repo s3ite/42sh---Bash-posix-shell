@@ -48,7 +48,8 @@ int main(int argc, char **argv)
     char *input = parse_command_line(argc, argv);
     if(!input)
     {
-      printf("The command line syntax is: 42sh [OPTIONS] [SCRIPT] [ARGUMENTS ...]\n");
+      fprintf(stderr, "%s", "The command line syntax is: 42sh [OPTIONS] [SCRIPT] [ARGUMENTS ...]\n");
+      //printf("The command line syntax is: 42sh [OPTIONS] [SCRIPT] [ARGUMENTS ...]\n");
       return 2;
     }
     /*if (!input)
