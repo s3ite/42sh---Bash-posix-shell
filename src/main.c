@@ -46,7 +46,12 @@ int main(int argc, char **argv)
 
 
     char *input = parse_command_line(argc, argv);
-    if (!input)
+    if(!input)
+    {
+      printf("mauvais arg\n");
+      return 2;
+    }
+    /*if (!input)
     {
         while (1)
         {
@@ -69,7 +74,7 @@ int main(int argc, char **argv)
             }
             free(str);
         }
-    }
+    }*/
     char *new_input=remove_escaped_newline(input);
     struct lexer *lexer = lexer_init(10, new_input);
     lexer = lexer_load(new_input, lexer);
@@ -80,7 +85,6 @@ int main(int argc, char **argv)
       free(input);
       free(new_input);
       fprintf(stderr, "%s", "Syntax error: Unterminated quoted string\n");
-      //printf("Syntax error: Unterminated quoted string");
       return 2;//erreur lors du lexing
     }
 
