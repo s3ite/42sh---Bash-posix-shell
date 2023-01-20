@@ -223,6 +223,12 @@ static int shell_cmd_exec(struct shell_command_node *shell)
         else
             rc = exec_u(shell);
     }
+    else if(shell->type == BLOCK)
+    {
+        struct block_node *block = shell->node;
+        struct ast *ast = block->ast;
+        rc = ast_exec(ast);
+    }
 
     return rc;
 }

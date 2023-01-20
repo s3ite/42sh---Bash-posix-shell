@@ -8,13 +8,11 @@ static struct ast *handle_shell_command(struct lexer *lexer,
     struct ast *res = NULL;
 
     struct token *token = lexer_peek(lexer);
-    if (token->type == TOKEN_IF || token->type == TOKEN_WHILE
-        || token->type == TOKEN_UNTIL)
+    if (token->type == TOKEN_IF || token->type == TOKEN_WHILE || token->type == TOKEN_UNTIL || token->type == TOKEN_OPEN_ACC || token->type == TOKEN_OPEN_PAR)
     {
         res = parse_shell_command(lexer, parser);
-      
+    
     }
-
     return res;
 }
 
@@ -34,8 +32,6 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser)
     else if (token->type == WORD)
     {
         res = add_simple_commande(lexer, parser);
-        if (!res)
-            fprintf(stderr, "parse_command null");
     }
 
     // Redirection des parses commands
@@ -58,6 +54,6 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser)
     }
 
     if (!res)
-        fprintf(stderr, "parse_command null");
+        fprintf(stderr, "parse_command null\n");
     return res;
 }

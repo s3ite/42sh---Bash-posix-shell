@@ -138,6 +138,8 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
     {
         token = lexer_pop(lexer);
         token = lexer_peek(lexer);
+        if(!token)
+            return ast;
         while (token->type == TOKEN_NEWLINE)
         {
             lexer_pop(lexer);
