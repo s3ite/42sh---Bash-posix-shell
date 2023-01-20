@@ -135,7 +135,7 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
     ast_append(parser->nodes, ast);
 
     token = lexer_peek(lexer);
-    while(token && token->type == PIPELINE)
+    while(token && token->type == TOKEN_PIPELINE)
     {
         token = lexer_pop(lexer);
         token = lexer_peek(lexer);
