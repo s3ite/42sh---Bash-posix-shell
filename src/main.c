@@ -49,8 +49,7 @@ int main(int argc, char **argv)
     if(!input)
     {
       fprintf(stderr, "%s", "The command line syntax is: 42sh [OPTIONS] [SCRIPT] [ARGUMENTS ...]\n");
-      //printf("The command line syntax is: 42sh [OPTIONS] [SCRIPT] [ARGUMENTS ...]\n");
-      return 2;
+      return 2;//erreur lors de la lecture de l'input
     }
   
     char *new_input=remove_escaped_newline(input);

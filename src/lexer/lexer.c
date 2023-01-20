@@ -108,6 +108,15 @@ char *strnappend(char *str1, char *str2, int n)
     return str1;
 }
 
+char *strappendchar(char *str1, char c)
+{
+    int i = strlen(str1);
+    str1 = realloc(str1, 2 + i);
+    str1[i] = c;
+    str1[i + 1] = '\0';
+    return str1;
+}
+
 char *remove_backslash(char *str)
 {
     int i = strlen(str);
@@ -236,6 +245,82 @@ struct token *handle_var(char *input)
     return tok;
 }
 
+int handle_double_quote(char *input,struct lexer *res)
+{
+    int j = 0;
+    int escaped = (input[j] == '\\');
+    int var=(input[j]=='$');
+    while (input[j] != '\0' && !(escaped == 0 && input[j]=='"'))
+    {
+        if(!var)
+        {
+            char *word=malloc(1);
+            while (input[j] != '\0' && !(escaped == 0 && input[j]=='"') && !var)
+            {
+                if (input[j] == '\\')
+                {
+                    j++;
+                    if (input[j] == '\\')
+                    {
+                        word=strappendchar(word,'\\');
+                    }
+                    else if (input[j]=='$')
+                    {
+                        word=strappendchar(word,'$');
+                    }
+                    else if (input[j]=='\n')
+                    {
+                        word=strappendchar(word,'\n');
+                    }
+                    else if (input[j]=='"')
+                    {
+                        word=strappendchar(word,'"');
+                    }
+                    else
+                    {
+                        word=strappendchar(word,'\\');
+                        word=strappendchar(word,input[j]);
+                    }
+                }
+                else if (input[j] == '$')
+                {
+                    var=1;
+                }
+                else
+                {
+                    word=strappendchar(word,input[j]);
+                }
+                j++;
+            }
+            struct token *tok = token_init(word, WORD);
+            res=lexer_append(res,tok);
+        }
+        else
+        {
+            char *word=malloc(1);
+            while (input[j] != '\0' && !(escaped == 0 && input[j]=='"') && var)
+            {
+                if(in(input[j],"; ><|\t\n'\"$"))
+                {
+                    var=0;
+                }
+                else
+                {
+                    word=strappendchar(word,input[j]);
+                }
+                j++;
+            }
+            struct token *tok = token_init(word, TOKEN_VAR);
+            res=lexer_append(res,tok);
+        }
+    }
+    if(input[j]=='\0')
+    {
+        return -1;
+    }
+    return j;
+}
+
 struct lexer *lexer_load(char *input, struct lexer *res)
 {
     int i = 0;
@@ -278,7 +363,11 @@ struct lexer *lexer_load(char *input, struct lexer *res)
             res = lexer_append(res, tok);
             i += strlen(tok->value) + 1;
             tok->value = remove_backslash(tok->value);
-        }        
+        }
+        else if (strncmp(input + i, "\"", 1) == 0) // getsion des double quote
+        {
+            i += handle_double_quote(input + i,res) + 1;
+        }           
         else
         {
             int tok_type = get_token_type(input + i);
@@ -301,7 +390,7 @@ struct lexer *lexer_load(char *input, struct lexer *res)
                 i += strlen(redir_list[is_redirection(input + i) - 1]);
             }
             else if (tok_type != -1
-                     && tok_type != TOKEN_EOF) // gestion tokens normaux
+                     && tok_type != TOKEN_EOF) // gestion tokens "normaux"
             {
                 char *tok_list[NUM_TOK - 3] = {
                     ";",    "||",   "&&", "|", "!",    "\n", "if",   "then",
@@ -316,7 +405,7 @@ struct lexer *lexer_load(char *input, struct lexer *res)
                 i++;
         }
     }
-    struct token *tok = token_init("\0", TOKEN_EOF);
+    struct token *tok = token_init("\0", TOKEN_EOF); // gestion du token EOF
     res = lexer_append(res, tok);
     return res;
 }
