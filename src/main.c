@@ -44,7 +44,7 @@ int main(int argc, char **argv)
       fprintf(stderr, "%s", "Syntax error: Unterminated quoted string\n");
       return 2;//erreur lors du lexing
     }
-
+    //lexer_print(lexer);
 
     int rc = 0;
     struct parser *parser = parse(lexer);
