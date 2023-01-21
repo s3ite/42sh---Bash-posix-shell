@@ -11,3 +11,4 @@ char *strdup(const char *str)
     memcpy(copy, str, len);
     return (copy);
 }
+

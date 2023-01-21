@@ -25,6 +25,8 @@ src/redirection/redirection.h
 
 src/ast/print_ast.c
 src/ast/print_ast.h
+src/ast/variable.c
+src/ast/variable.h
 
 src/built_in/built_in.h
 src/built_in/boolean.c
@@ -50,6 +52,9 @@ src/parser/parse_compound_list.c
 
 src/parse_command_line/parse_command_line.h
 src/parse_command_line/parse_command_line.c
+
+src/expansion/expansion.c
+src/expansion/expansion.h
 
 src/exec/exec.c
 src/exec/exec.h

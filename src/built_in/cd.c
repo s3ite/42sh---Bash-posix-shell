@@ -3,9 +3,91 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "../ast/variable.h"
+#include <dirent.h>
+#include <stdbool.h>
 
 #include "built_in.h"
 
+bool is_absolute_path(const char *path) {
+    return path[0] == '/';
+}
+
+static int set_pwd(char *path, struct variable_item *pwd)
+{
+    if (update_variable(variables_list, "OLDPWD", TYPE_STRING, pwd->value) != 0)
+        {fprintf(stderr, "ERROR: variable OLDPWD not set properly");
+        return -1;}
+    
+    if (update_variable(variables_list, "PWD", TYPE_STRING, (union value) {.string = path}) != 0)
+       { fprintf(stderr, "ERROR: variable PWD not set properly");
+       return -1;}
+    return 0;
+}   
+
+
+static bool is_directory_exists(const char *path)
+{
+    DIR *dir = opendir(path);
+    if (dir) {
+        closedir(dir);
+        return true;
+    }
+
+    fprintf(stderr, "Directory does not exist\n");
+    return false;
+}
+
+
+int my_cd(char **cmd)
+{
+    if (cmd[2] != NULL)
+    {
+        fprintf(stderr, "cd : too many arguments");
+        return 1;
+    }
+    struct variable_item *pwd_var = get_variable(variables_list, "PWD");
+    struct variable_item *old_pwd_var = get_variable(variables_list, "OLDPWD");
+
+    // si pas d'arguments
+    if(cmd[1] == NULL)
+        return set_pwd(getenv("HOME"), pwd_var);
+
+    //si path absolue
+    if(is_absolute_path(cmd[1]))
+        return set_pwd(cmd[1], pwd_var);
+
+    // cas du -
+    if (strcmp(cmd[1], "-") == 0)
+        set_pwd(old_pwd_var->value.string, pwd_var);
+
+
+    char *tmp_path = malloc(1024);
+    sprintf(tmp_path, "%s/%s", pwd_var->value.string, cmd[1]);
+
+
+    if (is_directory_exists(tmp_path) == false)
+        return 1; // ERROR INVALID PATH
+    
+    return set_pwd(tmp_path, pwd_var);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 int my_cd(char **argv, int size)
 {
     char dir[4096] = { 0 };
@@ -49,3 +131,4 @@ int my_cd(char **argv, int size)
 
     return 0;
 }
+*/

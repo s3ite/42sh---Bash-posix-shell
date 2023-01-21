@@ -171,7 +171,7 @@ struct token *handle_quote(char *input)
     {
         value[j - 1] = '\0';
         int k = 0;
-        while (!in(*(input + j + k + 1), "; ><|\t\n'\"$(){}"))
+        while (!in(*(input + j + k + 1), "; ><|\t\n'\"(){}"))
         {
             k++;
         }
@@ -186,7 +186,7 @@ struct token *handle_word(char *input)
     int j = 0;
     int escaped = (input[j] == '\\');
     while (input[j] != '\0'
-           && !(escaped == 0 && in(input[j], "; ><|\t\n'\"$(){}")))
+           && !(escaped == 0 && in(input[j], "; ><|\t\n'\"(){}")))
     {
         if (input[j] == '\\')
         {
@@ -369,6 +369,7 @@ struct lexer *lexer_load(char *input, struct lexer *res)
                 i += strlen(tok->value) + 2;
             }
         }
+        /*
         else if (strncmp(input + i, "$", 1) == 0) // getsion des variables
         {
             struct token *tok = handle_var(input + i + 1);
@@ -376,6 +377,7 @@ struct lexer *lexer_load(char *input, struct lexer *res)
             i += strlen(tok->value) + 1;
             tok->value = remove_backslash(tok->value);
         }
+        */
         else if (strncmp(input + i, "\"", 1) == 0) // getsion des double quote
         {
             int inc = handle_double_quote(input + i,res) + 1;;

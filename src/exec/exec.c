@@ -1,6 +1,9 @@
 #include "exec.h"
-
+#include <stdlib.h>
 #include "../redirection/redirection.h"
+#include "../ast/variable.h"
+#include "../expansion/expansion.h"
+
 
 int run_command(char **cmd)
 {
@@ -49,7 +52,7 @@ static char **to_command(struct dlist *args, struct dlist *values)
 
     struct dlist_item *tmp1 = args->head;
     struct dlist_item *tmp2 = values->head;
-
+    
     char **cmd = malloc(sizeof(char *) * (size + 1));
     size_t i = 0;
 
@@ -62,6 +65,10 @@ static char **to_command(struct dlist *args, struct dlist *values)
     for (; i < size && tmp2; ++i)
     {
         cmd[i] = strdup(tmp2->value);
+        // expansion des variables
+        while(contains_variable(cmd[i]))
+            cmd[i] = expand_variable(cmd[i], variables_list);
+
         tmp2 = tmp2->next;
     }
 
@@ -90,7 +97,7 @@ static int run_buildin(char **cmd)
     }
     else if (strcmp("exit", name) == 0)
     {
-        return my_exit();
+        return my_exit(cmd);
     }
     else if (strcmp("true", name) == 0)
     {
@@ -102,7 +109,7 @@ static int run_buildin(char **cmd)
     }
     else if (strcmp("cd", name) == 0)
     {
-        return my_cd(cmd, size);
+        return my_cd(cmd);
     }
 
     return 0;
@@ -127,9 +134,50 @@ static int is_builtin(char **cmd)
 
     return 0;
 }
+/*
+// expand simple command variable
+struct ast *expand_sp_variable(struct ast *ast)
+{
+    enum node_type node_type = ast->node_type;
+    // expand command and arguments
+    
+    // expand value
+    if (node_type == SIMPLE_COMMAND)
+    {
+        struct simple_command_node *simple_cmd = ast->node;
+
+        // si pas de value
+        if (simple_cmd->values == NULL)
+            return ast;
+        
+        struct dlist_items *values = simple_cmd->values->head;
+        //ON boucle sur les arguments et on remplace les valeurs a expandre par les valeurs des variables
+        while(values != NULL)
+        {
+            if (values->values)
+        }
+    }
+}
+
+
+*/
+
+
+bool is_variable_assigment(struct dlist *args)
+{
+    if (args->head->next != NULL)
+        return false;
+    
+    return strchr(args->head->value, '=') != NULL;
+}
+
+
 
 static int simple_cmd_exec(struct ast *ast)
 {
+
+    //ast = expand_variable(ast);
+
     int rc = 0;
     struct simple_command_node *cmd_nbode = ast->node;
     struct dlist *args = cmd_nbode->args;
@@ -145,8 +193,34 @@ static int simple_cmd_exec(struct ast *ast)
             return rc;
     }
 
-    char **cmd = to_command(args, values);
+    if(is_variable_assigment(args))
+    {
+        if (values->head != NULL)
+            return 127; // Error handling : command not found
 
+        char *name = strdup(strtok(args->head->value, "="));
+        char *value = strdup(strtok(NULL, "\0\n\t\r"));
+
+        union value value_var = {.string = value};
+        enum value_type value_type = TYPE_STRING;
+
+        // if is an integer value
+        for (size_t i = 0; i < strlen(value); i++)
+        {
+            if (isalnum(value[i]) == 0)
+                continue;
+            
+            add_variable(variables_list, init_item(name, value_var, value_type));
+            return 0;
+        }
+        value_type = TYPE_INTEGER;
+        value_var.integer = atoi(value);
+        
+        add_variable(variables_list, init_item(name, value_var, value_type));
+        return 0;
+    }
+
+    char **cmd = to_command(args, values);
     if (is_builtin(cmd))
     {
         rc = run_buildin(cmd);
@@ -296,6 +370,7 @@ static int shell_cmd_exec(struct shell_command_node *shell)
 
 int ast_exec(struct ast *node)
 {
+
     int rc = 0;
 
     if (!node)
