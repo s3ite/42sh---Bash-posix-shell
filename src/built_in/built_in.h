@@ -9,7 +9,7 @@ int my_true(void);
 int my_false(void);
 
 int my_exit(char **cmd);
-void my_unset(void);
+int my_unset(char **cmd);
 
 int my_cd(char **cmd);
 int my_echo(char **cmd, size_t arg_number, size_t index);

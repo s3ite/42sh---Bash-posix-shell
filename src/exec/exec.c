@@ -111,6 +111,10 @@ static int run_buildin(char **cmd)
     {
         return my_cd(cmd);
     }
+    else if (strcmp("unset", name) == 0)
+    {
+        return my_unset(cmd);
+    }
 
     return 0;
 }

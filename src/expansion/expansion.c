@@ -1,11 +1,10 @@
 #include "expansion.h"
 #include <stdlib.h>
-#include <strings.h>
 #include <string.h>
 
 char *get_word_between_parenthesis(char *input)
 {
-    char *word= index(input, '$');
+    char *word= strchr(input, '$');
     if (word == NULL || word[1] != '(')
         return NULL;
 
@@ -16,7 +15,7 @@ char *get_word_between_parenthesis(char *input)
 char *get_word(char *input)
 {
 
-    char *word = index(input, '$');
+    char *word = strchr(input, '$');
     if (word == NULL) 
         return NULL;
 
@@ -31,7 +30,7 @@ char *get_word(char *input)
 
 char *expand_variable(char *input, struct variables_list *list)
 {
-    char *new_input = malloc(1024);
+    char *new_input = calloc(1, 1024);
 
     char *tmp = strtok(input, " \0\n\t\r");
 
@@ -46,7 +45,8 @@ char *expand_variable(char *input, struct variables_list *list)
             var = get_variable(list, word);
             if (var != NULL)
             {
-                new_input = strcat(new_input, get_value(var));
+                char *value = get_value(var);
+                new_input = strcat(new_input, value);
                 strcat(new_input, " ");
             }
         }
@@ -63,8 +63,9 @@ char *expand_variable(char *input, struct variables_list *list)
 
 bool contains_variable(char *input)
 {
-    char *tmp = index(input, '$');
+    char *tmp = strchr(input, '$');
     if (tmp == NULL)
         return false;
+
     return isspace(tmp[1]) == 0;
 }

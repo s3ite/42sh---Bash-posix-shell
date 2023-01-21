@@ -61,6 +61,6 @@ int main(int argc, char **argv)
     free(input);
     free(new_input);
   
-    free(variables_list);
+    free_variables();
     return rc;
 }

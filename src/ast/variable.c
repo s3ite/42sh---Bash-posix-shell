@@ -156,7 +156,7 @@ int remove_variable(struct variables_list *list, char *name)
         }
     }
 
-    return -1; //Error handling
+    return 0; //Error handling
 }
 
 void free_variable_list(struct variables_list *list)
@@ -168,6 +168,7 @@ void free_variable_list(struct variables_list *list)
     {
         tmp = head;
         head = head->next;
+        free(tmp->value.string);
         free(tmp);
     }
     free(list);
@@ -269,19 +270,6 @@ int update_pwd(struct variables_list *list, char *new_pwd)
 }
 
 
-void free_variables(struct variables_list *list)
-{
-    struct variable_item *item = list->head;
-    struct variable_item *tmp;
-    
-    while (item)
-    {  
-        tmp = item;
-        item = item->next;
-        free(tmp);
-    }
-    free(list);
-}
 
 /**
  * Init the variable list structure
@@ -320,4 +308,20 @@ struct variables_list *init_variables_list(void)
     add_variable(list, init_item("IFS", (union value) {.string = ""}, TYPE_STRING));
     add_variable(list, init_item("0", (union value) {.string = "42sh"}, TYPE_STRING));
     return list;
+}
+
+void free_variables(void)
+{
+    struct variable_item *item = variables_list->head;
+    struct variable_item *tmp;
+    
+    while (item)
+    {
+        tmp = item;
+        item = item->next;
+        free(tmp->name);
+        free(tmp);
+    }
+
+    free(variables_list);
 }
