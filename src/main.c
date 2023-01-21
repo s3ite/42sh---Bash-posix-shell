@@ -36,7 +36,6 @@ int main(int argc, char **argv)
     char *new_input=remove_escaped_newline(input);
     struct lexer *lexer = lexer_init(10, new_input);
     lexer = lexer_load(new_input, lexer);
-
     if(!lexer)
     {
       free(variables_list);

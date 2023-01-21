@@ -249,7 +249,7 @@ struct token *handle_var(char *input)
 
 int handle_double_quote(char *input, struct lexer *res)
 {
-    int j = 0;
+    int j = 1;
     int escaped = (input[j] == '\\');
     int var = (input[j] == '$');
     while (input[j] != '\0' && !(escaped == 0 && input[j] == '"'))
@@ -257,6 +257,7 @@ int handle_double_quote(char *input, struct lexer *res)
         if (!var)
         {
             char *word = malloc(1);
+            word[0]='\0';
             while (input[j] != '\0' && !(escaped == 0 && input[j] == '"')
                    && !var)
             {
@@ -372,8 +373,14 @@ struct lexer *lexer_load(char *input, struct lexer *res)
         */
         else if (strncmp(input + i, "\"", 1) == 0) // getsion des double quote
         {
-            i += handle_double_quote(input + i, res) + 1;
-        }
+            int inc = handle_double_quote(input + i,res) + 1;;
+            if(inc == 0)
+            {
+                lexer_destroy(res);
+                return NULL;
+            }
+            i += inc;
+        }           
         else
         {
             int tok_type = get_token_type(input + i);
