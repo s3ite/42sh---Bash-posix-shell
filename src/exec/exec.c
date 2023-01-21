@@ -215,12 +215,18 @@ static int simple_cmd_exec(struct ast *ast)
                 continue;
             
             add_variable(variables_list, init_item(name, value_var, value_type));
+            free(name);
+            free(value);
+
             return 0;
         }
         value_type = TYPE_INTEGER;
         value_var.integer = atoi(value);
-        
+    
         add_variable(variables_list, init_item(name, value_var, value_type));
+
+        free(name);
+        free(value);
         return 0;
     }
 

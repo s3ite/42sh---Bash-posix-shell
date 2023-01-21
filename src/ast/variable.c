@@ -291,11 +291,11 @@ struct variables_list *init_variables_list(void)
     value.integer = 0;
     add_variable(list, init_item("?", value, TYPE_INTEGER));
     
-    value.string = malloc(VALUE_SIZE);
     value.string  = getcwd(value.string, VALUE_SIZE);
-
     add_variable(list, init_item("PWD", value, TYPE_STRING));
     add_variable(list, init_item("OLDPWD", value, TYPE_STRING));
+    free(value.string);
+
     add_variable(list, init_item("HOME", (union value) {.string = getenv("HOME")}, TYPE_STRING));
 
     add_variable(list, init_item("#", (union value) {.string = ""}, TYPE_STRING));
@@ -320,6 +320,7 @@ void free_variables(void)
         tmp = item;
         item = item->next;
         free(tmp->name);
+        free(tmp->value.string);
         free(tmp);
     }
 
