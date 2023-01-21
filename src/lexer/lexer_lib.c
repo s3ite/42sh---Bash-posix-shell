@@ -20,7 +20,7 @@ void lexer_destroy(struct lexer *v)
 {
     for (size_t i = 0; i < v->size; i++)
     {
-        if (v->data[i]->type == WORD ||v->data[i]->type == TOKEN_VAR)
+        if (v->data[i]->type == WORD || v->data[i]->type == TOKEN_VAR)
         {
             free(v->data[i]->value);
         }

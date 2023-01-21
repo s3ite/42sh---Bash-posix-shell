@@ -45,11 +45,11 @@ int get_token_type(char *str)
     {
         return -1;
     }
-    char *tok_list[NUM_TOK - 3] = {
-        ";",    "||",   "&&", "|", "!",     "\n",  "{",  "}",     "(",  ")","if",   "then",
-        "elif", "else", "fi", "while", "do", "done", "until",
-           "for", "in"
-    }; // TO_UPDATE:token
+    char *tok_list[NUM_TOK - 3] = { ";",     "||",   "&&",   "|",     "!",
+                                    "\n",    "{",    "}",    "(",     ")",
+                                    "if",    "then", "elif", "else",  "fi",
+                                    "while", "do",   "done", "until", "for",
+                                    "in" }; // TO_UPDATE:token
     size_t i = 0;
     if (is_redirection(str))
     {
@@ -85,8 +85,8 @@ int handle_comment(char *input)
     {
         i++;
     }
-    if(*(input + i) == '\n')
-      i++;
+    if (*(input + i) == '\n')
+        i++;
     return i;
 }
 
@@ -178,7 +178,8 @@ struct token *handle_word(char *input)
 {
     int j = 0;
     int escaped = (input[j] == '\\');
-    while (input[j] != '\0' && !(escaped == 0 && in(input[j], "; ><|\t\n'\"$(){}")))
+    while (input[j] != '\0'
+           && !(escaped == 0 && in(input[j], "; ><|\t\n'\"$(){}")))
     {
         if (input[j] == '\\')
         {
@@ -204,9 +205,9 @@ struct token *handle_var(char *input)
 {
     int j = 0;
     int escaped = (input[j] == '\\');
-    if(input[j]=='(')
+    if (input[j] == '(')
     {
-        while (input[j] != '\0' && !(escaped == 0 && input[j]==')'))
+        while (input[j] != '\0' && !(escaped == 0 && input[j] == ')'))
         {
             if (input[j] == '\\')
             {
@@ -218,14 +219,15 @@ struct token *handle_var(char *input)
             }
             j++;
         }
-        if(input[j]=='\0')
+        if (input[j] == '\0')
         {
             return NULL;
         }
     }
     else
     {
-        while (input[j] != '\0' && !(escaped == 0 && in(input[j], "; ><|\t\n'\"$")))
+        while (input[j] != '\0'
+               && !(escaped == 0 && in(input[j], "; ><|\t\n'\"$")))
         {
             if (input[j] == '\\')
             {
@@ -245,77 +247,79 @@ struct token *handle_var(char *input)
     return tok;
 }
 
-int handle_double_quote(char *input,struct lexer *res)
+int handle_double_quote(char *input, struct lexer *res)
 {
     int j = 1;
     int escaped = (input[j] == '\\');
-    int var=(input[j]=='$');
-    while (input[j] != '\0' && !(escaped == 0 && input[j]=='"'))
+    int var = (input[j] == '$');
+    while (input[j] != '\0' && !(escaped == 0 && input[j] == '"'))
     {
-        if(!var)
+        if (!var)
         {
-            char *word=malloc(1);
+            char *word = malloc(1);
             word[0]='\0';
-            while (input[j] != '\0' && !(escaped == 0 && input[j]=='"') && !var)
+            while (input[j] != '\0' && !(escaped == 0 && input[j] == '"')
+                   && !var)
             {
                 if (input[j] == '\\')
                 {
                     j++;
                     if (input[j] == '\\')
                     {
-                        word=strappendchar(word,'\\');
+                        word = strappendchar(word, '\\');
                     }
-                    else if (input[j]=='$')
+                    else if (input[j] == '$')
                     {
-                        word=strappendchar(word,'$');
+                        word = strappendchar(word, '$');
                     }
-                    else if (input[j]=='\n')
+                    else if (input[j] == '\n')
                     {
-                        word=strappendchar(word,'\n');
+                        word = strappendchar(word, '\n');
                     }
-                    else if (input[j]=='"')
+                    else if (input[j] == '"')
                     {
-                        word=strappendchar(word,'"');
+                        word = strappendchar(word, '"');
                     }
                     else
                     {
-                        word=strappendchar(word,'\\');
-                        word=strappendchar(word,input[j]);
+                        word = strappendchar(word, '\\');
+                        word = strappendchar(word, input[j]);
                     }
                 }
                 else if (input[j] == '$')
                 {
-                    var=1;
+                    var = 1;
                 }
                 else
                 {
-                    word=strappendchar(word,input[j]);
+                    word = strappendchar(word, input[j]);
                 }
                 j++;
             }
             struct token *tok = token_init(word, WORD);
-            res=lexer_append(res,tok);
+            res = lexer_append(res, tok);
         }
         else
         {
-            char *word=malloc(1);
-            while (input[j] != '\0' && !(escaped == 0 && input[j]=='"') && var)
+            char *word = malloc(1);
+            while (input[j] != '\0' && !(escaped == 0 && input[j] == '"')
+                   && var)
             {
-                if(in(input[j],"; ><|\t\n'\"$"))
+                if (in(input[j], "; ><|\t\n'\"$"))
                 {
-                    var=0;
+                    var = 0;
                 }
                 else
                 {
-                    word=strappendchar(word,input[j]);
+                    word = strappendchar(word, input[j]);
                 }
                 j++;
             }
             struct token *tok = token_init(word, TOKEN_VAR);
-            res=lexer_append(res,tok);
+            res = lexer_append(res, tok);
         }
     }
-    if(input[j]=='\0')
+    if (input[j] == '\0')
     {
         return -1;
     }
@@ -400,10 +404,10 @@ struct lexer *lexer_load(char *input, struct lexer *res)
                      && tok_type != TOKEN_EOF) // gestion tokens "normaux"
             {
                 char *tok_list[NUM_TOK - 3] = {
-                    ";",    "||",   "&&", "|", "!",     "\n",  "{",  "}",     "(",  ")","if",   "then",
-                    "elif", "else", "fi", "while", "do", "done", "until",
-                    "for", "in"
-            }; // TO_UPDATE:token
+                    ";",  "||",    "&&", "|",    "!",     "\n",   "{",
+                    "}",  "(",     ")",  "if",   "then",  "elif", "else",
+                    "fi", "while", "do", "done", "until", "for",  "in"
+                }; // TO_UPDATE:token
                 struct token *tok = token_init(tok_list[tok_type], tok_type);
                 res = lexer_append(res, tok);
                 i += strlen(tok_list[tok_type]);

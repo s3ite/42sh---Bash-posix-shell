@@ -47,7 +47,7 @@ static struct ast *parse_block_cmd(struct lexer *lexer, struct parser *parser)
     struct token *token = lexer_peek(lexer);
     struct block_node *block = malloc(sizeof(struct block_node));
 
-    if(token->type == TOKEN_OPEN_ACC)
+    if (token->type == TOKEN_OPEN_ACC)
         block->type = TOKEN_OPEN_ACC;
     else if (token->type == TOKEN_OPEN_PAR)
         block->type = TOKEN_OPEN_PAR;
@@ -59,7 +59,7 @@ static struct ast *parse_block_cmd(struct lexer *lexer, struct parser *parser)
 
     token = lexer_pop(lexer);
     struct ast *compound = parse_compound_list(lexer, parser);
-    if(!compound)
+    if (!compound)
     {
         free(block);
         return NULL;
@@ -70,9 +70,9 @@ static struct ast *parse_block_cmd(struct lexer *lexer, struct parser *parser)
     struct shell_command_node *cmd = ast->node;
     cmd->node = block;
 
-    if(block->type == TOKEN_OPEN_ACC && token->type != TOKEN_CLOSE_ACC)
+    if (block->type == TOKEN_OPEN_ACC && token->type != TOKEN_CLOSE_ACC)
         return NULL;
-    if(block->type == TOKEN_OPEN_PAR && token->type != TOKEN_CLOSE_PAR)
+    if (block->type == TOKEN_OPEN_PAR && token->type != TOKEN_CLOSE_PAR)
         return NULL;
     token = lexer_pop(lexer);
     return ast;
@@ -90,9 +90,9 @@ struct ast *parse_shell_command(struct lexer *lexer, struct parser *parser)
 {
     struct ast *ast = NULL;
     struct token *token = lexer_peek(lexer);
-    if(!token)
+    if (!token)
         return NULL;
-    if(token->type != TOKEN_OPEN_ACC && token->type != TOKEN_OPEN_PAR)
+    if (token->type != TOKEN_OPEN_ACC && token->type != TOKEN_OPEN_PAR)
         ast = parse_cmd(lexer, parser);
     else
     {

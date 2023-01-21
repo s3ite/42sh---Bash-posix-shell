@@ -20,12 +20,12 @@ int parse_input(struct lexer *lexer, struct parser *parser)
         return 1;
 
     token = lexer_peek(lexer);
-   
+
     struct ast *root = parse_list(lexer, parser);
     if (!root)
         return 0;
 
     parser->ast = root;
-  
+
     return 1;
 }

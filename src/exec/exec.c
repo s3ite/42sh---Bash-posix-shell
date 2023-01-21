@@ -163,6 +163,61 @@ static int simple_cmd_exec(struct ast *ast)
     return rc;
 }
 
+int exec_pipe(struct operator_node *node, int *res)
+{
+    int fd[2];
+    if (pipe(fd) == -1)
+        return -1;
+
+    pid_t pid1 = fork();
+    if (pid1 < 0)
+    {
+        close(fd[0]);
+        close(fd[1]);
+        return -1;
+    }
+
+    if (pid1 == 0)
+    {
+        close(fd[0]);
+        dup2(fd[1], STDOUT_FILENO);
+        *res = ast_exec(node->left);
+        close(fd[1]);
+        exit(*res);
+    }
+    else
+    {
+        close(fd[1]);
+        pid_t pid2 = fork();
+        if (pid2 < 0)
+        {
+            close(fd[0]);
+            return -1;
+        }
+        if (pid2 == 0)
+        {
+            close(fd[1]);
+            dup2(fd[0], STDIN_FILENO);
+            *res = ast_exec(node->right);
+            close(fd[0]);
+            exit(*res);
+        }
+        else
+        {
+            close(fd[0]);
+            int status1, status2;
+            waitpid(pid1, &status1, 0);
+            waitpid(pid2, &status2, 0);
+            if (WIFEXITED(status2))
+            {
+                *res = WEXITSTATUS(status2);
+                return 0;
+            }
+            return -1;
+        }
+    }
+}
+
 static int exec_op(struct operator_node *op)
 {
     if (op->type == SEMICOLON)
@@ -176,11 +231,11 @@ static int exec_op(struct operator_node *op)
     }
     else if (op->type == NEG)
     {
-        if(op->left)
+        if (op->left)
         {
             return !ast_exec(op->left);
         }
-        if(op->right)
+        if (op->right)
         {
             return !ast_exec(op->right);
         }
@@ -192,7 +247,7 @@ static int exec_op(struct operator_node *op)
         int right = 0;
         if (op->left)
             left = ast_exec(op->left);
-        if(!left)
+        if (!left)
             return left;
         if (op->right)
             right = ast_exec(op->right);
@@ -206,6 +261,12 @@ static int exec_op(struct operator_node *op)
         if (left)
             return left;
         return ast_exec(op->right);
+    }
+    else if (op->type == PIPE)
+    {
+        int res = 0;
+        exec_pipe(op, &res);
+        return res;
     }
     return 0;
 }
@@ -223,7 +284,7 @@ static int shell_cmd_exec(struct shell_command_node *shell)
         else
             rc = exec_u(shell);
     }
-    else if(shell->type == BLOCK)
+    else if (shell->type == BLOCK)
     {
         struct block_node *block = shell->node;
         struct ast *ast = block->ast;

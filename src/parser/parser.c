@@ -32,7 +32,7 @@ struct parser *parse(struct lexer *lexer)
     parser->nodes = ast_list_init();
 
     int rc = parse_input(lexer, parser);
-    if (!rc) 
+    if (!rc)
     {
         struct token *token = lexer_peek(lexer);
         if (token->type == TOKEN_EOF)
@@ -42,7 +42,8 @@ struct parser *parse(struct lexer *lexer)
             free(parser);
             return NULL;
         }
-        fprintf(stderr, "42sh: syntax error near unexpected token %s\n", token->value); 
+        fprintf(stderr, "42sh: syntax error near unexpected token %s\n",
+                token->value);
         node_free(parser->nodes);
         free(parser);
         return NULL;
@@ -120,10 +121,10 @@ struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
 
 struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 {
-   
     int neg = 0;
     struct token *token = lexer_peek(lexer);
-    if(token && token->type == TOKEN_NEG){
+    if (token && token->type == TOKEN_NEG)
+    {
         lexer_pop(lexer);
         neg = 1;
     }
@@ -134,11 +135,11 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
     ast_append(parser->nodes, ast);
 
     token = lexer_peek(lexer);
-    while(token && token->type == TOKEN_PIPELINE)
+    while (token && token->type == TOKEN_PIPELINE)
     {
         token = lexer_pop(lexer);
         token = lexer_peek(lexer);
-        if(!token)
+        if (!token)
             return ast;
         while (token->type == TOKEN_NEWLINE)
         {
@@ -147,23 +148,22 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
         }
 
         struct ast *next_cmd = parse_command(lexer, parser);
-        if(!next_cmd)
+        if (!next_cmd)
             return next_cmd;
         ast_append(parser->nodes, next_cmd);
         ast = build_operator_node(PIPE, ast, next_cmd);
         ast_append(parser->nodes, ast);
 
         token = lexer_peek(lexer);
-        if(!token)
+        if (!token)
             break;
     }
 
-    if(neg)
+    if (neg)
     {
         ast = build_operator_node(NEG, ast, NULL);
         ast_append(parser->nodes, ast);
     }
-
 
     return ast;
 }
@@ -209,7 +209,7 @@ void ast_free(struct ast *ast)
 void parser_free(struct parser *parser)
 {
     // ast_free(parser->ast);
-    if(!parser)
+    if (!parser)
         return;
     node_free(parser->nodes);
     free(parser);
