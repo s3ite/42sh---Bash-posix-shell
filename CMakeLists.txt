@@ -25,6 +25,8 @@ src/redirection/redirection.h
 
 src/ast/print_ast.c
 src/ast/print_ast.h
+src/ast/variable.c
+src/ast/variable.h
 
 src/built_in/built_in.h
 src/built_in/boolean.c

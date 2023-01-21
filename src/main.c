@@ -41,17 +41,17 @@ void exit_program(int signo)
 
 int main(int argc, char **argv)
 {
+
+
+    variables_list = init_variables_list();
+
+    free(variables_list);
     if (signal(SIGTERM, exit_program) == SIG_ERR)
       fprintf(stderr, "\ncan't catch SIGTERM\n");
 
 
     char *input = parse_command_line(argc, argv);
-    if(!input)
-    {
-      printf("mauvais arg\n");
-      return 2;
-    }
-    /*if (!input)
+    if (!input)
     {
         while (1)
         {
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
             }
             free(str);
         }
-    }*/
+    }
     char *new_input=remove_escaped_newline(input);
     struct lexer *lexer = lexer_init(10, new_input);
     lexer = lexer_load(new_input, lexer);
@@ -85,6 +85,7 @@ int main(int argc, char **argv)
       free(input);
       free(new_input);
       fprintf(stderr, "%s", "Syntax error: Unterminated quoted string\n");
+      //printf("Syntax error: Unterminated quoted string");
       return 2;//erreur lors du lexing
     }
 
@@ -99,6 +100,6 @@ int main(int argc, char **argv)
     if (rc == RC_ERROR)
         return RC_ERROR;
 
-    free(variables_list);
+    free_variables(variables_list);
     return rc;
 }

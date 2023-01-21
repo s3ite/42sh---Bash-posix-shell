@@ -121,9 +121,39 @@ static int is_builtin(char **cmd)
 
     return 0;
 }
+/*
+// expand simple command variable
+struct ast *expand_sp_variable(struct ast *ast)
+{
+    enum node_type node_type = ast->node_type;
+    // expand command and arguments
+    
+    // expand value
+    if (node_type == SIMPLE_COMMAND)
+    {
+        struct simple_command_node *simple_cmd = ast->node;
+
+        // si pas de value
+        if (simple_cmd->values == NULL)
+            return ast;
+        
+        struct dlist_items *values = simple_cmd->values->head;
+        //ON boucle sur les arguments et on remplace les valeurs a expandre par les valeurs des variables
+        while(values != NULL)
+        {
+            if (values->values)
+        }
+    }
+}
+
+
+*/
 
 static int simple_cmd_exec(struct ast *ast)
 {
+
+    //ast = expand_variable(ast);
+
     int rc = 0;
     struct simple_command_node *cmd_nbode = ast->node;
     struct dlist *args = cmd_nbode->args;
@@ -211,6 +241,7 @@ static int shell_cmd_exec(struct shell_command_node *shell)
 
 int ast_exec(struct ast *node)
 {
+
     int rc = 0;
 
     if (!node)

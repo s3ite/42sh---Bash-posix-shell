@@ -1,2 +1,1 @@
-Hello World
-rection/error_to_file.in: line 1: echoo: command not found
+./tests/redirection/error_to_file.in: line 1: echoo: command not found
