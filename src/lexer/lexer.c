@@ -18,19 +18,26 @@ int in(char c, char *delim)
 int is_redirection(char *str)
 {
     char *redir_list[7] = { ">|", "<>", ">>", ">&", "<&", ">", "<" };
-    int j = 0;
-    while (j < 7)
+    int i = 0;
+    int escaped=str[i]=='\\';
+    while(str[i]!='\0' && in(str[i],"0123456789\\><"))
     {
-        size_t len_r = strlen(redir_list[j]);
-        if (strncmp(str, redir_list[j], len_r) == 0)
+        int j = 0;
+        while (j < 7)
         {
-            break;
+            size_t len_r = strlen(redir_list[j]);
+            if (!escaped && strncmp(str + i, redir_list[j], len_r) == 0)
+            {
+                break;
+            }
+            j++;
         }
-        j++;
-    }
-    if (j < 7)
-    {
-        return j + 1;
+        if (j < 7)
+        {
+            return j + 1;
+        }
+        escaped=(str[i]=='\\'&&!escaped);
+        i++;
     }
     return 0;
 }
@@ -391,14 +398,32 @@ struct lexer *lexer_load(char *input, struct lexer *res)
             }
             else if (tok_type == TOKEN_REDIRECTION) // gestion des redirections
             {
-                char *redir_list[7] = {
-                    ">|", "<>", ">>", ">&", "<&", ">", "<"
-                };
-                struct token *tok =
-                    token_init(redir_list[is_redirection(input + i) - 1],
-                               TOKEN_REDIRECTION);
+                char *redir_list[7] = { ">|", "<>", ">>", ">&", "<&", ">", "<" };
+                char *value=malloc(1);
+                value[0]='\0';
+                while(!(in(input[i],"; |\t\n'\"$(){}")))
+                {
+                    int j = 0;
+                    while (j < 7)
+                    {
+                        size_t len_r = strlen(redir_list[j]);
+                        if (strncmp(input + i, redir_list[j], len_r) == 0)
+                        {
+                            break;
+                        }
+                        j++;
+                    }
+                    value=strappendchar(value,input[i]);
+                    if(j<5)
+                    {
+                        i++;
+                        value=strappendchar(value,input[i]);
+                    }
+                    i++;
+                }
+                printf("%s\n",value);
+                struct token *tok =token_init(value,TOKEN_REDIRECTION);
                 res = lexer_append(res, tok);
-                i += strlen(redir_list[is_redirection(input + i) - 1]);
             }
             else if (tok_type != -1
                      && tok_type != TOKEN_EOF) // gestion tokens "normaux"
