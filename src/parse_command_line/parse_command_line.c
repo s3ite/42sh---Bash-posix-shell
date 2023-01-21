@@ -60,19 +60,21 @@ char *parse_command_line(int argc, char **argv)
     }
     if (argc == 2)
     {
-        FILE *f;
-        if ((f = fopen(argv[optind], "r")))
+        FILE *file;
+        if ((file = fopen(argv[optind], "r")))
         {
-            size_t l = get_file_size(f);
-            char *buff = malloc(l + 1);
-            if (!buff)
+            size_t file_len = get_file_size(file);
+            //size_t file_len = ftell(file);
+
+            char *buffer = malloc(file_len + 1);
+            if (!buffer)
             {
                 return NULL;
             }
-            fread(buff, l, 1, f);
-            buff[l] = '\0';
-            fclose(f);
-            return buff;
+            fread(buffer, file_len, 1, file);
+            buffer[file_len] = '\0';
+            fclose(file);
+            return buffer;
         }
     }
     if (argc == 1)

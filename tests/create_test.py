@@ -23,7 +23,7 @@ def create_testcase_from_file(file : str) -> TestCase:
     
 
 if __name__ == "__main__":
-    test_directory = ["comment", "edge_case", "echo", "empty", "if", "simple_command", "script", "single_quote", "true_false", "redirection"]
+    test_directory = ["comment", "edge_case", "echo", "exit", "empty", "if", "simple_command", "script", "single_quote", "true_false", "redirection"]
     #test_directory = ["redirection", "42trash_criterion"]
     #test_directory = ["variable"]
 

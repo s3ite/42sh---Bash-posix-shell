@@ -1,6 +1,6 @@
-2
 build
 CMakeLists.txt
 README.md
+script.sh
 src
 tests

@@ -1,6 +1,9 @@
 #include "exec.h"
-
+#include <stdlib.h>
 #include "../redirection/redirection.h"
+#include "../ast/variable.h"
+#include "../expansion/expansion.h"
+
 
 int run_command(char **cmd)
 {
@@ -49,7 +52,7 @@ static char **to_command(struct dlist *args, struct dlist *values)
 
     struct dlist_item *tmp1 = args->head;
     struct dlist_item *tmp2 = values->head;
-
+    
     char **cmd = malloc(sizeof(char *) * (size + 1));
     size_t i = 0;
 
@@ -62,6 +65,10 @@ static char **to_command(struct dlist *args, struct dlist *values)
     for (; i < size && tmp2; ++i)
     {
         cmd[i] = strdup(tmp2->value);
+        // expansion des variables
+        while(contains_variable(cmd[i]))
+            cmd[i] = expand_variable(cmd[i], variables_list);
+
         tmp2 = tmp2->next;
     }
 
@@ -90,7 +97,7 @@ static int run_buildin(char **cmd)
     }
     else if (strcmp("exit", name) == 0)
     {
-        return my_exit();
+        return my_exit(cmd);
     }
     else if (strcmp("true", name) == 0)
     {
@@ -99,6 +106,10 @@ static int run_buildin(char **cmd)
     else if (strcmp("false", name) == 0)
     {
         return my_false();
+    }
+    else if (strcmp("cd", name) == 0)
+    {
+        return my_cd(cmd);
     }
 
     return 0;
@@ -117,6 +128,8 @@ static int is_builtin(char **cmd)
     else if (strcmp("true", name) == 0)
         return 1;
     else if (strcmp("false", name) == 0)
+        return 1;
+    else if (strcmp("cd", name) == 0)
         return 1;
 
     return 0;
@@ -149,6 +162,17 @@ struct ast *expand_sp_variable(struct ast *ast)
 
 */
 
+
+bool is_variable_assigment(struct dlist *args)
+{
+    if (args->head->next != NULL)
+        return false;
+    
+    return strchr(args->head->value, '=') != NULL;
+}
+
+
+
 static int simple_cmd_exec(struct ast *ast)
 {
 
@@ -169,8 +193,34 @@ static int simple_cmd_exec(struct ast *ast)
             return rc;
     }
 
-    char **cmd = to_command(args, values);
+    if(is_variable_assigment(args))
+    {
+        if (values->head != NULL)
+            return 127; // Error handling : command not found
 
+        char *name = strdup(strtok(args->head->value, "="));
+        char *value = strdup(strtok(NULL, "\0\n\t\r"));
+
+        union value value_var = {.string = value};
+        enum value_type value_type = TYPE_STRING;
+
+        // if is an integer value
+        for (size_t i = 0; i < strlen(value); i++)
+        {
+            if (isalnum(value[i]) == 0)
+                continue;
+            
+            add_variable(variables_list, init_item(name, value_var, value_type));
+            return 0;
+        }
+        value_type = TYPE_INTEGER;
+        value_var.integer = atoi(value);
+        
+        add_variable(variables_list, init_item(name, value_var, value_type));
+        return 0;
+    }
+
+    char **cmd = to_command(args, values);
     if (is_builtin(cmd))
     {
         rc = run_buildin(cmd);
@@ -187,6 +237,61 @@ static int simple_cmd_exec(struct ast *ast)
     return rc;
 }
 
+int exec_pipe(struct operator_node *node, int *res)
+{
+    int fd[2];
+    if (pipe(fd) == -1)
+        return -1;
+
+    pid_t pid1 = fork();
+    if (pid1 < 0)
+    {
+        close(fd[0]);
+        close(fd[1]);
+        return -1;
+    }
+
+    if (pid1 == 0)
+    {
+        close(fd[0]);
+        dup2(fd[1], STDOUT_FILENO);
+        *res = ast_exec(node->left);
+        close(fd[1]);
+        exit(*res);
+    }
+    else
+    {
+        close(fd[1]);
+        pid_t pid2 = fork();
+        if (pid2 < 0)
+        {
+            close(fd[0]);
+            return -1;
+        }
+        if (pid2 == 0)
+        {
+            close(fd[1]);
+            dup2(fd[0], STDIN_FILENO);
+            *res = ast_exec(node->right);
+            close(fd[0]);
+            exit(*res);
+        }
+        else
+        {
+            close(fd[0]);
+            int status1, status2;
+            waitpid(pid1, &status1, 0);
+            waitpid(pid2, &status2, 0);
+            if (WIFEXITED(status2))
+            {
+                *res = WEXITSTATUS(status2);
+                return 0;
+            }
+            return -1;
+        }
+    }
+}
+
 static int exec_op(struct operator_node *op)
 {
     if (op->type == SEMICOLON)
@@ -198,13 +303,25 @@ static int exec_op(struct operator_node *op)
             res = ast_exec(op->right);
         return res;
     }
+    else if (op->type == NEG)
+    {
+        if (op->left)
+        {
+            return !ast_exec(op->left);
+        }
+        if (op->right)
+        {
+            return !ast_exec(op->right);
+        }
+        return 1;
+    }
     else if (op->type == OR)
     {
         int left = 0;
         int right = 0;
         if (op->left)
             left = ast_exec(op->left);
-        if(!left)
+        if (!left)
             return left;
         if (op->right)
             right = ast_exec(op->right);
@@ -218,6 +335,12 @@ static int exec_op(struct operator_node *op)
         if (left)
             return left;
         return ast_exec(op->right);
+    }
+    else if (op->type == PIPE)
+    {
+        int res = 0;
+        exec_pipe(op, &res);
+        return res;
     }
     return 0;
 }
@@ -234,6 +357,12 @@ static int shell_cmd_exec(struct shell_command_node *shell)
             rc = exec_w(shell);
         else
             rc = exec_u(shell);
+    }
+    else if (shell->type == BLOCK)
+    {
+        struct block_node *block = shell->node;
+        struct ast *ast = block->ast;
+        rc = ast_exec(ast);
     }
 
     return rc;

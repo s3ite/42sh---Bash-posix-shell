@@ -8,8 +8,8 @@ add_compile_options(-Werror)
 add_compile_options(-Wall)
 add_compile_options(-Wextra)
 add_compile_options(-Wvla)
-add_compile_options(-fsanitize=address)
-add_link_options(-fsanitize=address)
+#add_compile_options(-fsanitize=address)
+#add_link_options(-fsanitize=address)
 add_compile_options(-g)
 
 
@@ -32,6 +32,7 @@ src/built_in/built_in.h
 src/built_in/boolean.c
 src/built_in/exit.c
 src/built_in/echo.c
+src/built_in/cd.c
 
 src/parser/parser.c
 src/parser/parser.h
@@ -51,6 +52,9 @@ src/parser/parse_compound_list.c
 
 src/parse_command_line/parse_command_line.h
 src/parse_command_line/parse_command_line.c
+
+src/expansion/expansion.c
+src/expansion/expansion.h
 
 src/exec/exec.c
 src/exec/exec.h

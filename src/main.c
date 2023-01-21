@@ -11,70 +11,28 @@
 #include <unistd.h>
 #include <strings.h>
 
+#include "expansion/expansion.h"
 #include "./ast/variable.h"
 #include <stdlib.h>
 
 
-struct variables_list *variables_list;
 
-void exit_program(int signo)
-{
-  variables_list = malloc(sizeof(struct variables_list));
-  if (signo == SIGTERM)
-  {
-    //printf("End of the instance...");
-
-    // catch des signaux et cleanup des donnnees / trap
-    signal(SIGINT, SIG_IGN);
-    signal(SIGTERM, SIG_IGN);
-
-    // on recupere le pid de l'instance actuelle
-    pid_t shell_pid = getpid();
-
-    // free of datas allocated
-    free(variables_list);
-    
-    // on envoie un SIGQUIT au shell
-    kill(shell_pid, SIGQUIT);
-  }
-}
 
 int main(int argc, char **argv)
 {
-
-
-    variables_list = init_variables_list();
-
-    free(variables_list);
-    if (signal(SIGTERM, exit_program) == SIG_ERR)
-      fprintf(stderr, "\ncan't catch SIGTERM\n");
-
-
+   variables_list = init_variables_list();
+    
     char *input = parse_command_line(argc, argv);
-    if (!input)
+    if(!input)
     {
-        while (1)
-        {
-            char *str = malloc(1024);
-            printf("42sh$ ");
-            fgets(str, 1024, stdin);
-            str[strlen(str) - 1] = '\0';
-
-            struct lexer *lexer = lexer_init(10, str);
-            lexer = lexer_load(str, lexer);
-            //lexer_print(lexer);
-            int rc = parse(lexer);
-            lexer_destroy(lexer);
-            free(input);
-            if(rc == RC_ERROR)
-            {
-                free(str);
-                free(variables_list);
-                return RC_ERROR;
-            }
-            free(str);
-        }
+      fprintf(stderr, "The command line syntax is: 42sh [OPTIONS] [SCRIPT] [ARGUMENTS ...]\n");
+      return 2;
     }
+
+    // expansion of variable
+    // while(contains_variable(input))
+    //   input = expand_variable(input, variables_list);
+
     char *new_input=remove_escaped_newline(input);
     struct lexer *lexer = lexer_init(10, new_input);
     lexer = lexer_load(new_input, lexer);
@@ -85,21 +43,25 @@ int main(int argc, char **argv)
       free(input);
       free(new_input);
       fprintf(stderr, "%s", "Syntax error: Unterminated quoted string\n");
-      //printf("Syntax error: Unterminated quoted string");
       return 2;//erreur lors du lexing
     }
 
-    //lexer_print(lexer);
 
-
-    int rc = parse(lexer);
-
+    int rc = 0;
+    struct parser *parser = parse(lexer);
+    if(parser)
+    {
+      rc = ast_exec(parser->ast);
+    }
+    else
+    {
+      rc = 2;
+    }
     lexer_destroy(lexer);
+    parser_free(parser);
     free(input);
     free(new_input);
-    if (rc == RC_ERROR)
-        return RC_ERROR;
-
-    free_variables(variables_list);
+  
+    free(variables_list);
     return rc;
 }

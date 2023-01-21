@@ -3,6 +3,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include "../lexer/lexer.h"
+
 struct RC
 {
     int code;
@@ -26,6 +28,7 @@ enum shell_type
 {
     IF = 0,
     WU = 1,
+    BLOCK = 2
 };
 
 struct condition_wu
@@ -79,12 +82,20 @@ struct shell_command_node
     void *node;
 };
 
+struct block_node
+{
+    enum TokenType type; //{ } or ()
+    struct ast *ast;
+};
+
 enum operator_type
 {
     AND = 0,
     OR,
     BITAND,
-    SEMICOLON
+    SEMICOLON,
+    NEG,
+    PIPE
 };
 
 struct operator_node

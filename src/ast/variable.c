@@ -4,23 +4,25 @@
 #include <sys/types.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <string.h>
 
 
-static struct variable_item *init_item(char *name, union value value, enum value_type value_type)
+#include "../others/tools.h"
+
+//variable global pour la gestion des variables
+struct variables_list * variables_list;
+
+struct variable_item *init_item(char *name, union value value, enum value_type value_type)
 {
     struct variable_item *item = malloc(sizeof(struct variable_item));
     item->name = strdup(name);
 
     if (value_type == TYPE_STRING)
-    {
-        //item->value.string = malloc(VALUE_SIZE);
         item->value.string = strdup(value.string);
-    }
     else
+    {
         item->value.integer = value.integer;
+        item->value.string = malloc(VALUE_SIZE);
+    }
 
     item->type = value_type;
     item->next = NULL;
@@ -41,7 +43,14 @@ static int replace_variable(struct variables_list *list, char *name, union value
     {
         if (strcmp(head->name, name) == 0)
         {
-            head->value = value;
+            if(head->type == TYPE_STRING)
+            {
+                free(head->value.string);
+                head->value.string = value.string;
+            }
+            else
+                head->value.integer = value.integer;
+
             return 0;
         }
     }
@@ -50,27 +59,51 @@ static int replace_variable(struct variables_list *list, char *name, union value
 }
 
 
+int update_variable(struct variables_list *list, char *name, enum value_type type, union value value)
+{
+    if (list == NULL || list->head == NULL)
+        return -1;
+
+    struct variable_item *head = list->head;
+
+    for (; head != NULL; head = head->next)
+    {
+        if (strcmp(head->name, name) == 0)
+        {
+            if(type == TYPE_STRING)
+                head->value.string = strdup(value.string);
+            else
+                head->value.integer = value.integer;
+
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
 /**
  * add a variable to the list of variables
  * @param list the list of variables
  * @param var the struct variable to add or replace 
  * @return 0 on succes, -1 on failure
  */
-static int add_variable(struct variables_list *list, struct variable_item *var)
+int add_variable(struct variables_list *list, struct variable_item *var)
 {
     if (list == NULL || var == NULL)
         return -1;
     
-    if (replace_variable(list, var->name, var->value) == 0)
-        return 0; 
+    //if (replace_variable(list, var->name, var->value) == 0)
+        //return 0; 
 
     if(list->head == NULL)
-    {
-        list->head = list->tail = malloc(sizeof(struct variable_item));
-    }
+        list->head = var;
+
+    if(list->tail != NULL)
+        list->tail->next = var;
+
     //add
     var->prev = list->tail;
-    list->tail->next = var;
     list->tail = var;
     list->size++;
     
@@ -93,6 +126,15 @@ struct variable_item *get_variable(struct variables_list *list, char *name)
     }
 
     return NULL;
+}
+
+// return string formatted value of variable
+char *get_value(struct variable_item *item)
+{
+    if(item->type == TYPE_STRING)
+        return item->value.string;
+
+     return snprintf(item->value.string, VALUE_SIZE, "%d", item->value.integer) > 0 ? item->value.string : NULL;
 }
 
 /**
@@ -185,7 +227,7 @@ char *special_hashtag(struct variables_list *list)
  */
 int update_interrogation(struct variables_list *list, int last_rc)
 {
-    return replace_variable(list, "$?", (union value) {.integer = last_rc});
+    return replace_variable(list, "?", (union value) {.integer = last_rc});
 }
 
 
@@ -196,7 +238,7 @@ int update_random(struct variables_list *list)
 {
     union value value = {.integer = rand()};
 
-    return replace_variable(list, "$RANDOM", value); 
+    return replace_variable(list, "RANDOM", value); 
 }
 
 /**
@@ -204,7 +246,7 @@ int update_random(struct variables_list *list)
  */
 int update_oldpwd(struct variables_list *list, char *old_pwd)
 {
-    int res = replace_variable(list, "$OLDPWD", (union value) {.string = old_pwd});
+    int res = replace_variable(list, "OLDPWD", (union value) {.string = old_pwd});
     return res;
 }
 
@@ -213,7 +255,7 @@ int update_oldpwd(struct variables_list *list, char *old_pwd)
  */
 int update_pwd(struct variables_list *list, char *new_pwd)
 {
-    struct variable_item *item = get_variable(list, "$PWD");
+    struct variable_item *item = get_variable(list, "PWD");
     if (item == NULL)
         return -1;
 
@@ -222,7 +264,7 @@ int update_pwd(struct variables_list *list, char *new_pwd)
     if (res != 0)
         return res;
 
-    return replace_variable(list, "$PWD", (union value) {.string = new_pwd});
+    return replace_variable(list, "PWD", (union value) {.string = new_pwd});
     
 }
 
@@ -253,28 +295,29 @@ struct variables_list *init_variables_list(void)
     list->size = 0;
     
     union value value =  {.integer = getpid()};
-    add_variable(list, init_item("$$", value, TYPE_INTEGER));
+    add_variable(list, init_item("$", value, TYPE_INTEGER));
 
-    // value.integer = rand();
-    // add_variable(list, init_item("$RANDOM", value,  TYPE_INTEGER));
+    value.integer = rand();
+    add_variable(list, init_item("RANDOM", value,  TYPE_INTEGER));
 
-    // value.integer = 0;
-    // add_variable(list, init_item("$?", value, TYPE_INTEGER));
+    value.integer = 0;
+    add_variable(list, init_item("?", value, TYPE_INTEGER));
     
-    // value.string = malloc(VALUE_SIZE);
-    // value.string  = getcwd(value.string, VALUE_SIZE);
+    value.string = malloc(VALUE_SIZE);
+    value.string  = getcwd(value.string, VALUE_SIZE);
 
-    // add_variable(list, init_item("$PWD", value, TYPE_STRING));
-    // add_variable(list, init_item("$OLDPWD", value, TYPE_STRING));
+    add_variable(list, init_item("PWD", value, TYPE_STRING));
+    add_variable(list, init_item("OLDPWD", value, TYPE_STRING));
+    add_variable(list, init_item("HOME", (union value) {.string = getenv("HOME")}, TYPE_STRING));
 
-    // add_variable(list, init_item("$#", (union value) {.string = ""}, TYPE_STRING));
-    // add_variable(list, init_item("$*", (union value) {.string = ""}, TYPE_STRING));
+    add_variable(list, init_item("#", (union value) {.string = ""}, TYPE_STRING));
+    add_variable(list, init_item("*", (union value) {.string = ""}, TYPE_STRING));
     
-    // //liste de tout les arguments
-    // add_variable(list, init_item("$@", (union value) {.string = ""}, TYPE_STRING));
+    //liste de tout les arguments
+    add_variable(list, init_item("@", (union value) {.string = ""}, TYPE_STRING));
 
-    // add_variable(list, init_item("$UID", (union value) {.integer = getuid()}, TYPE_INTEGER));
-    // add_variable(list, init_item("$IFS", (union value) {.string = ""}, TYPE_STRING));
-    // add_variable(list, init_item("$0", (union value) {.string = "42sh"}, TYPE_STRING));
+    add_variable(list, init_item("UID", (union value) {.integer = getuid()}, TYPE_INTEGER));
+    add_variable(list, init_item("IFS", (union value) {.string = ""}, TYPE_STRING));
+    add_variable(list, init_item("0", (union value) {.string = "42sh"}, TYPE_STRING));
     return list;
 }

@@ -21,34 +21,34 @@ int get_rc(struct global_var *ret)
  ** @struct lexer *
  ** Return: Success code
  */
-int parse(struct lexer *lexer)
+struct parser *parse(struct lexer *lexer)
 {
     // Check for eof or newline
 
     struct parser *parser = malloc(sizeof(struct parser));
     if (!parser)
-        return RC_ERROR;
+        return NULL;
     parser->ast = NULL;
     parser->nodes = ast_list_init();
 
     int rc = parse_input(lexer, parser);
-    if (!rc) // TODO: Free all structures to avoid memory leak.   // Then//
-             // return error code.
+    if (!rc)
     {
         struct token *token = lexer_peek(lexer);
         if (token->type == TOKEN_EOF)
         {
             fprintf(stderr, "Invalid grammar: GET EOF\n");
-            parser_free(parser);
-            return RC_ERROR;
+            node_free(parser->nodes);
+            free(parser);
+            return NULL;
         }
+        fprintf(stderr, "42sh: syntax error near unexpected token %s\n",
+                token->value);
+        node_free(parser->nodes);
+        free(parser);
+        return NULL;
     }
-
-    rc = ast_exec(parser->ast);
-
-    parser_free(parser);
-
-    return rc;
+    return parser;
 }
 
 static struct ast *build_operator_node(enum operator_type type,
@@ -121,23 +121,49 @@ struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
 
 struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 {
-   
     int neg = 0;
     struct token *token = lexer_peek(lexer);
-    if(token && token->type == TOKEN_NEG)
+    if (token && token->type == TOKEN_NEG)
+    {
         lexer_pop(lexer);
+        neg = 1;
+    }
 
     struct ast *ast = parse_command(lexer, parser);
     if (!ast)
         return ast;
     ast_append(parser->nodes, ast);
 
-    if(neg)
+    token = lexer_peek(lexer);
+    while (token && token->type == TOKEN_PIPELINE)
     {
-        ast = build_operator_node(OR, ast, NULL);
+        token = lexer_pop(lexer);
+        token = lexer_peek(lexer);
+        if (!token)
+            return ast;
+        while (token->type == TOKEN_NEWLINE)
+        {
+            lexer_pop(lexer);
+            token = lexer_peek(lexer);
+        }
+
+        struct ast *next_cmd = parse_command(lexer, parser);
+        if (!next_cmd)
+            return next_cmd;
+        ast_append(parser->nodes, next_cmd);
+        ast = build_operator_node(PIPE, ast, next_cmd);
         ast_append(parser->nodes, ast);
+
+        token = lexer_peek(lexer);
+        if (!token)
+            break;
     }
 
+    if (neg)
+    {
+        ast = build_operator_node(NEG, ast, NULL);
+        ast_append(parser->nodes, ast);
+    }
 
     return ast;
 }
@@ -183,6 +209,8 @@ void ast_free(struct ast *ast)
 void parser_free(struct parser *parser)
 {
     // ast_free(parser->ast);
+    if (!parser)
+        return;
     node_free(parser->nodes);
     free(parser);
 }
