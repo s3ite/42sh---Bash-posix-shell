@@ -7,7 +7,6 @@
 
 #include "built_in.h"
 
-
 int str_to_int(char *input)
 {
     int result = 0;
@@ -24,16 +23,16 @@ int str_to_int(char *input)
             result *= 10;
             result += input[i] - '0';
         }
-        else 
+        else
             return 2;
-    } 
+    }
 
-
-    return result  < 0 ? 255 : result;
+    return result < 0 ? 255 : result;
 }
 int my_exit(char **cmd)
 {
-    if (cmd[1] == NULL) return 0;
+    if (cmd[1] == NULL)
+        return 0;
 
     if (cmd[2])
     {

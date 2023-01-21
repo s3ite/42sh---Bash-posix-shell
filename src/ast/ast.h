@@ -139,6 +139,6 @@ struct ast_node
 struct ast *init_ast(void);
 void ast_append(struct ast_node *list, struct ast *ast);
 int exec_if(struct shell_command_node *shell);
-struct ast_node *ast_list_init();
+struct ast_node *ast_list_init(void);
 int ast_exec(struct ast *node);
 #endif /* ! AST_H */

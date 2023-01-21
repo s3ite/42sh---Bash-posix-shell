@@ -19,8 +19,8 @@ int is_redirection(char *str)
 {
     char *redir_list[7] = { ">|", "<>", ">>", ">&", "<&", ">", "<" };
     int i = 0;
-    int escaped=str[i]=='\\';
-    while(str[i]!='\0' && in(str[i],"0123456789\\><"))
+    int escaped = str[i] == '\\';
+    while (str[i] != '\0' && in(str[i], "0123456789\\><"))
     {
         int j = 0;
         while (j < 7)
@@ -36,7 +36,7 @@ int is_redirection(char *str)
         {
             return j + 1;
         }
-        escaped=(str[i]=='\\'&&!escaped);
+        escaped = (str[i] == '\\' && !escaped);
         i++;
     }
     return 0;
@@ -264,7 +264,7 @@ int handle_double_quote(char *input, struct lexer *res)
         if (!var)
         {
             char *word = malloc(1);
-            word[0]='\0';
+            word[0] = '\0';
             while (input[j] != '\0' && !(escaped == 0 && input[j] == '"')
                    && !var)
             {
@@ -380,14 +380,15 @@ struct lexer *lexer_load(char *input, struct lexer *res)
         */
         else if (strncmp(input + i, "\"", 1) == 0) // getsion des double quote
         {
-            int inc = handle_double_quote(input + i,res) + 1;;
-            if(inc == 0)
+            int inc = handle_double_quote(input + i, res) + 1;
+            ;
+            if (inc == 0)
             {
                 lexer_destroy(res);
                 return NULL;
             }
             i += inc;
-        }           
+        }
         else
         {
             int tok_type = get_token_type(input + i);
@@ -400,10 +401,12 @@ struct lexer *lexer_load(char *input, struct lexer *res)
             }
             else if (tok_type == TOKEN_REDIRECTION) // gestion des redirections
             {
-                char *redir_list[7] = { ">|", "<>", ">>", ">&", "<&", ">", "<" };
-                char *value=malloc(1);
-                value[0]='\0';
-                while(!(in(input[i],"; |\t\n'\"$(){}")))
+                char *redir_list[7] = {
+                    ">|", "<>", ">>", ">&", "<&", ">", "<"
+                };
+                char *value = malloc(1);
+                value[0] = '\0';
+                while (!(in(input[i], "; |\t\n'\"$(){}")))
                 {
                     int j = 0;
                     while (j < 7)
@@ -415,16 +418,16 @@ struct lexer *lexer_load(char *input, struct lexer *res)
                         }
                         j++;
                     }
-                    value=strappendchar(value,input[i]);
-                    if(j<5)
+                    value = strappendchar(value, input[i]);
+                    if (j < 5)
                     {
                         i++;
-                        value=strappendchar(value,input[i]);
+                        value = strappendchar(value, input[i]);
                     }
                     i++;
                 }
-                printf("%s\n",value);
-                struct token *tok =token_init(value,TOKEN_REDIRECTION);
+                printf("%s\n", value);
+                struct token *tok = token_init(value, TOKEN_REDIRECTION);
                 res = lexer_append(res, tok);
             }
             else if (tok_type != -1

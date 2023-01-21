@@ -20,7 +20,7 @@ static struct ast *build_operator_node(enum operator_type type,
 static int is_expected_token(struct lexer *lexer)
 {
     struct token *token = lexer_peek(lexer);
-    if(!token)
+    if (!token)
         return 0;
     return (token->type == TOKEN_NEWLINE || token->type == TOKEN_EOF);
 }
@@ -63,7 +63,7 @@ struct ast *parse_list(struct lexer *lexer, struct parser *parser)
         token_free(copy);
     }
 
-    if(!is_expected_token(lexer))
+    if (!is_expected_token(lexer))
         return NULL;
     return res;
 }

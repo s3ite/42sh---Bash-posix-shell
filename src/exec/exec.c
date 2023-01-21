@@ -1,9 +1,10 @@
 #include "exec.h"
+
 #include <stdlib.h>
-#include "../redirection/redirection.h"
+
 #include "../ast/variable.h"
 #include "../expansion/expansion.h"
-
+#include "../redirection/redirection.h"
 
 int run_command(char **cmd)
 {
@@ -52,7 +53,7 @@ static char **to_command(struct dlist *args, struct dlist *values)
 
     struct dlist_item *tmp1 = args->head;
     struct dlist_item *tmp2 = values->head;
-    
+
     char **cmd = malloc(sizeof(char *) * (size + 1));
     size_t i = 0;
 
@@ -66,7 +67,7 @@ static char **to_command(struct dlist *args, struct dlist *values)
     {
         cmd[i] = strdup(tmp2->value);
         // expansion des variables
-        while(contains_variable(cmd[i]))
+        while (contains_variable(cmd[i]))
             cmd[i] = expand_variable(cmd[i], variables_list);
 
         tmp2 = tmp2->next;
@@ -144,7 +145,7 @@ struct ast *expand_sp_variable(struct ast *ast)
 {
     enum node_type node_type = ast->node_type;
     // expand command and arguments
-    
+
     // expand value
     if (node_type == SIMPLE_COMMAND)
     {
@@ -153,10 +154,10 @@ struct ast *expand_sp_variable(struct ast *ast)
         // si pas de value
         if (simple_cmd->values == NULL)
             return ast;
-        
+
         struct dlist_items *values = simple_cmd->values->head;
-        //ON boucle sur les arguments et on remplace les valeurs a expandre par les valeurs des variables
-        while(values != NULL)
+        //ON boucle sur les arguments et on remplace les valeurs a expandre par
+les valeurs des variables while(values != NULL)
         {
             if (values->values)
         }
@@ -166,21 +167,17 @@ struct ast *expand_sp_variable(struct ast *ast)
 
 */
 
-
 bool is_variable_assigment(struct dlist *args)
 {
     if (args->head->next != NULL)
         return false;
-    
+
     return strchr(args->head->value, '=') != NULL;
 }
 
-
-
 static int simple_cmd_exec(struct ast *ast)
 {
-
-    //ast = expand_variable(ast);
+    // ast = expand_variable(ast);
 
     int rc = 0;
     struct simple_command_node *cmd_nbode = ast->node;
@@ -197,7 +194,7 @@ static int simple_cmd_exec(struct ast *ast)
             return rc;
     }
 
-    if(is_variable_assigment(args))
+    if (is_variable_assigment(args))
     {
         if (values->head != NULL)
             return 127; // Error handling : command not found
@@ -205,7 +202,7 @@ static int simple_cmd_exec(struct ast *ast)
         char *name = strdup(strtok(args->head->value, "="));
         char *value = strdup(strtok(NULL, "\0\n\t\r"));
 
-        union value value_var = {.string = value};
+        union value value_var = { .string = value };
         enum value_type value_type = TYPE_STRING;
 
         // if is an integer value
@@ -213,8 +210,9 @@ static int simple_cmd_exec(struct ast *ast)
         {
             if (isalnum(value[i]) == 0)
                 continue;
-            
-            add_variable(variables_list, init_item(name, value_var, value_type));
+
+            add_variable(variables_list,
+                         init_item(name, value_var, value_type));
             free(name);
             free(value);
 
@@ -222,7 +220,7 @@ static int simple_cmd_exec(struct ast *ast)
         }
         value_type = TYPE_INTEGER;
         value_var.integer = atoi(value);
-    
+
         add_variable(variables_list, init_item(name, value_var, value_type));
 
         free(name);
@@ -289,7 +287,8 @@ int exec_pipe(struct operator_node *node, int *res)
         else
         {
             close(fd[0]);
-            int status1, status2;
+            int status1;
+            int status2;
             waitpid(pid1, &status1, 0);
             waitpid(pid2, &status2, 0);
             if (WIFEXITED(status2))
@@ -380,7 +379,6 @@ static int shell_cmd_exec(struct shell_command_node *shell)
 
 int ast_exec(struct ast *node)
 {
-
     int rc = 0;
 
     if (!node)

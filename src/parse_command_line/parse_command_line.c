@@ -64,7 +64,7 @@ char *parse_command_line(int argc, char **argv)
         if ((file = fopen(argv[optind], "r")))
         {
             size_t file_len = get_file_size(file);
-            //size_t file_len = ftell(file);
+            // size_t file_len = ftell(file);
 
             char *buffer = malloc(file_len + 1);
             if (!buffer)
