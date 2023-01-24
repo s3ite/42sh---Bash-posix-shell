@@ -8,9 +8,9 @@ add_compile_options(-Werror)
 add_compile_options(-Wall)
 add_compile_options(-Wextra)
 add_compile_options(-Wvla)
-#add_compile_options(-fsanitize=address)
-#add_link_options(-fsanitize=address)
-#add_compile_options(-g)
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
+add_compile_options(-g)
 
 
 add_executable(42sh
@@ -61,6 +61,8 @@ src/exec/exec.c
 src/exec/exec.h
 
 src/lexer/lexer_lib.c
+src/lexer/lexer_load.c
+src/lexer/lexer_tools.c
 src/lexer/lexer.c
 src/lexer/lexer.h
 
