@@ -28,15 +28,14 @@ char *strnappend(char *str1, char *str2, int n)
     return str1;
 }
 
-char *strappendchar(char *str1, char c)
+void strappendchar(char **str1, char c)
 {
-    size_t len = strlen(str1);
-    char *str2 = malloc(len + 1 + 1);
-    strcpy(str2, str1);
-    str2[len] = c;
-    str2[len + 1] = '\0';
-    free(str1);
-    return str2;
+    char *str=*str1;
+    size_t len = strlen(str);
+    str = realloc(str,len + 1 + 1);
+    str[len] = c;
+    str[len + 1] = '\0';
+    *str1=str;
 }
 
 char *remove_backslash(char *str)

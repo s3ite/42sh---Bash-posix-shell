@@ -67,7 +67,7 @@ void token_free(struct token *token);
 // from lexer_tools.c
 int in(char c, char *delim);
 char *strnappend(char *str1, char *str2, int n);
-char *strappendchar(char *str1, char c);
+void strappendchar(char **str1, char c);
 char *remove_backslash(char *str);
 
 // from lexer.c

@@ -168,29 +168,29 @@ struct token *handle_var(char *input)
     return tok;
 }
 
-int reduce_db1(char *input,char *word ,int j)
+int reduce_db1(char *input,char **word ,int j)
 {
     j++;
     if (input[j] == '\\')
     {
-        word = strappendchar(word, '\\');
+        strappendchar(word, '\\');
     }
     else if (input[j] == '$')
     {
-        word = strappendchar(word, '$');
+        strappendchar(word, '$');
     }
     else if (input[j] == '\n')
     {
-        word = strappendchar(word, '\n');
+        strappendchar(word, '\n');
     }
     else if (input[j] == '"')
     {
-        word = strappendchar(word, '"');
+        strappendchar(word, '"');
     }
     else
     {
-        word = strappendchar(word, '\\');
-        word = strappendchar(word, input[j]);
+        strappendchar(word, '\\');
+        strappendchar(word, input[j]);
     }
     return j;
 }
@@ -203,7 +203,7 @@ int reduce_db2(char *input,struct lexer *res, int j,int *var)
     {
         if (input[j] == '\\')
         {
-            j=reduce_db1(input, word,j);
+            j=reduce_db1(input, &word,j);
         }
         else if (input[j] == '$')
         {
@@ -211,7 +211,7 @@ int reduce_db2(char *input,struct lexer *res, int j,int *var)
         }
         else
         {
-            word = strappendchar(word, input[j]);
+            strappendchar(&word, input[j]);
         }
         j++;
     }
@@ -233,16 +233,17 @@ int handle_double_quote(char *input, struct lexer *res)
         else
         {
             char *word = malloc(1);
+            word[0]='\0';
             while (input[j] != '\0' && !(input[j] == '"')
                    && var)
             {
-                if (in(input[j], "; ><|\t\n'\"$"))
+                if (in(input[j], "; ><|\t\n'\"$)"))
                 {
                     var = 0;
                 }
                 else
                 {
-                    word = strappendchar(word, input[j]);
+                    strappendchar(&word, input[j]);
                 }
                 j++;
             }

@@ -70,11 +70,11 @@ int reduce5_1(char *input,struct lexer *res, int i)
             }
             j++;
         }
-        value = strappendchar(value, input[i]);
+        strappendchar(&value, input[i]);
         if (j < 5)
         {
             i++;
-            value = strappendchar(value, input[i]);
+            strappendchar(&value, input[i]);
         }
         i++;
     }
