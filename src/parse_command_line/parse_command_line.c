@@ -39,47 +39,9 @@ char *remove_escaped_newline(char *input)
     return ret;
 }
 
-char *parse_command_line(int argc, char **argv)
+char *get_stdin()
 {
-    if (argc >= 3)
-    {
-        int opt;
-        size_t l;
-        char *a;
-        while ((opt = getopt(argc, argv, "c:")) != -1)
-        {
-            switch (opt)
-            {
-            case 'c':
-                l = strlen(optarg);
-                a = malloc(l + 1);
-                strcpy(a, optarg);
-                return a;
-            }
-        }
-    }
-    if (argc == 2)
-    {
-        FILE *file;
-        if ((file = fopen(argv[optind], "r")))
-        {
-            size_t file_len = get_file_size(file);
-            // size_t file_len = ftell(file);
-
-            char *buffer = malloc(file_len + 1);
-            if (!buffer)
-            {
-                return NULL;
-            }
-            fread(buffer, file_len, 1, file);
-            buffer[file_len] = '\0';
-            fclose(file);
-            return buffer;
-        }
-    }
-    if (argc == 1)
-    {
-        if ((isatty(STDIN_FILENO)))
+    if ((isatty(STDIN_FILENO)))
         {
             return NULL;
         }
@@ -105,6 +67,46 @@ char *parse_command_line(int argc, char **argv)
         }
         buff[red] = '\0';
         return buff;
+}
+
+char *parse_command_line(int argc, char **argv)
+{
+    if (argc >= 3)
+    {
+        int opt;
+        size_t l;
+        char *a;
+        while ((opt = getopt(argc, argv, "c:")) != -1)
+        {
+            if(opt=='c')
+            {
+                l = strlen(optarg);
+                a = malloc(l + 1);
+                strcpy(a, optarg);
+                return a;
+            }
+        }
+    }
+    if (argc == 2)
+    {
+        FILE *file;
+        if ((file = fopen(argv[optind], "r")))
+        {
+            size_t file_len = get_file_size(file);
+            char *buffer = malloc(file_len + 1);
+            if (!buffer)
+            {
+                return NULL;
+            }
+            fread(buffer, file_len, 1, file);
+            buffer[file_len] = '\0';
+            fclose(file);
+            return buffer;
+        }
+    }
+    if (argc == 1)
+    {
+        return get_stdin();
     }
     return NULL;
 }
