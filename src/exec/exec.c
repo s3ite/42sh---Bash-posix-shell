@@ -66,6 +66,7 @@ static char **to_command(struct dlist *args, struct dlist *values)
     for (; i < size && tmp2; ++i)
     {
         cmd[i] = strdup(tmp2->value);
+        
         // expansion des variables
         while (contains_variable(cmd[i]))
             cmd[i] = expand_variable(cmd[i], variables_list);
@@ -139,34 +140,8 @@ static int is_builtin(char **cmd)
 
     return 0;
 }
-/*
-// expand simple command variable
-struct ast *expand_sp_variable(struct ast *ast)
-{
-    enum node_type node_type = ast->node_type;
-    // expand command and arguments
 
-    // expand value
-    if (node_type == SIMPLE_COMMAND)
-    {
-        struct simple_command_node *simple_cmd = ast->node;
-
-        // si pas de value
-        if (simple_cmd->values == NULL)
-            return ast;
-
-        struct dlist_items *values = simple_cmd->values->head;
-        //ON boucle sur les arguments et on remplace les valeurs a expandre par
-les valeurs des variables while(values != NULL)
-        {
-            if (values->values)
-        }
-    }
-}
-
-
-*/
-
+// return true if the command is a variable assignment
 bool is_variable_assigment(struct dlist *args)
 {
     if (args->head->next != NULL)
@@ -177,23 +152,24 @@ bool is_variable_assigment(struct dlist *args)
 
 static int simple_cmd_exec(struct ast *ast)
 {
-    // ast = expand_variable(ast);
-
     int rc = 0;
-    struct simple_command_node *cmd_nbode = ast->node;
-    struct dlist *args = cmd_nbode->args;
-    struct dlist *values = cmd_nbode->values;
+    struct simple_command_node *cmd_node = ast->node;
+    struct dlist *args = cmd_node->args;
+    struct dlist *values = cmd_node->values;
 
-    struct ast *prefix = cmd_nbode->prefix;
-    if (prefix && prefix->node_type == REDIRECTION)
+    struct ast **prefix = cmd_node->prefix;
+    int len = cmd_node->prefix_len;
+    int i = 0;
+    while ( i < len && prefix[i]->node_type == REDIRECTION)
     {
-        struct redirection_node *rd_node = prefix->node;
+        struct redirection_node *rd_node = prefix[i]->node;
         rc = redirection_exec_handler(rd_node);
 
         if (rc != 0) // Error handling
             return rc;
+        i++;
     }
-
+    // assign variable
     if (is_variable_assigment(args))
     {
         if (values->head != NULL)
@@ -201,6 +177,8 @@ static int simple_cmd_exec(struct ast *ast)
 
         char *name = strdup(strtok(args->head->value, "="));
         char *value = strdup(strtok(NULL, "\0\n\t\r"));
+        if (!value)
+            return 0; // Error handling : No value
 
         union value value_var = { .string = value };
         enum value_type value_type = TYPE_STRING;
@@ -211,21 +189,20 @@ static int simple_cmd_exec(struct ast *ast)
             if (isalnum(value[i]) == 0)
                 continue;
 
-            add_variable(variables_list,
+            rc = add_variable(variables_list,
                          init_item(name, value_var, value_type));
             free(name);
             free(value);
-
-            return 0;
+            return rc;
         }
         value_type = TYPE_INTEGER;
         value_var.integer = atoi(value);
 
-        add_variable(variables_list, init_item(name, value_var, value_type));
+        rc = add_variable(variables_list, init_item(name, value_var, value_type));
 
         free(name);
         free(value);
-        return 0;
+        return rc;
     }
 
     char **cmd = to_command(args, values);
@@ -241,7 +218,6 @@ static int simple_cmd_exec(struct ast *ast)
     }
 
     free_cmd(cmd);
-
     return rc;
 }
 

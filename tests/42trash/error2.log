@@ -1,1 +1,1 @@
-./tests/redirection/error_to_file.in: line 1: echoo: command not found
+42sh: Error while executing cmd (unknown): echoo: No such file or directory

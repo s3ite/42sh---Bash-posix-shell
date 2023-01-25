@@ -1,0 +1,1 @@
+tr 'o' 'i' <> tests/42trash/DONT_DELETE/tr_file2 1<> 2

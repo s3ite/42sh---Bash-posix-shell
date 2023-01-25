@@ -44,7 +44,7 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser)
 
     while (token->type == TOKEN_REDIRECTION)
     {
-        struct ast *res = parse_redirection(lexer, parser);
+        res = parse_redirection(lexer, parser);
         if (!res)
         {
             fprintf(stderr, "Error parse_command");

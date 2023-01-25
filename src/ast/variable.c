@@ -307,7 +307,7 @@ struct variables_list *init_variables_list(void)
     add_variable(list,
                  init_item("*", (union value){ .string = "" }, TYPE_STRING));
 
-    // liste de tout les arguments
+    // liste de tous les arguments
     add_variable(list,
                  init_item("@", (union value){ .string = "" }, TYPE_STRING));
 

@@ -426,7 +426,6 @@ struct lexer *lexer_load(char *input, struct lexer *res)
                     }
                     i++;
                 }
-                printf("%s\n", value);
                 struct token *tok = token_init(value, TOKEN_REDIRECTION);
                 res = lexer_append(res, tok);
             }

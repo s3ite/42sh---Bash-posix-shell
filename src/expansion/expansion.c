@@ -30,7 +30,6 @@ char *get_word(char *input)
 char *expand_variable(char *input, struct variables_list *list)
 {
     char *new_input = calloc(1, 1024);
-
     char *tmp = strtok(input, " \0\n\t\r");
 
     char *word = NULL;
@@ -46,16 +45,13 @@ char *expand_variable(char *input, struct variables_list *list)
             {
                 char *value = get_value(var);
                 new_input = strcat(new_input, value);
-                strcat(new_input, " ");
             }
         }
         else
-        {
             new_input = strcat(new_input, tmp);
-            strcat(new_input, " ");
-        }
     }
 
+    free(input);
     return new_input;
 }
 
