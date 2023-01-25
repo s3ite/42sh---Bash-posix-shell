@@ -5,11 +5,18 @@
 #include "../ast/list.h"
 #include "parser.h"
 
+//Check if token is redirection
 static bool is_prefix(struct token *token)
 {
     return token->type == TOKEN_REDIRECTION;
 }
 
+/*
+ ** Name: handle_prefix
+ ** Description: parse prefix
+ ** struct lexer *lexer, struct parser *parser
+ ** Return: struct ast
+ */
 static struct ast **handle_prefix(struct lexer *lexer, struct parser *parser, int *prefix_len)
 {
     struct ast **ast = NULL;

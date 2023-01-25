@@ -5,8 +5,8 @@
 #include "../ast/print_ast.h"
 #include "../exec/exec.h"
 
+//global var, contains functions map
 struct hash_map *hash_func;
-
 
 void set_rc(int res, struct global_var *ret)
 {
@@ -59,6 +59,13 @@ struct parser *parse(struct lexer *lexer)
     return parser;
 }
 
+
+/*
+ ** Name: build_operator_node
+ ** Description: build ast structure
+ ** @enum operator_type type,struct ast *left, struct ast *right
+ ** Return: struct ast
+ */
 static struct ast *build_operator_node(enum operator_type type,
                                        struct ast *left, struct ast *right)
 {
@@ -75,6 +82,7 @@ static struct ast *build_operator_node(enum operator_type type,
     return ast;
 }
 
+//Check if given token is a condition 
 static int is_condition_token(struct token *token)
 {
     if (!token)
@@ -82,6 +90,12 @@ static int is_condition_token(struct token *token)
     return token->type == TOKEN_AND || token->type == TOKEN_OR;
 }
 
+/*
+ ** Name: parse_and_or
+ ** Description: parse and_or rule
+ ** struct lexer *lexer, struct parser *parser
+ ** Return: struct ast
+ */
 struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
 {
     struct ast *ast = parse_pipeline(lexer, parser);
@@ -127,6 +141,12 @@ struct ast *parse_and_or(struct lexer *lexer, struct parser *parser)
     return ast;
 }
 
+/*
+ ** Name: parse_pipeline
+ ** Description: parse pipeline rule
+ ** struct lexer *lexer, struct parser *parser
+ ** Return: struct ast
+ */
 struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 {
     int neg = 0;
@@ -176,6 +196,11 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
     return ast;
 }
 
+
+/*
+    FREE PARSER FUNCTIONS
+
+*/
 void node_free(struct ast_node *nodes)
 {
     if (!nodes)

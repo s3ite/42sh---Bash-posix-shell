@@ -2,6 +2,13 @@
 
 #include "parser.h"
 
+
+/*
+ ** Name: build_operator_node
+ ** Description: build operator node structure
+ ** enum operator_type type,truct ast *left, struct ast *right
+ ** Return: struct ast
+ */
 static struct ast *build_operator_node(enum operator_type type,
                                        struct ast *left, struct ast *right)
 {
@@ -17,6 +24,9 @@ static struct ast *build_operator_node(enum operator_type type,
     return ast;
 }
 
+/*
+* check if token is newline or EOF
+*/
 static int is_expected_token(struct lexer *lexer)
 {
     struct token *token = lexer_peek(lexer);

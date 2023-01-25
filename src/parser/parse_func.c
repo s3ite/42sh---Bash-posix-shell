@@ -1,6 +1,7 @@
 #include "parser.h"
 
 
+//Build function node
 static struct ast *build_node(struct ast *body)
 {
     struct ast *ast = malloc(sizeof(struct ast));
@@ -8,6 +9,13 @@ static struct ast *build_node(struct ast *body)
     ast->node = body;
     return ast;
 }
+
+/*
+ ** Name: parse_func
+ ** Description: parse function rule
+ ** struct lexer *lexer, struct parser *parser
+ ** Return: struct ast
+ */
 struct ast *parse_func(struct lexer *lexer, struct parser *parser)
 {
     struct token *token = lexer_peek(lexer);

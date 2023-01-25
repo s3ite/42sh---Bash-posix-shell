@@ -1,5 +1,12 @@
 #include "parser.h"
 
+
+/*
+ ** Name: parse_condition
+ ** Description: parse condition 
+ ** truct ast *body, struct ast *condition,enum loop loo
+ ** Return: struct ast
+ */
 struct ast *parse_condition(struct lexer *lexer, struct parser *parser,
                             enum TokenType type)
 {
@@ -16,6 +23,12 @@ struct ast *parse_condition(struct lexer *lexer, struct parser *parser,
     return ast;
 }
 
+/*
+ ** Name: build_condition_wu
+ ** Description: build condition_wu structure
+ ** truct ast *body, struct ast *condition,enum loop loo
+ ** Return: struct condition_wu
+ */
 struct condition_wu *build_condition_wu(struct ast *body, struct ast *condition,
                                         enum loop loop)
 {
@@ -27,6 +40,13 @@ struct condition_wu *build_condition_wu(struct ast *body, struct ast *condition,
     return ast;
 }
 
+
+/*
+ ** Name: parse_rule_wu
+ ** Description: parse while/untile rule
+ ** struct lexer *lexer, struct parser *parser, struct ast prev_ast
+ ** Return: struct ast
+ */
 struct ast *parse_rule_wu(struct lexer *lexer, struct parser *parser,
                           struct ast *prev_ast)
 {

@@ -1,5 +1,12 @@
 #include "parser.h"
 
+
+/*
+ ** Name: build_condition_if_node
+ ** Description: build condition_node struct
+ ** truct ast *body, struct ast *condition,enum loop loo
+ ** Return: struct condition_if_node
+ */
 struct condition_if_node *build_condition_if_node(struct ast *condition,
                                                   struct ast *then_action,
                                                   struct ast *else_action)

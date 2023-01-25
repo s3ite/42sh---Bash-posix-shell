@@ -1,5 +1,12 @@
 #include "parser.h"
 
+
+/*
+ ** Name: parse_rule_else
+ ** Description: parse else rule
+ ** struct lexer *lexer, struct parser *parser
+ ** Return: struct ast
+ */
 struct ast *parse_rule_else(struct lexer *lexer, struct parser *parser)
 {
     struct token *token = lexer_peek(lexer);
