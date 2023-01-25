@@ -34,8 +34,12 @@ int reduce2(char *input,struct lexer *res, int i)
 int reduce3(char *input,struct lexer *res, int i)
 {
     struct token *tok = handle_var(input + i + 1);
+    if(tok==NULL)
+    {
+        return -1;
+    }
     res = lexer_append(res, tok);
-    i += strlen(tok->value) + 1;
+    i += strlen(tok->value);
     tok->value = remove_backslash(tok->value);
     return i;
 }
@@ -52,7 +56,7 @@ int reduce4(char *input,struct lexer *res, int i)
     return i;
 }
 
-int reduce5_1(char *input,struct lexer *res, int i)
+int reduce5_1(char *input,struct lexer *res, int i) // gestion des redirections
 {
     char *redir_list[7] = {
         ">|", "<>", ">>", ">&", "<&", ">", "<"};
@@ -75,6 +79,8 @@ int reduce5_1(char *input,struct lexer *res, int i)
         {
             i++;
             strappendchar(&value, input[i]);
+            i++;
+            break;
         }
         i++;
     }
@@ -128,26 +134,22 @@ int reduce6(char *input,struct lexer *res, int i)
         else if (strncmp(input + i, "'", 1) == 0) // getsion des single quote
         {
             i=reduce2(input,res,i);
-            if (i==-1)
-            {
-                return -1;
-            }
         }
-        /*else if (strncmp(input + i, "$", 1) == 0) // getsion des variables
+        else if (strncmp(input + i, "$(", 2) == 0) // getsion des variables
         {
             i=reduce3(input,res,i);
-        }*/
+        }
         else if (strncmp(input + i, "\"", 1) == 0) // getsion des double quote
         {
             i=reduce4(input,res,i);
-            if (i==-1)
-            {
-                return -1;
-            }
         }
         else
         {
             i=reduce5(input,res,i);
+        }
+        if (i==-1)
+        {
+            return -1;
         }
     return i;
 }

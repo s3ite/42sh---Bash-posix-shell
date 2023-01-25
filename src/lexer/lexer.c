@@ -136,7 +136,7 @@ struct token *handle_word(char *input)
     return tok;
 }
 
-struct token *handle_var(char *input)
+struct token *handle_var(char *input) // sous-fonction pour gerer les variables
 {
     int j = 0;
     int escaped = (input[j] == '\\');
@@ -160,11 +160,20 @@ struct token *handle_var(char *input)
             escaped=(input[j]=='\\')&&!escaped;
             j++;
         }
+        if (input[j] == '\0')
+        {
+            return NULL;
+        }   
     }
-    char *value = malloc(j + 1);
-    strncpy(value, input, j);
-    value[j] = '\0';
-    struct token *tok = token_init(value, TOKEN_VAR);
+    char *value = malloc(j + 2);
+    strncpy(value, input, j+1);
+    value[j+1] = '\0';
+    char *a=malloc(2);
+    a[0]='$';
+    a[1]='\0';
+    a=strnappend(a,value,j+1);
+    free(value);
+    struct token *tok = token_init(a, TOKEN_VAR);
     return tok;
 }
 
