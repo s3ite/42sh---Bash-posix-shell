@@ -60,11 +60,13 @@ struct redirection_node
     char *word;
 };
 
+
 struct simple_command_node
 {
     struct dlist *args; // commande & args
     struct dlist *values; // valeur après la cmd
-    struct ast *prefix; // redirection && assignement
+    struct ast **prefix; // redirection && assignement
+    int prefix_len;
 };
 
 union rules
@@ -118,6 +120,7 @@ enum node_type
     PREFIX,
     REDIRECTION,
     ELEMENT,
+    FUNCTION,
 };
 
 /**

@@ -83,6 +83,11 @@ void lexer_print(struct lexer *v)
     printf("\n");
 }
 
+struct token *lexer_peek_two(struct lexer *v)
+{
+    return v->data[v->index+1];
+}
+
 struct token *lexer_peek(struct lexer *v)
 {
     return v->data[v->index];

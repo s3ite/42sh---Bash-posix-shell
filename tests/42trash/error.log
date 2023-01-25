@@ -1,1 +1,2 @@
-./tests/redirection/redirection_output_diff_fd.in: line 1: echoo: command not found
+42sh: Error while executing cmd (unknown): echoo: No such file or directory
+t found

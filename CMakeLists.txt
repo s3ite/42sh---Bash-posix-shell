@@ -12,21 +12,21 @@ add_compile_options(-fsanitize=address)
 add_link_options(-fsanitize=address)
 add_compile_options(-g)
 
+#Sub CmakeList
+add_subdirectory (src/parser)
+add_subdirectory (src/others)
+add_subdirectory (src/lexer)
+add_subdirectory (src/built_in)
+add_subdirectory (src/ast)
+add_subdirectory (src/exec)
+add_subdirectory (src/redirection)
+add_subdirectory (src/expansion)
+
 
 add_executable(42sh
-src/ast/ast.c
-src/ast/ast.h
 
-src/ast/list.c
-src/ast/list.h
 
-src/redirection/redirection.c
-src/redirection/redirection.h
 
-src/ast/print_ast.c
-src/ast/print_ast.h
-src/ast/variable.c
-src/ast/variable.h
 
 src/built_in/built_in.h
 src/built_in/boolean.c
@@ -34,41 +34,13 @@ src/built_in/exit.c
 src/built_in/echo.c
 src/built_in/cd.c
 src/built_in/unset.c
+src/built_in/dot.c
 
-src/parser/parser.c
-src/parser/parser.h
-src/parser/parse_input.c
-src/parser/parse_list.c
-src/parser/parse_shell_command.c
-src/parser/parse_simple_commande.c
-src/parser/parse_rule_if.c
-src/parser/parse_rule_else.c
-src/parser/parse_rule_elif.c
-src/parser/parse_redirection.c
-src/parser/parse_rule_wu.c
-src/parser/parse_prefix.c
-
-src/parser/parse_command.c
-src/parser/parse_compound_list.c
-
-src/parse_command_line/parse_command_line.h
-src/parse_command_line/parse_command_line.c
-
-src/expansion/expansion.c
-src/expansion/expansion.h
-
-src/exec/exec.c
-src/exec/exec.h
-
-src/lexer/lexer_lib.c
-src/lexer/lexer_load.c
-src/lexer/lexer_tools.c
-src/lexer/lexer.c
-src/lexer/lexer.h
-
-src/others/tools.c
-src/others/tools.h
 
 src/main.c
+src/run_program.c
+src/run_program.h
 
 )
+
+target_link_libraries(42sh parser others lexer built_in ast exec redirection expansion)

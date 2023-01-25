@@ -5,48 +5,39 @@
 #include "../ast/list.h"
 #include "parser.h"
 
+//Check if token is redirection
 static bool is_prefix(struct token *token)
 {
     return token->type == TOKEN_REDIRECTION;
 }
 
-static struct ast *handle_prefix(struct lexer *lexer, struct parser *parser)
+/*
+ ** Name: handle_prefix
+ ** Description: parse prefix
+ ** struct lexer *lexer, struct parser *parser
+ ** Return: struct ast
+ */
+static struct ast **handle_prefix(struct lexer *lexer, struct parser *parser, int *prefix_len)
 {
-    struct ast *ast = parser_prefix(lexer, parser);
-
-    if (!ast)
-        return NULL;
-
-    lexer_pop(lexer);
-    struct token *token = lexer_peek(lexer);
-
-    if (token->type == WORD)
+    struct ast **ast = NULL;
+    struct token *token = NULL;
+    int i = 0;
+    do
     {
-        while (token->type == WORD)
+        ast = realloc(ast, sizeof(struct ast *) * (i + 1));
+        ast[i] = parser_prefix(lexer, parser);
+        if (ast[i] == NULL)
         {
-            ast->node_type = ELEMENT;
-            ast->node = malloc(1024);
-            ast->node = strcpy(ast->node, token->value);
-
-            ast_append(parser->nodes, ast);
-            token = lexer_peek(lexer);
-        }
-
-        return ast;
-    }
-
-    while (is_prefix(token))
-    {
-        ast = parser_prefix(lexer, parser);
-        if (ast == NULL)
-        {
-            fprintf(stderr, "Error parsing handle prefix");
+            free(ast);
             return NULL;
         }
-        ast_append(parser->nodes, ast);
-        token = lexer_peek(lexer);
-    }
 
+        ast_append(parser->nodes, ast[i]);
+        token = lexer_peek(lexer);
+        i++;
+    } while (token != NULL && is_prefix(token));
+
+    *prefix_len = i;
     return ast;
 }
 /**
@@ -60,11 +51,12 @@ static struct ast *handle_prefix(struct lexer *lexer, struct parser *parser)
 struct simple_command_node *parse_simple_commande(struct lexer *lexer,
                                                   struct parser *parser)
 {
+    struct simple_command_node *simple_command =
+            malloc(sizeof(struct simple_command_node));
     struct token *token = lexer_peek(lexer);
     if (token->type == WORD)
     {
-        struct simple_command_node *simple_command =
-            malloc(sizeof(struct simple_command_node));
+
 
         struct token *next_token = lexer_pop(lexer);
         // revoir limplemntation de la liste pour placer le premier token
@@ -95,11 +87,21 @@ struct simple_command_node *parse_simple_commande(struct lexer *lexer,
         simple_command->args = args;
         simple_command->values = values;
 
-        simple_command->prefix = handle_prefix(lexer, parser);
+        simple_command->prefix = handle_prefix(lexer, parser, &simple_command->prefix_len);
 
-        return simple_command;
+        //return simple_command;
     }
-    return NULL;
+    else if (token->type == TOKEN_REDIRECTION)
+    {
+        simple_command->prefix = handle_prefix(lexer, parser, &simple_command->prefix_len);
+    }
+    else
+    {
+        free_simple_command(simple_command);
+        return NULL;
+    }
+
+    return simple_command;
 }
 
 struct ast *add_simple_commande(struct lexer *lexer, struct parser *parser)
@@ -117,6 +119,15 @@ struct ast *add_simple_commande(struct lexer *lexer, struct parser *parser)
 
     return ast;
 }
+void free_prefix(struct ast **ast)
+{
+    for (size_t i = 0; i < 2; i++)
+    {
+        free_ast_redirection(ast[i]->node);
+        free(ast[i]);
+    }
+    free(ast);
+}
 
 void free_simple_command(struct simple_command_node *simple_command)
 {
@@ -125,6 +136,7 @@ void free_simple_command(struct simple_command_node *simple_command)
 
     free_dlist(simple_command->args);
     free_dlist(simple_command->values);
+    free(simple_command->prefix);
     free(simple_command);
 }
 

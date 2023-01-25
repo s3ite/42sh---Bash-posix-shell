@@ -205,10 +205,12 @@ int reduce_db2(char *input,struct lexer *res, int j,int *var)
         {
             j=reduce_db1(input, &word,j);
         }
+        /*
         else if (input[j] == '$')
         {
             *var = 1;
         }
+        */
         else
         {
             strappendchar(&word, input[j]);

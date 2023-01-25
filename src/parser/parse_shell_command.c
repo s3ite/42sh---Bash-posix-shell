@@ -6,6 +6,13 @@
 #include "../ast/list.h"
 #include "parser.h"
 
+
+/*
+ ** Name: build_shell_command_node
+ ** Description: build ast structure for shell command
+ ** enum shell_type
+ ** Return: struct ast
+ */
 struct ast *build_shell_command_node(enum shell_type type)
 {
     struct ast *ast = init_ast();
@@ -20,6 +27,13 @@ struct ast *build_shell_command_node(enum shell_type type)
     return ast;
 }
 
+
+/*
+ ** Name: parse_cmd
+ ** Description: parse command rule
+ ** struct lexer *lexer, struct parser *parser
+ ** Return: struct ast
+ */
 static struct ast *parse_cmd(struct lexer *lexer, struct parser *parser)
 {
     struct ast *ast = NULL;
@@ -40,6 +54,13 @@ static struct ast *parse_cmd(struct lexer *lexer, struct parser *parser)
     return ast;
 }
 
+
+/*
+ ** Name: parse_cmd
+ ** Description: parse commands block
+ ** struct lexer *lexer, struct parser *parser
+ ** Return: struct ast
+ */
 static struct ast *parse_block_cmd(struct lexer *lexer, struct parser *parser)
 {
     struct ast *ast = build_shell_command_node(BLOCK);

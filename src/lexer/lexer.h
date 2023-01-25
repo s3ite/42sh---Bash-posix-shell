@@ -78,6 +78,7 @@ struct token *handle_quote(char *input);
 struct token *handle_word(char *input);
 struct token *handle_var(char *input);
 int handle_double_quote(char *input, struct lexer *res);
+struct token *lexer_peek_two(struct lexer *v);
 
 // from lexer_load.c
 struct lexer *lexer_load(char *input, struct lexer *res);

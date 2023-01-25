@@ -1,0 +1,1 @@
+emre=palhart;paul=emron;echo $emre $paul; echo $(paul) $emre

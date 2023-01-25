@@ -14,4 +14,5 @@ int my_unset(char **cmd);
 int my_cd(char **cmd);
 int my_echo(char **cmd, size_t arg_number, size_t index);
 
+int my_dot(char **cmd);
 #endif

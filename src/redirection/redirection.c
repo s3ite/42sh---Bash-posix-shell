@@ -68,7 +68,10 @@ int fd_in(struct redirection_node *rd_node, char *path)
     int file_fd = open(path, O_RDONLY);
 
     if (file_fd == -1)
+    {
+        fprintf(stderr, "can't open the file %s\n", path);
         return 1; // error
+    }
 
     // DUPLICATE io_fd  || sauvegarde de io_fd
     int save_stdin = dup(io_fd);
@@ -99,13 +102,16 @@ int fd_in(struct redirection_node *rd_node, char *path)
     return 0;
 }
 
+/**
+ * Gestion de redirection <& et >&
+*/
 int fd_dup_in_out(struct redirection_node *rd_node, char *path, bool input)
 {
     int io_fd = input ? 0 : 1;
     io_fd = rd_node->io_number == -1 ? io_fd : rd_node->io_number;
 
     // cas du -
-    if (strcmp(path, "-"))
+    if (strcmp(path, "-") == 0)
         close(io_fd);
 
     int file_fd = atoi(path);
@@ -113,15 +119,11 @@ int fd_dup_in_out(struct redirection_node *rd_node, char *path, bool input)
     // si fd non existant
     if (isatty(file_fd) == 0)
     {
-        fprintf(stderr, "Bad file descriptor"); //
-        return 1;
+        fprintf(stderr, "fd_dup : Bad file descriptor %d", file_fd); //
+        return 1; // ERROR HANDLING : COMMAND NOT FOUND
     }
 
-    int new_io = 0;
-    if (input)
-        dup2(io_fd, STDIN_FILENO);
-    else
-        dup2(io_fd, STDOUT_FILENO);
+    int new_io = dup2(file_fd, io_fd);
 
     if (new_io == -1)
     {
@@ -137,17 +139,9 @@ int fd_io(struct redirection_node *rd_node, char *path)
     int io_fd = rd_node->io_number == -1 ? STDIN_FILENO : rd_node->io_number;
 
     int file_fd = open(path, O_CREAT | O_RDWR, 0777);
-
     if (file_fd == -1)
-        return 1; // error
-
-    // DUPLICATE io_fd  || sauvegarde de io_fd
-    int save_stdin = dup(io_fd);
-    int save_stdout = dup(STDOUT_FILENO);
-
-    if (save_stdin == -1 || save_stdout == -1)
     {
-        close(file_fd);
+        fprintf(stderr, "Error fd_io : ouverture du fichier");
         return 1; // error
     }
 
@@ -158,8 +152,6 @@ int fd_io(struct redirection_node *rd_node, char *path)
     if (new_in == -1 || new_out == -1)
     {
         close(file_fd);
-        close(save_stdin);
-        close(save_stdout);
         return 1; // error
     }
 
@@ -167,8 +159,6 @@ int fd_io(struct redirection_node *rd_node, char *path)
     if (close(file_fd) == -1)
     {
         close(new_in);
-        close(save_stdin);
-        close(save_stdout);
         return 1; // error
     }
 
@@ -181,6 +171,11 @@ int fd_io(struct redirection_node *rd_node, char *path)
 int redirection_exec_handler(struct redirection_node *rd_node)
 {
     char *path = rd_node->word;
+    if (strcmp(path,"") == 0)
+    {
+        fprintf(stderr, "PARSE ERROR near redirection op : redirection_exec_handler");
+        return 2; // ERROR Handling : PARSE ERROR
+    }
 
     fflush(stdout);
 
@@ -207,5 +202,5 @@ int redirection_exec_handler(struct redirection_node *rd_node)
         return fd_io(rd_node, path);
 
     fprintf(stderr, "redirection_exec_handler erreur de lexing");
-    return 1;
+    return 2; // Error Handling :  Syntax Error
 }

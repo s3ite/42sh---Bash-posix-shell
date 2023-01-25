@@ -78,12 +78,14 @@ static enum redirection_type io_node(char *command)
     return -1;
 }
 
+// return true if rd_type hasn't the right type
 bool is_unassigned(int rd_type)
 {
     return rd_type != FD_OUT && rd_type != FD_DUP_OUT
         && rd_type != FD_OUT_APPEND && rd_type != FD_OUT_NO_CLOBBER
-        && rd_type != FD_IN && rd_type != FD_DUP_IN;
+        && rd_type != FD_IN && rd_type != FD_DUP_IN && rd_type != FD_IO;
 }
+
 struct ast *parse_redirection(struct lexer *lexer, struct parser *parser)
 {
     struct token *token = lexer_peek(lexer);
@@ -94,24 +96,28 @@ struct ast *parse_redirection(struct lexer *lexer, struct parser *parser)
         return NULL;
     }
 
-    char *io_command = token->value;
-    int io_number = get_ionumber(io_command);
+    int io_number = get_ionumber(token->value);
+    char *io_command = strchr(token->value, '<');
+
+    if (io_command == NULL)
+        io_command = strchr(token->value, '>');
 
     lexer_pop(lexer);
     token = lexer_peek(lexer);
-
+    if (token->type != TOKEN_EOF)
+        lexer_pop(lexer);
     char *word = token->value;
+    
     struct redirection_node *rd_node = build_rd_node(io_number, word);
 
     enum redirection_type rd_type;
     rd_type = input_node(io_command);
     if (is_unassigned(rd_type))
         rd_type = output_node(io_command);
-    else if (is_unassigned(rd_type))
+    if (is_unassigned(rd_type))
         rd_type = io_node(io_command);
-    else if (rd_type < 0)
+    if (rd_type < 0)
         fprintf(stderr, "bad parsing rd_type");
-    ;
 
     rd_node->type = rd_type;
     struct ast *ast = init_ast();

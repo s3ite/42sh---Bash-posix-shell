@@ -110,12 +110,3 @@ char *parse_command_line(int argc, char **argv)
     }
     return NULL;
 }
-/*int main (int argc, char **argv)
-{
-    char *res=parse_command_line(argc,argv);
-    if (res)
-    {
-        printf("%s\n",res);
-        free(res);
-    }
-}*/
