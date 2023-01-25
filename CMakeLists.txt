@@ -34,6 +34,7 @@ src/built_in/exit.c
 src/built_in/echo.c
 src/built_in/cd.c
 src/built_in/unset.c
+src/built_in/dot.c
 
 src/parser/parser.c
 src/parser/parser.h
@@ -69,6 +70,8 @@ src/lexer/lexer.h
 src/others/tools.c
 src/others/tools.h
 
+src/run_program.c
+src/run_program.h
 src/main.c
 
 )

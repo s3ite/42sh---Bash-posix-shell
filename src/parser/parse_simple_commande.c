@@ -21,7 +21,6 @@ static struct ast **handle_prefix(struct lexer *lexer, struct parser *parser, in
         ast[i] = parser_prefix(lexer, parser);
         if (ast[i] == NULL)
         {
-            fprintf(stderr, "Error parsing handle_prefix");
             free(ast);
             return NULL;
         }

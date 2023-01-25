@@ -117,6 +117,10 @@ static int run_buildin(char **cmd)
     {
         return my_unset(cmd);
     }
+    else if (strcmp(".", name) == 0)
+    {
+        return my_dot(cmd);
+    }
 
     return 0;
 }
