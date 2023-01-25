@@ -6,6 +6,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "others/hash_map.h"
+
 #include "./ast/variable.h"
 #include "built_in/built_in.h"
 #include "exec/exec.h"
@@ -19,7 +21,7 @@
 int main(int argc, char **argv)
 {
     variables_list = init_variables_list();
-
+    
     char *input = parse_command_line(argc, argv);
     if (!input)
     {

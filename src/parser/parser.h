@@ -5,6 +5,7 @@
 #include "../ast/list.h"
 #include "../lexer/lexer.h"
 #include "../others/tools.h"
+#include "../others/hash_map.h"
 
 #define RC_ERROR -1
 #define RC_SUCCESS 0
@@ -56,6 +57,7 @@ struct condition_if_node *build_condition_if_node(struct ast *condition,
                                                   struct ast *else_action);
 struct ast *parse_rule_wu(struct lexer *lexer, struct parser *parser,
                           struct ast *prev_ast);
+struct ast *parse_func(struct lexer *lexer, struct parser *parser);
 
 struct ast *parser_prefix(struct lexer *lexer, struct parser *parser);
 struct ast *parse_redirection(struct lexer *lexer, struct parser *parser);
@@ -63,5 +65,9 @@ struct ast *parse_redirection(struct lexer *lexer, struct parser *parser);
 void free_ast_simple_command(struct ast *ast);
 void free_simple_command(struct simple_command_node *simple_command);
 void free_ast_redirection(struct redirection_node *rd_node);
+
+
+void free_ast_redirection(struct redirection_node *rd_node);
+struct hash_map *get_functions();
 
 #endif /* ! PARSER_H */
