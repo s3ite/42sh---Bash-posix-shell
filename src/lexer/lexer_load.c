@@ -133,10 +133,10 @@ int reduce6(char *input,struct lexer *res, int i)
                 return -1;
             }
         }
-        else if (strncmp(input + i, "$", 1) == 0) // getsion des variables
+        /*else if (strncmp(input + i, "$", 1) == 0) // getsion des variables
         {
             i=reduce3(input,res,i);
-        }
+        }*/
         else if (strncmp(input + i, "\"", 1) == 0) // getsion des double quote
         {
             i=reduce4(input,res,i);
