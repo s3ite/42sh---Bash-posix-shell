@@ -64,7 +64,22 @@ struct token *lexer_peek(struct lexer *v);
 struct token *token_init(char *value, enum TokenType type);
 void token_free(struct token *token);
 
+// from lexer_tools.c
+int in(char c, char *delim);
+char *strnappend(char *str1, char *str2, int n);
+void strappendchar(char **str1, char c);
+char *remove_backslash(char *str);
+
 // from lexer.c
+int is_redirection(char *str);
+int get_token_type(char *str);
+int handle_comment(char *input);
+struct token *handle_quote(char *input);
+struct token *handle_word(char *input);
+struct token *handle_var(char *input);
+int handle_double_quote(char *input, struct lexer *res);
+
+// from lexer_load.c
 struct lexer *lexer_load(char *input, struct lexer *res);
 
 #endif /* LEXER.H */
