@@ -6,6 +6,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "others/hash_map.h"
+
 #include "./ast/variable.h"
 #include "built_in/built_in.h"
 #include "exec/exec.h"
@@ -14,10 +16,11 @@
 #include "parse_command_line/parse_command_line.h"
 #include "parser/parser.h"
 
+
 int main(int argc, char **argv)
 {
     variables_list = init_variables_list();
-
+    
     char *input = parse_command_line(argc, argv);
     if (!input)
     {
@@ -39,6 +42,7 @@ int main(int argc, char **argv)
         free(variables_list);
         free(input);
         free(new_input);
+        hash_map_free(get_functions());
         fprintf(stderr, "%s", "Syntax error: Unterminated quoted string\n");
         return 2; // erreur lors du lexing
     }
@@ -54,6 +58,7 @@ int main(int argc, char **argv)
     {
         rc = 2;
     }
+    hash_map_free(get_functions());
     lexer_destroy(lexer);
     parser_free(parser);
     free(input);

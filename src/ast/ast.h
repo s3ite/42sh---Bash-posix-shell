@@ -120,6 +120,7 @@ enum node_type
     PREFIX,
     REDIRECTION,
     ELEMENT,
+    FUNCTION,
 };
 
 /**

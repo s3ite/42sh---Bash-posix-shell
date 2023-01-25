@@ -122,6 +122,16 @@ static int run_buildin(char **cmd)
 }
 
 /**
+ * return 1 if the command is a function command, 0 otherwise
+ */
+static int is_function(char **cmd)
+{
+    char *name = cmd[0];
+    struct hash_map *map = get_functions();
+    return hash_map_get(map, name) != NULL;
+}
+
+/**
  * return 1 if the command is a builtin command, 0 otherwise
  */
 static int is_builtin(char **cmd)
@@ -140,6 +150,7 @@ static int is_builtin(char **cmd)
 
     return 0;
 }
+
 
 // return true if the command is a variable assignment
 bool is_variable_assigment(struct dlist *args)
@@ -206,7 +217,14 @@ static int simple_cmd_exec(struct ast *ast)
     }
 
     char **cmd = to_command(args, values);
-    if (is_builtin(cmd))
+    if(is_function(cmd))
+    {
+        char *name = cmd[0];
+        struct hash_map *map = get_functions();
+        struct ast *func_ast= hash_map_get(map, name);
+        rc = ast_exec(func_ast);
+    }
+    else if (is_builtin(cmd))
     {
         rc = run_buildin(cmd);
         free_cmd(cmd);

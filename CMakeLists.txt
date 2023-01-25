@@ -47,6 +47,7 @@ src/parser/parse_rule_elif.c
 src/parser/parse_redirection.c
 src/parser/parse_rule_wu.c
 src/parser/parse_prefix.c
+src/parser/parse_func.c
 
 src/parser/parse_command.c
 src/parser/parse_compound_list.c
@@ -68,6 +69,8 @@ src/lexer/lexer.h
 
 src/others/tools.c
 src/others/tools.h
+src/others/hash_map.h
+src/others/hash_map.c
 
 src/main.c
 
