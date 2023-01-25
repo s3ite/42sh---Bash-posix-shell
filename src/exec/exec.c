@@ -6,6 +6,13 @@
 #include "../expansion/expansion.h"
 #include "../redirection/redirection.h"
 
+
+/*
+ ** Name: run_command
+ ** Description: Fork, then execute given command
+ ** char **cmd
+ ** Return: int success
+ */
 int run_command(char **cmd)
 {
     int status;
@@ -33,6 +40,9 @@ int run_command(char **cmd)
     return WEXITSTATUS(status);
 }
 
+/*
+*   Free array
+*/
 static void free_cmd(char **cmd)
 {
     size_t index = 0;
@@ -44,6 +54,12 @@ static void free_cmd(char **cmd)
     free(cmd);
 }
 
+/*
+ ** Name: to_command
+ ** Description: Convert linked list to array
+ ** struct dlist *args, struct dlist *values
+ ** Return: char **cmd
+ */
 static char **to_command(struct dlist *args, struct dlist *values)
 {
     if (!args || !values)
@@ -243,6 +259,14 @@ static int simple_cmd_exec(struct ast *ast)
     return rc;
 }
 
+
+
+/*
+ ** Name: exec_pipe
+ ** Description: execution of pipe
+ ** struct operator_node *node, int *res
+ ** Return: int success
+ */
 int exec_pipe(struct operator_node *node, int *res)
 {
     int fd[2];
@@ -299,6 +323,13 @@ int exec_pipe(struct operator_node *node, int *res)
     }
 }
 
+
+/*
+ ** Name: exec_op
+ ** Description: execution of operator node
+ ** struct operator_node *node
+ ** Return: int success
+ */
 static int exec_op(struct operator_node *op)
 {
     if (op->type == SEMICOLON)
@@ -352,6 +383,14 @@ static int exec_op(struct operator_node *op)
     return 0;
 }
 
+
+
+/*
+ ** Name: shell_cmd_exec
+ ** Description: execution of shell command
+ ** struct shell_command_node *shell
+ ** Return: int success
+ */
 static int shell_cmd_exec(struct shell_command_node *shell)
 {
     int rc = 0;
@@ -375,6 +414,13 @@ static int shell_cmd_exec(struct shell_command_node *shell)
     return rc;
 }
 
+
+/*
+ ** Name: ast_exec
+ ** Description: global execution function
+ ** struct ast *node
+ ** Return: int success
+ */
 int ast_exec(struct ast *node)
 {
     int rc = 0;
@@ -418,6 +464,7 @@ int exec_if(struct shell_command_node *shell)
     return rc;
 }
 
+//exec while
 int exec_w(struct shell_command_node *shell)
 {
     int body = 0;
@@ -429,10 +476,8 @@ int exec_w(struct shell_command_node *shell)
 
     return body;
 }
-/*
-    UNTIL
-*/
 
+//exec until
 int exec_u(struct shell_command_node *shell)
 {
     int body = 0;

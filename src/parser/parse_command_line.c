@@ -8,6 +8,12 @@
 #include <string.h>
 #include <unistd.h>
 
+/*
+ ** Name: get_file_size
+ ** Description: compute file size
+ ** File *f
+ ** Return: int
+ */
 int get_file_size(FILE *f)
 {
     fseek(f, 0L, SEEK_END);
@@ -16,6 +22,13 @@ int get_file_size(FILE *f)
     return res;
 }
 
+
+/*
+ ** Name: remove_escaped_newline
+ ** Description: remove escaped newline
+ ** char *input
+ ** Return: char *
+ */
 char *remove_escaped_newline(char *input)
 {
     size_t l = strlen(input);
@@ -39,6 +52,12 @@ char *remove_escaped_newline(char *input)
     return ret;
 }
 
+/*
+ ** Name: get_stdin
+ ** Description: read stdin
+ ** void
+ ** Return: schar *
+ */
 char *get_stdin()
 {
     if ((isatty(STDIN_FILENO)))
@@ -69,6 +88,13 @@ char *get_stdin()
         return buff;
 }
 
+
+/*
+ ** Name: parse_command_line
+ ** Description: parse programm argument
+ ** int argc, char **argv
+ ** Return: char *
+ */
 char *parse_command_line(int argc, char **argv)
 {
     if (argc >= 3)
@@ -110,12 +136,3 @@ char *parse_command_line(int argc, char **argv)
     }
     return NULL;
 }
-/*int main (int argc, char **argv)
-{
-    char *res=parse_command_line(argc,argv);
-    if (res)
-    {
-        printf("%s\n",res);
-        free(res);
-    }
-}*/

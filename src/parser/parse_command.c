@@ -2,6 +2,12 @@
 
 #include "parser.h"
 
+/*
+ ** Name: handle_shell_command
+ ** Description: check if expected token is good
+ ** struct lexer *lexer, struct parser *parser
+ ** Return: struct ast
+ */
 static struct ast *handle_shell_command(struct lexer *lexer,
                                         struct parser *parser)
 {
