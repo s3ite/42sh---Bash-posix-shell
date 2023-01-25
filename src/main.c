@@ -32,5 +32,7 @@ int main(int argc, char **argv)
     }
 
     
-    return run_program(input);
+    int rc = run_program(input);
+    free_variables();
+    return rc;
 }

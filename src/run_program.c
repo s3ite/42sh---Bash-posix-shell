@@ -39,11 +39,11 @@ int run_program(char *input)
     {
         rc = 2;
     }
+    
     lexer_destroy(lexer);
+    
     parser_free(parser);
     free(input);
     free(new_input);
-
-    free_variables();
     return rc;
 }

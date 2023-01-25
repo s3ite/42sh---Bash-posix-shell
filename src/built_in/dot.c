@@ -22,12 +22,14 @@ int my_dot(char **cmd)
     }
 
     
-    char buffer[1024];
-    if (read(file_fd, buffer, sizeof(buffer)) == -1)
+    char *buffer = malloc(4096);
+    int nbread = read(file_fd, buffer, 4096);
+    if (nbread == -1)
     {
         fprintf(stderr, "error reading the file : my_dot");
         return 1;
     }
+    buffer[nbread] = '\0';
     close(file_fd);
     return run_program(buffer);
 }

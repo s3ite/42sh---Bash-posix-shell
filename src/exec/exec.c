@@ -151,6 +151,8 @@ static int is_builtin(char **cmd)
         return 1;
     else if (strcmp("cd", name) == 0)
         return 1;
+    else if (strcmp(".", name) == 0)
+        return 1;
 
     return 0;
 }
