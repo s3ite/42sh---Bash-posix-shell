@@ -1,4 +1,3 @@
->
 2
 ass=ignation
 bad
@@ -7,9 +6,6 @@ CMakeLists.txt
 def=d
 def=d$ee
 file
-p
-p@
-pp
 README.md
 src
 test
