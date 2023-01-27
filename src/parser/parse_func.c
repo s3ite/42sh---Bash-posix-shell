@@ -45,7 +45,6 @@ struct ast *parse_func(struct lexer *lexer, struct parser *parser)
         return NULL;
     ast_append(parser->nodes, body);
     hash_map_insert(get_functions(), name, body );
-    printf("Ajout de la fonction %s\n", name);
     return build_node(body);
 
 }
