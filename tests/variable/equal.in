@@ -1,0 +1,1 @@
+test=$(echo ceci est un test); echo $test

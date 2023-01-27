@@ -1,5 +1,9 @@
+#define _POSIX_C_SOURCE  200809L
 #include "lexer.h"
+#include <unistd.h>
 
+ #include <fcntl.h>
+ 
 struct lexer *lexer_init(size_t n, char *input)
 {
     struct lexer *v = malloc(sizeof(struct lexer));
@@ -69,18 +73,30 @@ struct lexer *lexer_append(struct lexer *v, struct token *elt)
 
 void lexer_print(struct lexer *v)
 {
-    printf("input is: %s\n", v->input);
-    printf("token list is: ");
+    char buffer[1024];
+    char *tmp = "tests/log";
+    int nbwrite = 0;
+    remove(tmp);
+    int fd = open(tmp, O_CREAT | O_WRONLY, 0777);
+
+    sprintf(buffer, "input is: %s\ntoken list is: ", v->input);
+
+    nbwrite += write(fd, buffer, strlen(buffer));
+   
     for (size_t i = 0; i < v->size; i++)
     {
-        printf("%s ", v->data[i]->value);
+        sprintf(buffer, "%s ", v->data[i]->value);
+        nbwrite += write(fd, buffer, strlen(buffer));
     }
-    printf("\ntokentype list is: ");
+
+    nbwrite += write(fd, "\ntokentype list is: ", 21);
     for (size_t i = 0; i < v->size; i++)
     {
-        printf("%d ", (enum TokenType)v->data[i]->type);
+        sprintf(buffer, "%d ", (enum TokenType)v->data[i]->type);
+        nbwrite += write(fd, buffer, strlen(buffer) );
     }
-    printf("\n");
+    close(fd);
+    
 }
 
 struct token *lexer_peek_two(struct lexer *v)

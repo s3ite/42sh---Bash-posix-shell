@@ -56,8 +56,6 @@ struct simple_command_node *parse_simple_commande(struct lexer *lexer,
     struct token *token = lexer_peek(lexer);
     if (token->type == WORD)
     {
-
-
         struct token *next_token = lexer_pop(lexer);
         // revoir limplemntation de la liste pour placer le premier token
         struct dlist *args = dlist_init();
@@ -88,7 +86,6 @@ struct simple_command_node *parse_simple_commande(struct lexer *lexer,
         simple_command->values = values;
 
         simple_command->prefix = handle_prefix(lexer, parser, &simple_command->prefix_len);
-
         //return simple_command;
     }
     else if (token->type == TOKEN_REDIRECTION)

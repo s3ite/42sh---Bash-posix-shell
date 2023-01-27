@@ -1,1 +1,1 @@
-./build/42sh -c 'tr 'o' 'i' <> tests/42trash/DONT_DELETE/tr_file2 1<> 2 gudufygpigo'
+'tr 'o' 'i' <> tests/42trash/DONT_DELETE/tr_file2 1<> 2 gudufygpigo'

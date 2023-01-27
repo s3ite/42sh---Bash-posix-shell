@@ -12,9 +12,6 @@ import termcolor
 OK_TAG = f"[{termcolor.colored('OK', 'green')}]"
 KO_TAG = f"[{termcolor.colored('KO', 'red')}]"
 
-
-
-
 @dataclass
 class TestCase:
     file: str
@@ -66,4 +63,4 @@ if __name__ == "__main__":
             print(f"{OK_TAG} {file}")
             pass
         
-        print("\t===================================\t\n")
+        print("\t===================================\t")

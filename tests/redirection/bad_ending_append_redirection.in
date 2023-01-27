@@ -1,1 +1,1 @@
-cat <> test
+cat <> ./tests/42trash/DONT_DELETE/tr_file2; tr 'o' 'a' <> ./tests/42trash/DONT_DELETE/tr_file2;

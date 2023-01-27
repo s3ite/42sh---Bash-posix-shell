@@ -27,19 +27,17 @@ int run_program(char *input)
         fprintf(stderr, "%s", "Syntax error: Unterminated quoted string\n");
         return 2; // erreur lors du lexing
     }
-    //lexer_print(lexer);
+    lexer_print(lexer);
 
     int rc = 0;
     struct parser *parser = parse(lexer);
     if (parser)
-    {
         rc = ast_exec(parser->ast);
-    }
     else
-    {
         rc = 2;
-    }
-    
+
+    update_question_mark(variables_list, 0);
+
     lexer_destroy(lexer);
     
     parser_free(parser);

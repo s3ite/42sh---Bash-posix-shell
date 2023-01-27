@@ -49,12 +49,8 @@ char *get_value(struct variable_item *item);
 int update_variable(struct variables_list *list, char *name,
                     enum value_type type, union value value);
 int add_variable(struct variables_list *list, struct variable_item *var);
-
-// special variables update
-int update_interrogation(struct variables_list *list, int last_rc);
-int update_random(struct variables_list *list);
-int update_oldpwd(struct variables_list *list, char *old_pwd);
-int update_pwd(struct variables_list *list, char *new_pwd);
-
 void free_variables(void);
+
+int update_question_mark(struct variables_list *list, int value);
+
 #endif /* ! VARIABLE_H */

@@ -1,0 +1,1 @@
+test=tata; tata=${PWD}; echo $$test 

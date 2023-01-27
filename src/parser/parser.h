@@ -4,7 +4,6 @@
 #include "../ast/ast.h"
 #include "../ast/list.h"
 #include "../lexer/lexer.h"
-#include "../others/tools.h"
 #include "../others/hash_map.h"
 
 #define RC_ERROR -1

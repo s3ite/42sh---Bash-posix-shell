@@ -152,7 +152,19 @@ struct token *handle_var(char *input) // sous-fonction pour gerer les variables
             return NULL;
         }
     }
-    else
+    else if (input[j] == '{')
+    {
+        while (input[j] != '\0' && !(escaped == 0 && input[j] == '}'))
+        {
+            escaped=(input[j]=='\\')&&!escaped;
+            j++;
+        }
+        if (input[j] == '\0')
+        {
+            return NULL;
+        }
+    }
+    else if ( j == 0)
     {
         while (input[j] != '\0'
                && !(escaped == 0 && in(input[j], "; ><|\t\n'\"$")))
@@ -173,7 +185,7 @@ struct token *handle_var(char *input) // sous-fonction pour gerer les variables
     a[1]='\0';
     a=strnappend(a,value,j+1);
     free(value);
-    struct token *tok = token_init(a, TOKEN_VAR);
+    struct token *tok = token_init(a, WORD);
     return tok;
 }
 
@@ -203,7 +215,6 @@ int reduce_db1(char *input,char **word ,int j)
     }
     return j;
 }
-
 int reduce_db2(char *input,struct lexer *res, int j,int *var)
 {
     char *word = malloc(1);
@@ -256,7 +267,7 @@ int handle_double_quote(char *input, struct lexer *res)
                 }
                 j++;
             }
-            struct token *tok = token_init(word, TOKEN_VAR);
+            struct token *tok = token_init(word, WORD);
             res = lexer_append(res, tok);
         }
     }

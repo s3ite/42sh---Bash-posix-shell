@@ -58,6 +58,12 @@ struct redirection_node
     enum redirection_type type;
     int io_number;
     char *word;
+
+    int save_io_number;
+    int new_value;
+
+    int save_io_number2;
+    int new_value2;
 };
 
 

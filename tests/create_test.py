@@ -23,9 +23,9 @@ def create_testcase_from_file(file : str) -> TestCase:
     
 
 if __name__ == "__main__":
-    test_directory = ["comment", "edge_case", "echo", "exit", "empty", "if", "simple_command", "script", "single_quote", "true_false", "redirection", "variable"]
-    #test_directory = ["redirection", "42trash_criterion", "variable"]
-    #test_directory = ["variable"]
+    test_directory = ["comment", "edge_case", "echo", "exit", "empty", "if", "simple_command", "substitution", "script", "single_quote", "true_false", "redirection", "variable"]
+    #test_directory = ["redirection", "42trash_criterion"]
+    #test_directory = ["variable", "substitution"]
 
     nb_dir = len(test_directory)
 

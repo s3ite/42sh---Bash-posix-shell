@@ -4,6 +4,7 @@
 
 #include "../ast/print_ast.h"
 #include "../exec/exec.h"
+#include "../ast/variable.h"
 
 //global var, contains functions map
 struct hash_map *hash_func;
@@ -40,6 +41,8 @@ struct parser *parse(struct lexer *lexer)
     parser->nodes = ast_list_init();
 
     int rc = parse_input(lexer, parser);
+    update_question_mark(variables_list, rc);
+
     if (!rc)
     {
         struct token *token = lexer_peek(lexer);

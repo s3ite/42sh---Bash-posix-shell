@@ -74,18 +74,13 @@ char *parse_command_line(int argc, char **argv)
     if (argc >= 3)
     {
         int opt;
-        size_t l;
         char *a;
         while ((opt = getopt(argc, argv, "c:")) != -1)
-        {
             if(opt=='c')
             {
-                l = strlen(optarg);
-                a = malloc(l + 1);
-                strcpy(a, optarg);
-                return a;
+                a = malloc(strlen(optarg) + 1);
+                return strcpy(a, optarg);
             }
-        }
     }
     if (argc == 2)
     {
@@ -94,19 +89,16 @@ char *parse_command_line(int argc, char **argv)
         {
             size_t file_len = get_file_size(file);
             char *buffer = malloc(file_len + 1);
+
             if (!buffer)
-            {
                 return NULL;
-            }
+
             fread(buffer, file_len, 1, file);
             buffer[file_len] = '\0';
             fclose(file);
             return buffer;
         }
     }
-    if (argc == 1)
-    {
-        return get_stdin();
-    }
-    return NULL;
+
+    return argc == 1 ? get_stdin() : NULL;
 }

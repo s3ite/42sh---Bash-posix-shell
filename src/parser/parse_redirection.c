@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200809L
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -18,6 +19,10 @@ static struct redirection_node *build_rd_node(int io_number, char *word)
     struct redirection_node *rd_node = malloc(sizeof(struct redirection_node));
     rd_node->io_number = io_number;
     rd_node->word = word;
+    rd_node->new_value = -1;
+    rd_node->new_value2 = -1;
+    rd_node->save_io_number = -1;
+    rd_node->save_io_number2 = -1;
 
     return rd_node;
 }
@@ -79,11 +84,38 @@ static enum redirection_type io_node(char *command)
 }
 
 // return true if rd_type hasn't the right type
-bool is_unassigned(int rd_type)
+static bool is_unassigned(int rd_type)
 {
     return rd_type != FD_OUT && rd_type != FD_DUP_OUT
         && rd_type != FD_OUT_APPEND && rd_type != FD_OUT_NO_CLOBBER
         && rd_type != FD_IN && rd_type != FD_DUP_IN && rd_type != FD_IO;
+}
+
+static char *get_word(char **io_command)
+{
+    char *lastchar = strrchr(*io_command, '|');
+    if (lastchar == NULL)
+        lastchar = strrchr(*io_command, '&');
+    if (lastchar == NULL)
+        lastchar = strrchr(*io_command, '>');
+    if (lastchar == NULL)
+        lastchar = strrchr(*io_command, '<');
+    
+    if (lastchar == NULL)
+    {
+        fprintf(stderr, "erreur de parsing : get word");
+        return NULL;
+    }
+
+    if (*(++lastchar) == '\0')
+        return NULL;
+    
+    char *res = strdup(lastchar);
+    int len = strlen(res);
+    int cmd = strlen(io_command[0]);
+    io_command[0][cmd - len] = '\0';
+    lastchar = '\0';
+    return res;
 }
 
 struct ast *parse_redirection(struct lexer *lexer, struct parser *parser)
@@ -98,16 +130,22 @@ struct ast *parse_redirection(struct lexer *lexer, struct parser *parser)
 
     int io_number = get_ionumber(token->value);
     char *io_command = strchr(token->value, '<');
+    char *word = NULL;
 
     if (io_command == NULL)
         io_command = strchr(token->value, '>');
 
+    word = get_word(&io_command);
+
     lexer_pop(lexer);
-    token = lexer_peek(lexer);
-    if (token->type != TOKEN_EOF)
-        lexer_pop(lexer);
-    char *word = token->value;
-    
+    if (word == NULL)
+    {
+        token = lexer_peek(lexer);
+        if (token->type != TOKEN_EOF && token->type != TOKEN_SEMICOLON)
+            lexer_pop(lexer);
+
+        word = strdup(token->value);
+    }
     struct redirection_node *rd_node = build_rd_node(io_number, word);
 
     enum redirection_type rd_type;
@@ -131,5 +169,6 @@ struct ast *parse_redirection(struct lexer *lexer, struct parser *parser)
 
 void free_ast_redirection(struct redirection_node *rd_node)
 {
+    free(rd_node->word);
     free(rd_node);
 }

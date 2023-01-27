@@ -1,0 +1,1 @@
+echo good; echo $?; echooo bad; #echo $?;

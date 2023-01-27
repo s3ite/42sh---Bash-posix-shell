@@ -1,5 +1,3 @@
-#define _POSIX_C_SOURCE 2
-
 #ifndef EXPANSION_H
 #    define EXPANSION_H
 
@@ -8,7 +6,7 @@
 
 #    include "../ast/variable.h"
 
-char *expand_variable(char *input, struct variables_list *list);
-bool contains_variable(char *input);
+bool contains_expansions(char *input);
+char *expansion_handler(char *input, struct variables_list *list);
 
 #endif /* ! EXPANSION_H */

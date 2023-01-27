@@ -9,13 +9,31 @@
 
 #include "../exec/exec.h"
 
+void reset_fd(struct ast **prefix, int len)
+{
+    fflush(stdout);
+    int i = 0;
+    while ( i < len && prefix[i]->node_type == REDIRECTION)
+    {
+        struct redirection_node *rd_node = prefix[i]->node;
+        if (rd_node->save_io_number != -1)
+            dup2(rd_node->save_io_number, rd_node->new_value);
+        if (rd_node->save_io_number != -1) 
+            dup2(rd_node->save_io_number2, rd_node->new_value2);   
+        i++;
+    }
+
+
+}
+
 /**
  * Gestion de redirection >, >>,  (>|)
  * command2 == string (path de redirection)
  */
-int fd_out(struct redirection_node *rd_node, bool append, char *path)
+static int fd_out(struct redirection_node *rd_node, bool append, char *path)
 {
     int io_fd = rd_node->io_number == -1 ? STDOUT_FILENO : rd_node->io_number;
+    rd_node->new_value = io_fd;
 
     int file_fd = 0;
     if (append)
@@ -28,6 +46,8 @@ int fd_out(struct redirection_node *rd_node, bool append, char *path)
 
     // DUPLICATE io_fd  || sauvegarde de io_fd
     int save_stdout = dup(io_fd);
+    rd_node->save_io_number = save_stdout;
+
     if (save_stdout == -1)
     {
         close(file_fd);
@@ -61,9 +81,10 @@ int fd_out(struct redirection_node *rd_node, bool append, char *path)
 /**
  * Gestion de redirection <
  */
-int fd_in(struct redirection_node *rd_node, char *path)
+static int fd_in(struct redirection_node *rd_node, char *path)
 {
     int io_fd = rd_node->io_number == -1 ? STDIN_FILENO : rd_node->io_number;
+    rd_node->new_value = io_fd;
 
     int file_fd = open(path, O_RDONLY);
 
@@ -75,6 +96,8 @@ int fd_in(struct redirection_node *rd_node, char *path)
 
     // DUPLICATE io_fd  || sauvegarde de io_fd
     int save_stdin = dup(io_fd);
+    rd_node->save_io_number = save_stdin;
+
     if (save_stdin == -1)
     {
         close(file_fd);
@@ -105,10 +128,11 @@ int fd_in(struct redirection_node *rd_node, char *path)
 /**
  * Gestion de redirection <& et >&
 */
-int fd_dup_in_out(struct redirection_node *rd_node, char *path, bool input)
+static int fd_dup_in_out(struct redirection_node *rd_node, char *path, bool input)
 {
     int io_fd = input ? 0 : 1;
     io_fd = rd_node->io_number == -1 ? io_fd : rd_node->io_number;
+    rd_node->new_value = io_fd;
 
     // cas du -
     if (strcmp(path, "-") == 0)
@@ -134,9 +158,11 @@ int fd_dup_in_out(struct redirection_node *rd_node, char *path, bool input)
     return 0;
 }
 
-int fd_io(struct redirection_node *rd_node, char *path)
+// <>
+static int fd_io(struct redirection_node *rd_node, char *path)
 {
     int io_fd = rd_node->io_number == -1 ? STDIN_FILENO : rd_node->io_number;
+    rd_node->new_value = io_fd;
 
     int file_fd = open(path, O_CREAT | O_RDWR, 0777);
     if (file_fd == -1)
@@ -144,6 +170,9 @@ int fd_io(struct redirection_node *rd_node, char *path)
         fprintf(stderr, "Error fd_io : ouverture du fichier");
         return 1; // error
     }
+
+    int save_stdin = dup(io_fd);
+    rd_node->save_io_number = save_stdin;
 
     // DUPLICATE Given file descriptor in stdin
     int new_in = dup2(file_fd, io_fd);

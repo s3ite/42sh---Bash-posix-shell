@@ -135,7 +135,12 @@ int reduce6(char *input,struct lexer *res, int i)
         {
             i=reduce2(input,res,i);
         }
-        else if (strncmp(input + i, "$(", 2) == 0) // getsion des variables
+        else if (strncmp(input + i, "$(", 2) == 0) // gestion des substitutions
+        {
+            i=reduce3(input,res,i);
+        }
+
+        else if (strncmp(input + i, "${", 2) == 0) // getsion des variables
         {
             i=reduce3(input,res,i);
         }

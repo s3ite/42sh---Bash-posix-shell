@@ -1,5 +1,6 @@
+#define _POSIX_C_SOURCE 200809L
 #include "exec.h"
-
+#include <string.h>
 #include <stdlib.h>
 
 #include "../ast/variable.h"
@@ -37,7 +38,8 @@ int run_command(char **cmd)
             return -1;
     }
 
-    return WEXITSTATUS(status);
+    int rc = WEXITSTATUS(status);
+    return rc;
 }
 
 /*
@@ -83,9 +85,13 @@ static char **to_command(struct dlist *args, struct dlist *values)
     {
         cmd[i] = strdup(tmp2->value);
         
-        // expansion des variables
-        while (contains_variable(cmd[i]))
-            cmd[i] = expand_variable(cmd[i], variables_list);
+        // expansion des thermes 
+        while (contains_expansions(cmd[i]))
+        {
+            cmd[i] = expansion_handler(cmd[i], variables_list);
+            if (cmd[i] == NULL)
+                return NULL;
+        }
 
         tmp2 = tmp2->next;
     }
@@ -208,37 +214,41 @@ static int simple_cmd_exec(struct ast *ast)
         if (values->head != NULL)
             return 127; // Error handling : command not found
 
-        char *name = strdup(strtok(args->head->value, "="));
-        char *value = strdup(strtok(NULL, "\0\n\t\r"));
-        if (!value)
+        char *tmp = NULL;
+        char *name = strdup(strtok_r(args->head->value, "=", &tmp));
+
+        // cas de la valeur manquante
+        char *tmpval = strtok_r(NULL, " \0\n\t\r", &tmp);
+        if (!tmpval)
+        {
+            free(name);
             return 0; // Error handling : No value
+        }
+        char *value = strdup(tmpval);
+
+        if (contains_expansions(name))
+        {
+            fprintf(stderr, "command not found : simple_cmd_exec"); // Error handling : command not found
+            free(name);
+            free(value);
+            return 127;
+        }
+        value = expansion_handler(value, variables_list);
 
         union value value_var = { .string = value };
         enum value_type value_type = TYPE_STRING;
-
-        // if is an integer value
-        for (size_t i = 0; i < strlen(value); i++)
-        {
-            if (isalnum(value[i]) == 0)
-                continue;
-
-            rc = add_variable(variables_list,
-                         init_item(name, value_var, value_type));
-            free(name);
-            free(value);
-            return rc;
-        }
-        value_type = TYPE_INTEGER;
-        value_var.integer = atoi(value);
-
-        rc = add_variable(variables_list, init_item(name, value_var, value_type));
-
+        
+        if ((rc = update_variable(variables_list, name, value_type, value_var)) == -1)
+            rc = add_variable(variables_list,init_item(name, value_var, value_type));
         free(name);
         free(value);
         return rc;
     }
 
     char **cmd = to_command(args, values);
+    if (cmd == NULL)
+        return 1; // Error handling : bad substitution
+        
     if(is_function(cmd))
     {
         char *name = cmd[0];
@@ -247,16 +257,12 @@ static int simple_cmd_exec(struct ast *ast)
         rc = ast_exec(func_ast);
     }
     else if (is_builtin(cmd))
-    {
         rc = run_buildin(cmd);
-        free_cmd(cmd);
-        return rc;
-    }
-    else
-    {
-        rc = run_command(cmd);
-    }
 
+    else
+        rc = run_command(cmd);
+
+    reset_fd(prefix, len);
     free_cmd(cmd);
     return rc;
 }
@@ -444,6 +450,13 @@ int ast_exec(struct ast *node)
         struct operator_node *op = node->node;
         rc = exec_op(op);
     }
+    else if (node->node_type == REDIRECTION)
+    {
+        struct redirection_node *redir = node->node;
+        rc = redirection_exec_handler(redir);
+    }
+    update_question_mark(variables_list, rc);
+
     return rc;
 }
 
