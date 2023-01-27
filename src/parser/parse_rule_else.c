@@ -1,6 +1,5 @@
 #include "parser.h"
 
-
 /*
  ** Name: parse_rule_else
  ** Description: parse else rule

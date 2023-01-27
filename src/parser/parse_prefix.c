@@ -1,6 +1,5 @@
 #include "parser.h"
 
-
 /*
  ** Name: parser_prefix
  ** Description: parse prefix (> < )

@@ -1,12 +1,12 @@
 #define _POSIX_C_SOURCE 200809L
 #include "exec.h"
-#include <string.h>
+
 #include <stdlib.h>
+#include <string.h>
 
 #include "../ast/variable.h"
 #include "../expansion/expansion.h"
 #include "../redirection/redirection.h"
-
 
 /*
  ** Name: run_command
@@ -43,8 +43,8 @@ int run_command(char **cmd)
 }
 
 /*
-*   Free array
-*/
+ *   Free array
+ */
 static void free_cmd(char **cmd)
 {
     size_t index = 0;
@@ -84,8 +84,8 @@ static char **to_command(struct dlist *args, struct dlist *values)
     for (; i < size && tmp2; ++i)
     {
         cmd[i] = strdup(tmp2->value);
-        
-        // expansion des thermes 
+
+        // expansion des thermes
         while (contains_expansions(cmd[i]))
         {
             cmd[i] = expansion_handler(cmd[i], variables_list);
@@ -179,7 +179,6 @@ static int is_builtin(char **cmd)
     return 0;
 }
 
-
 // return true if the command is a variable assignment
 bool is_variable_assigment(struct dlist *args)
 {
@@ -199,7 +198,7 @@ static int simple_cmd_exec(struct ast *ast)
     struct ast **prefix = cmd_node->prefix;
     int len = cmd_node->prefix_len;
     int i = 0;
-    while ( i < len && prefix[i]->node_type == REDIRECTION)
+    while (i < len && prefix[i]->node_type == REDIRECTION)
     {
         struct redirection_node *rd_node = prefix[i]->node;
         rc = redirection_exec_handler(rd_node);
@@ -228,7 +227,9 @@ static int simple_cmd_exec(struct ast *ast)
 
         if (contains_expansions(name))
         {
-            fprintf(stderr, "command not found : simple_cmd_exec"); // Error handling : command not found
+            fprintf(stderr,
+                    "command not found : simple_cmd_exec"); // Error handling :
+                                                            // command not found
             free(name);
             free(value);
             return 127;
@@ -237,9 +238,11 @@ static int simple_cmd_exec(struct ast *ast)
 
         union value value_var = { .string = value };
         enum value_type value_type = TYPE_STRING;
-        
-        if ((rc = update_variable(variables_list, name, value_type, value_var)) == -1)
-            rc = add_variable(variables_list,init_item(name, value_var, value_type));
+
+        if ((rc = update_variable(variables_list, name, value_type, value_var))
+            == -1)
+            rc = add_variable(variables_list,
+                              init_item(name, value_var, value_type));
         free(name);
         free(value);
         return rc;
@@ -248,12 +251,12 @@ static int simple_cmd_exec(struct ast *ast)
     char **cmd = to_command(args, values);
     if (cmd == NULL)
         return 1; // Error handling : bad substitution
-        
-    if(is_function(cmd))
+
+    if (is_function(cmd))
     {
         char *name = cmd[0];
         struct hash_map *map = get_functions();
-        struct ast *func_ast= hash_map_get(map, name);
+        struct ast *func_ast = hash_map_get(map, name);
         rc = ast_exec(func_ast);
     }
     else if (is_builtin(cmd))
@@ -266,8 +269,6 @@ static int simple_cmd_exec(struct ast *ast)
     free_cmd(cmd);
     return rc;
 }
-
-
 
 /*
  ** Name: exec_pipe
@@ -331,7 +332,6 @@ int exec_pipe(struct operator_node *node, int *res)
     }
 }
 
-
 /*
  ** Name: exec_op
  ** Description: execution of operator node
@@ -391,8 +391,6 @@ static int exec_op(struct operator_node *op)
     return 0;
 }
 
-
-
 /*
  ** Name: shell_cmd_exec
  ** Description: execution of shell command
@@ -421,7 +419,6 @@ static int shell_cmd_exec(struct shell_command_node *shell)
 
     return rc;
 }
-
 
 /*
  ** Name: ast_exec
@@ -479,7 +476,7 @@ int exec_if(struct shell_command_node *shell)
     return rc;
 }
 
-//exec while
+// exec while
 int exec_w(struct shell_command_node *shell)
 {
     int body = 0;
@@ -492,7 +489,7 @@ int exec_w(struct shell_command_node *shell)
     return body;
 }
 
-//exec until
+// exec until
 int exec_u(struct shell_command_node *shell)
 {
     int body = 0;

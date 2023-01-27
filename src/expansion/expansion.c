@@ -1,9 +1,11 @@
 #define _POSIX_C_SOURCE 200809L
-#include "../ast/variable.h"
 #include "expansion.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "../ast/variable.h"
 #include "../run_program.h"
 #define BUFFER_SIZE 1024
 #define DELIM "$\0"
@@ -28,11 +30,11 @@ static char *get_special_var(char *input, char *buffer)
         sprintf(buffer, "%d", rand());
 
     else if (strcmp(input, "PWD") == 0)
-        buffer = getenv("PWD");
+        getcwd(buffer, BUFFER_SIZE);
 
     else if (strcmp(input, "UID") == 0)
         buffer = getenv("UID");
-        
+
     else if (strcmp(input, "OLDPWD") == 0)
         buffer = getenv("OLDPWD");
     else if (strcmp(input, "IFS") == 0)
@@ -52,7 +54,7 @@ bool contains_expansions(char *input)
 
 /**
  * retrieve the closer {} or ()
-*/
+ */
 static char *get_word_between_closer(char **input, char closer)
 {
     char *closer2 = closer == '(' ? ")" : "}";
@@ -60,7 +62,6 @@ static char *get_word_between_closer(char **input, char closer)
     if (word == NULL || word[1] != closer)
         return NULL;
 
-    
     word = strtok_r(word + 2, closer2, input);
     return word;
 }
@@ -94,7 +95,7 @@ char *expand_variable(char *input, struct variables_list *list)
     char *save = input;
     char *new_input = calloc(1, BUFFER_SIZE);
     size_t tmplen = strcspn(input, DELIM);
-    char *tmp  = strndup(input, tmplen);
+    char *tmp = strndup(input, tmplen);
     new_input = strncat(new_input, tmp, tmplen);
     input += tmplen;
 
@@ -107,7 +108,7 @@ char *expand_variable(char *input, struct variables_list *list)
         if (word)
         {
             char *value = NULL;
-            
+
             if (strchr(word, ' ') != NULL)
             {
                 free(new_input);
@@ -123,7 +124,7 @@ char *expand_variable(char *input, struct variables_list *list)
             }
             else
             {
-                char res[BUFFER_SIZE] = {0};
+                char res[BUFFER_SIZE] = { 0 };
                 value = get_special_var(word, res);
                 new_input = strcat(new_input, value);
             }
@@ -136,11 +137,12 @@ char *expand_variable(char *input, struct variables_list *list)
             return NULL;
         }
 
-    tmplen = strcspn(input, "\0");
-    free(tmp);
-    tmp  = strndup(input, tmplen);
-    if(tmplen > 0) new_input = strcat(new_input, "$");
-    new_input = strncat(new_input, tmp, tmplen);
+        tmplen = strcspn(input, "\0");
+        free(tmp);
+        tmp = strndup(input, tmplen);
+        if (tmplen > 0)
+            new_input = strcat(new_input, "$");
+        new_input = strncat(new_input, tmp, tmplen);
     }
 
     free(save);
@@ -148,10 +150,10 @@ char *expand_variable(char *input, struct variables_list *list)
     return new_input;
 }
 
-
 /**
- * Build a string of the command that will be executed by the substitution and return it
-*/
+ * Build a string of the command that will be executed by the substitution and
+ * return it
+ */
 static char *build_subcommand(char *input)
 {
     char *res = malloc(BUFFER_SIZE);
@@ -160,10 +162,9 @@ static char *build_subcommand(char *input)
     return res;
 }
 
-
 /**
  * Build a new string with subtitution commands extended
-*/
+ */
 char *expand_substitution(char *input, struct variables_list *list)
 {
     char *new_input = calloc(1, BUFFER_SIZE);
@@ -172,7 +173,7 @@ char *expand_substitution(char *input, struct variables_list *list)
 
     // on expand de potentielle commandes inbriques
     word = strdup(get_word_between_closer(&input, '('));
-    while(contains_expansions(word))
+    while (contains_expansions(word))
     {
         word = expansion_handler(word, list);
         if (word == NULL)
@@ -182,7 +183,6 @@ char *expand_substitution(char *input, struct variables_list *list)
         }
     }
 
-
     if (word)
     {
         char *subcommand = build_subcommand(word);
@@ -191,10 +191,10 @@ char *expand_substitution(char *input, struct variables_list *list)
 
         FILE *fp = popen(subcommand, "r");
         fgets(output, BUFFER_SIZE, fp);
-        //printf("Output: %s", output);
+        // printf("Output: %s", output);
         pclose(fp);
 
-        //remove the \n a the end
+        // remove the \n a the end
         int len = strlen(output);
         output[len - 1] = '\0';
         new_input = strcat(new_input, output);
@@ -213,9 +213,9 @@ char *expansion_handler(char *input, struct variables_list *list)
     char *tmp = strchr(input, '$');
     if (tmp == NULL)
         return input;
-        
+
     if (tmp[1] == '(')
         return expand_substitution(input, list);
-        
+
     return expand_variable(input, list);
 }

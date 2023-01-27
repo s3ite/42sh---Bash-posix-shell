@@ -30,12 +30,12 @@ char *strnappend(char *str1, char *str2, int n)
 
 void strappendchar(char **str1, char c)
 {
-    char *str=*str1;
+    char *str = *str1;
     size_t len = strlen(str);
-    str = realloc(str,len + 1 + 1);
+    str = realloc(str, len + 1 + 1);
     str[len] = c;
     str[len + 1] = '\0';
-    *str1=str;
+    *str1 = str;
 }
 
 char *remove_backslash(char *str)

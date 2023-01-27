@@ -1,7 +1,8 @@
-#include "built_in.h"
-#include "../run_program.h"
 #include <fcntl.h>
 #include <unistd.h>
+
+#include "../run_program.h"
+#include "built_in.h"
 
 int my_dot(char **cmd)
 {
@@ -21,7 +22,6 @@ int my_dot(char **cmd)
         return 1; // error
     }
 
-    
     char *buffer = malloc(4096);
     int nbread = read(file_fd, buffer, 4096);
     if (nbread == -1)

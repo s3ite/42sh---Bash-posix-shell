@@ -6,7 +6,6 @@
 #include "../ast/list.h"
 #include "parser.h"
 
-
 /*
  ** Name: build_shell_command_node
  ** Description: build ast structure for shell command
@@ -26,7 +25,6 @@ struct ast *build_shell_command_node(enum shell_type type)
 
     return ast;
 }
-
 
 /*
  ** Name: parse_cmd
@@ -53,7 +51,6 @@ static struct ast *parse_cmd(struct lexer *lexer, struct parser *parser)
 
     return ast;
 }
-
 
 /*
  ** Name: parse_cmd

@@ -42,31 +42,31 @@ char *remove_escaped_newline(char *input)
 char *get_stdin()
 {
     if ((isatty(STDIN_FILENO)))
-        {
-            return NULL;
-        }
-        int l = 1024;
-        size_t red = 0;
-        char *buff = malloc(l + 1);
-        if (!buff)
-        {
-            return NULL;
-        }
-        size_t i = fread(buff, sizeof(char), l, stdin);
+    {
+        return NULL;
+    }
+    int l = 1024;
+    size_t red = 0;
+    char *buff = malloc(l + 1);
+    if (!buff)
+    {
+        return NULL;
+    }
+    size_t i = fread(buff, sizeof(char), l, stdin);
+    red += i;
+    if (red == 0)
+    {
+        return NULL;
+    }
+    while (i == 1024)
+    {
+        l += 1024;
+        buff = realloc(buff, l + 1);
+        i = fread(buff + red, sizeof(char), 1024, stdin);
         red += i;
-        if (red == 0)
-        {
-            return NULL;
-        }
-        while (i == 1024)
-        {
-            l += 1024;
-            buff = realloc(buff, l + 1);
-            i = fread(buff + red, sizeof(char), 1024, stdin);
-            red += i;
-        }
-        buff[red] = '\0';
-        return buff;
+    }
+    buff[red] = '\0';
+    return buff;
 }
 
 char *parse_command_line(int argc, char **argv)
@@ -76,7 +76,7 @@ char *parse_command_line(int argc, char **argv)
         int opt;
         char *a;
         while ((opt = getopt(argc, argv, "c:")) != -1)
-            if(opt=='c')
+            if (opt == 'c')
             {
                 a = malloc(strlen(optarg) + 1);
                 return strcpy(a, optarg);

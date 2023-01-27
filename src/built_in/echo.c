@@ -34,8 +34,7 @@ static void iterate(char **cmd, int i)
     }
 }
 
-
-static int  set_flags(char **cmd, int *flag_e, int *flag_n, size_t *i)
+static int set_flags(char **cmd, int *flag_e, int *flag_n, size_t *i)
 {
     if (!strcmp("-n", cmd[*i]))
         *flag_n = 1;

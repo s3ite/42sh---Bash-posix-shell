@@ -3,10 +3,10 @@
 #include <stdlib.h>
 
 #include "../ast/print_ast.h"
-#include "../exec/exec.h"
 #include "../ast/variable.h"
+#include "../exec/exec.h"
 
-//global var, contains functions map
+// global var, contains functions map
 struct hash_map *hash_func;
 
 void set_rc(int res, struct global_var *ret)
@@ -62,7 +62,6 @@ struct parser *parse(struct lexer *lexer)
     return parser;
 }
 
-
 /*
  ** Name: build_operator_node
  ** Description: build ast structure
@@ -85,7 +84,7 @@ static struct ast *build_operator_node(enum operator_type type,
     return ast;
 }
 
-//Check if given token is a condition 
+// Check if given token is a condition
 static int is_condition_token(struct token *token)
 {
     if (!token)
@@ -198,7 +197,6 @@ struct ast *parse_pipeline(struct lexer *lexer, struct parser *parser)
 
     return ast;
 }
-
 
 /*
     FREE PARSER FUNCTIONS

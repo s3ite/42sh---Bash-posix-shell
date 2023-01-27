@@ -12,7 +12,7 @@
 #include "../built_in/built_in.h"
 #include "../lexer/lexer.h"
 #include "../parser/parser.h"
-//#include "../redirection/redirection.h"
+// #include "../redirection/redirection.h"
 
 int run_command(char **cmd);
 int ast_exec(struct ast *node);

@@ -65,7 +65,6 @@ void free_ast_simple_command(struct ast *ast);
 void free_simple_command(struct simple_command_node *simple_command);
 void free_ast_redirection(struct redirection_node *rd_node);
 
-
 void free_ast_redirection(struct redirection_node *rd_node);
 struct hash_map *get_functions();
 

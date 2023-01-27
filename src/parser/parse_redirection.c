@@ -100,7 +100,7 @@ static char *get_word(char **io_command)
         lastchar = strrchr(*io_command, '>');
     if (lastchar == NULL)
         lastchar = strrchr(*io_command, '<');
-    
+
     if (lastchar == NULL)
     {
         fprintf(stderr, "erreur de parsing : get word");
@@ -109,7 +109,7 @@ static char *get_word(char **io_command)
 
     if (*(++lastchar) == '\0')
         return NULL;
-    
+
     char *res = strdup(lastchar);
     int len = strlen(res);
     int cmd = strlen(io_command[0]);

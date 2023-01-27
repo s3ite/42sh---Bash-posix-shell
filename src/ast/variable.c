@@ -63,9 +63,10 @@ int update_variable(struct variables_list *list, char *name,
 
 int update_question_mark(struct variables_list *list, int value)
 {
-    (void) list;
-    return update_variable(variables_list, "?", TYPE_INTEGER, (union value) {.integer = value});
- }
+    (void)list;
+    return update_variable(variables_list, "?", TYPE_INTEGER,
+                           (union value){ .integer = value });
+}
 
 /**
  * add a variable to the list of variables
@@ -75,9 +76,9 @@ int update_question_mark(struct variables_list *list, int value)
  */
 int add_variable(struct variables_list *list, struct variable_item *var)
 {
-    if(strcmp(var->name, "IFS") == 0)
+    if (strcmp(var->name, "IFS") == 0)
         destroy_item(var);
-        
+
     if (list == NULL || var == NULL)
         return -1;
 
@@ -162,14 +163,23 @@ void free_variable_list(struct variables_list *list)
 struct variables_list *init_variables_list(void)
 {
     struct variables_list *list = malloc(sizeof(struct variables_list));
+    char *buffer = getenv("OLDPWD");
+
     list->head = NULL;
     list->tail = NULL;
 
     list->size = 0;
 
-    add_variable(list, init_item("0", (union value){ .string = "42sh" }, TYPE_STRING));
-    add_variable(list, init_item("?", (union value){ .integer = 0}, TYPE_INTEGER));
+    add_variable(
+        list, init_item("0", (union value){ .string = "42sh" }, TYPE_STRING));
+    add_variable(list,
+                 init_item("?", (union value){ .integer = 0 }, TYPE_INTEGER));
 
+    add_variable(
+        list,
+        init_item("OLDPWD", (union value){ .string = buffer }, TYPE_STRING));
+    add_variable(
+        list, init_item("PWD", (union value){ .string = buffer }, TYPE_STRING));
 
     return list;
 }

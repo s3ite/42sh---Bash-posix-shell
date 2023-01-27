@@ -1,6 +1,4 @@
 
-add_library(expansion 
+add_library(expansion
 
-expansion.c
-expansion.h
-)
+                expansion.c expansion.h)

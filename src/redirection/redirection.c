@@ -13,17 +13,15 @@ void reset_fd(struct ast **prefix, int len)
 {
     fflush(stdout);
     int i = 0;
-    while ( i < len && prefix[i]->node_type == REDIRECTION)
+    while (i < len && prefix[i]->node_type == REDIRECTION)
     {
         struct redirection_node *rd_node = prefix[i]->node;
         if (rd_node->save_io_number != -1)
             dup2(rd_node->save_io_number, rd_node->new_value);
-        if (rd_node->save_io_number != -1) 
-            dup2(rd_node->save_io_number2, rd_node->new_value2);   
+        if (rd_node->save_io_number != -1)
+            dup2(rd_node->save_io_number2, rd_node->new_value2);
         i++;
     }
-
-
 }
 
 /**
@@ -127,8 +125,9 @@ static int fd_in(struct redirection_node *rd_node, char *path)
 
 /**
  * Gestion de redirection <& et >&
-*/
-static int fd_dup_in_out(struct redirection_node *rd_node, char *path, bool input)
+ */
+static int fd_dup_in_out(struct redirection_node *rd_node, char *path,
+                         bool input)
 {
     int io_fd = input ? 0 : 1;
     io_fd = rd_node->io_number == -1 ? io_fd : rd_node->io_number;
@@ -200,9 +199,10 @@ static int fd_io(struct redirection_node *rd_node, char *path)
 int redirection_exec_handler(struct redirection_node *rd_node)
 {
     char *path = rd_node->word;
-    if (strcmp(path,"") == 0)
+    if (strcmp(path, "") == 0)
     {
-        fprintf(stderr, "PARSE ERROR near redirection op : redirection_exec_handler");
+        fprintf(stderr,
+                "PARSE ERROR near redirection op : redirection_exec_handler");
         return 2; // ERROR Handling : PARSE ERROR
     }
 

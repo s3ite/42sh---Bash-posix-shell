@@ -35,11 +35,12 @@ struct ast *parse_command(struct lexer *lexer, struct parser *parser)
     struct token *token = lexer_peek(lexer);
     struct token *token_two = lexer_peek(lexer);
 
-    if(token->type == WORD && (token_two = lexer_peek_two(lexer))->type == TOKEN_OPEN_PAR)
+    if (token->type == WORD
+        && (token_two = lexer_peek_two(lexer))->type == TOKEN_OPEN_PAR)
     {
-        res =parse_func(lexer, parser);
+        res = parse_func(lexer, parser);
         ast_append(parser->nodes, res);
-    } 
+    }
     else if ((res = handle_shell_command(lexer, parser)) != NULL)
         return res;
 

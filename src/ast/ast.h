@@ -66,7 +66,6 @@ struct redirection_node
     int new_value2;
 };
 
-
 struct simple_command_node
 {
     struct dlist *args; // commande & args

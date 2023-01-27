@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-
 int is_redirection(char *str)
 {
     char *redir_list[7] = { ">|", "<>", ">>", ">&", "<&", ">", "<" };
@@ -123,7 +121,7 @@ struct token *handle_word(char *input)
     while (input[j] != '\0'
            && !(escaped == 0 && in(input[j], "; ><|\t\n'\"(){}")))
     {
-        escaped=(input[j]=='\\')&&!escaped;
+        escaped = (input[j] == '\\') && !escaped;
         j++;
     }
     char *value = malloc(j + 1);
@@ -144,7 +142,7 @@ struct token *handle_var(char *input) // sous-fonction pour gerer les variables
     {
         while (input[j] != '\0' && !(escaped == 0 && input[j] == ')'))
         {
-            escaped=(input[j]=='\\')&&!escaped;
+            escaped = (input[j] == '\\') && !escaped;
             j++;
         }
         if (input[j] == '\0')
@@ -156,7 +154,7 @@ struct token *handle_var(char *input) // sous-fonction pour gerer les variables
     {
         while (input[j] != '\0' && !(escaped == 0 && input[j] == '}'))
         {
-            escaped=(input[j]=='\\')&&!escaped;
+            escaped = (input[j] == '\\') && !escaped;
             j++;
         }
         if (input[j] == '\0')
@@ -164,32 +162,32 @@ struct token *handle_var(char *input) // sous-fonction pour gerer les variables
             return NULL;
         }
     }
-    else if ( j == 0)
+    else if (j == 0)
     {
         while (input[j] != '\0'
                && !(escaped == 0 && in(input[j], "; ><|\t\n'\"$")))
         {
-            escaped=(input[j]=='\\')&&!escaped;
+            escaped = (input[j] == '\\') && !escaped;
             j++;
         }
         if (input[j] == '\0')
         {
             return NULL;
-        }   
+        }
     }
     char *value = malloc(j + 2);
-    strncpy(value, input, j+1);
-    value[j+1] = '\0';
-    char *a=malloc(2);
-    a[0]='$';
-    a[1]='\0';
-    a=strnappend(a,value,j+1);
+    strncpy(value, input, j + 1);
+    value[j + 1] = '\0';
+    char *a = malloc(2);
+    a[0] = '$';
+    a[1] = '\0';
+    a = strnappend(a, value, j + 1);
     free(value);
     struct token *tok = token_init(a, WORD);
     return tok;
 }
 
-int reduce_db1(char *input,char **word ,int j)
+int reduce_db1(char *input, char **word, int j)
 {
     j++;
     if (input[j] == '\\')
@@ -215,15 +213,15 @@ int reduce_db1(char *input,char **word ,int j)
     }
     return j;
 }
-int reduce_db2(char *input,struct lexer *res, int j,int *var)
+int reduce_db2(char *input, struct lexer *res, int j, int *var)
 {
     char *word = malloc(1);
     word[0] = '\0';
-    while (input[j] != '\0' && !(input[j] == '"')&& !(*var))
+    while (input[j] != '\0' && !(input[j] == '"') && !(*var))
     {
         if (input[j] == '\\')
         {
-            j=reduce_db1(input, &word,j);
+            j = reduce_db1(input, &word, j);
         }
         else if (input[j] == '$')
         {
@@ -248,14 +246,13 @@ int handle_double_quote(char *input, struct lexer *res)
     {
         if (!var)
         {
-            j=reduce_db2(input,res,j,&var);
+            j = reduce_db2(input, res, j, &var);
         }
         else
         {
             char *word = malloc(1);
-            word[0]='\0';
-            while (input[j] != '\0' && !(input[j] == '"')
-                   && var)
+            word[0] = '\0';
+            while (input[j] != '\0' && !(input[j] == '"') && var)
             {
                 if (in(input[j], "; ><|\t\n'\"$)"))
                 {

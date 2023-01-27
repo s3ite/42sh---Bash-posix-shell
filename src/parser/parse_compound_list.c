@@ -1,7 +1,5 @@
 #include "parser.h"
 
-
-
 /*
  ** Name: parse_start
  ** Description: restart parsing from start
@@ -24,7 +22,6 @@ struct ast *parse_start(struct lexer *lexer, struct parser *parser)
     return ast;
 }
 
-
 /*
  ** Name: build_operator_node
  ** Description: build operator node
@@ -45,7 +42,6 @@ static struct ast *build_operator_node(enum operator_type type,
     ast->node = node;
     return ast;
 }
-
 
 /*
  ** Name: apply_operator_compound
@@ -82,7 +78,6 @@ static struct token *clone(struct lexer *lexer)
     }
     return copy;
 }
-
 
 /*
  ** Name: parse_compound_list

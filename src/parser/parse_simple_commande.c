@@ -5,7 +5,7 @@
 #include "../ast/list.h"
 #include "parser.h"
 
-//Check if token is redirection
+// Check if token is redirection
 static bool is_prefix(struct token *token)
 {
     return token->type == TOKEN_REDIRECTION;
@@ -17,7 +17,8 @@ static bool is_prefix(struct token *token)
  ** struct lexer *lexer, struct parser *parser
  ** Return: struct ast
  */
-static struct ast **handle_prefix(struct lexer *lexer, struct parser *parser, int *prefix_len)
+static struct ast **handle_prefix(struct lexer *lexer, struct parser *parser,
+                                  int *prefix_len)
 {
     struct ast **ast = NULL;
     struct token *token = NULL;
@@ -52,7 +53,7 @@ struct simple_command_node *parse_simple_commande(struct lexer *lexer,
                                                   struct parser *parser)
 {
     struct simple_command_node *simple_command =
-            malloc(sizeof(struct simple_command_node));
+        malloc(sizeof(struct simple_command_node));
     struct token *token = lexer_peek(lexer);
     if (token->type == WORD)
     {
@@ -85,12 +86,14 @@ struct simple_command_node *parse_simple_commande(struct lexer *lexer,
         simple_command->args = args;
         simple_command->values = values;
 
-        simple_command->prefix = handle_prefix(lexer, parser, &simple_command->prefix_len);
-        //return simple_command;
+        simple_command->prefix =
+            handle_prefix(lexer, parser, &simple_command->prefix_len);
+        // return simple_command;
     }
     else if (token->type == TOKEN_REDIRECTION)
     {
-        simple_command->prefix = handle_prefix(lexer, parser, &simple_command->prefix_len);
+        simple_command->prefix =
+            handle_prefix(lexer, parser, &simple_command->prefix_len);
     }
     else
     {

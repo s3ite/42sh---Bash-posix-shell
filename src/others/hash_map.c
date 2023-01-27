@@ -15,7 +15,6 @@ size_t hash(const char *key)
     return hash;
 }
 
-
 struct hash_map *hash_map_init(size_t size)
 {
     struct hash_map *hmap = malloc(sizeof(struct hash_map));
@@ -43,7 +42,7 @@ bool hash_map_insert(struct hash_map *hash_map, const char *key,
     l->key = key;
     l->value = value;
     struct pair_list *tmp = hash_map->data[h];
-    while (tmp) 
+    while (tmp)
     {
         if (tmp->key == key)
         {

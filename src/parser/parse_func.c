@@ -1,7 +1,6 @@
 #include "parser.h"
 
-
-//Build function node
+// Build function node
 static struct ast *build_node(struct ast *body)
 {
     struct ast *ast = malloc(sizeof(struct ast));
@@ -19,17 +18,17 @@ static struct ast *build_node(struct ast *body)
 struct ast *parse_func(struct lexer *lexer, struct parser *parser)
 {
     struct token *token = lexer_peek(lexer);
-    if(token->type != WORD)
+    if (token->type != WORD)
         return NULL;
-    char *name= token->value;
-    if(!name)
+    char *name = token->value;
+    if (!name)
         return NULL;
 
-    lexer_pop(lexer); //func () , on pop func
+    lexer_pop(lexer); // func () , on pop func
     lexer_pop(lexer); // on pop (
-    
+
     token = lexer_peek(lexer);
-    if(token->type != TOKEN_CLOSE_PAR)
+    if (token->type != TOKEN_CLOSE_PAR)
         return NULL; // bad grammar
     lexer_pop(lexer);
 
@@ -41,10 +40,9 @@ struct ast *parse_func(struct lexer *lexer, struct parser *parser)
     }
 
     struct ast *body = parse_shell_command(lexer, parser);
-    if(!body)
+    if (!body)
         return NULL;
     ast_append(parser->nodes, body);
-    hash_map_insert(get_functions(), name, body );
+    hash_map_insert(get_functions(), name, body);
     return build_node(body);
-
 }

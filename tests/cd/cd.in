@@ -1,1 +1,1 @@
-./build/42sh -c 'cd build; echo $pwd'
+cd build; echo $PWD

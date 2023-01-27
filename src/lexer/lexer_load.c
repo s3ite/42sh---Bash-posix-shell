@@ -1,6 +1,6 @@
 #include "lexer.h"
 
-int reduce1(char *input,struct lexer *res, int i)
+int reduce1(char *input, struct lexer *res, int i)
 {
     struct token *tok = handle_word(input + i);
     res = lexer_append(res, tok);
@@ -9,7 +9,7 @@ int reduce1(char *input,struct lexer *res, int i)
     return i;
 }
 
-int reduce2(char *input,struct lexer *res, int i)
+int reduce2(char *input, struct lexer *res, int i)
 {
     struct token *tok = handle_quote(input + i);
     if (!tok)
@@ -31,10 +31,10 @@ int reduce2(char *input,struct lexer *res, int i)
     return i;
 }
 
-int reduce3(char *input,struct lexer *res, int i)
+int reduce3(char *input, struct lexer *res, int i)
 {
     struct token *tok = handle_var(input + i + 1);
-    if(tok==NULL)
+    if (tok == NULL)
     {
         return -1;
     }
@@ -44,7 +44,7 @@ int reduce3(char *input,struct lexer *res, int i)
     return i;
 }
 
-int reduce4(char *input,struct lexer *res, int i)
+int reduce4(char *input, struct lexer *res, int i)
 {
     int inc = handle_double_quote(input + i, res) + 1;
     if (inc == 0)
@@ -56,10 +56,9 @@ int reduce4(char *input,struct lexer *res, int i)
     return i;
 }
 
-int reduce5_1(char *input,struct lexer *res, int i) // gestion des redirections
+int reduce5_1(char *input, struct lexer *res, int i) // gestion des redirections
 {
-    char *redir_list[7] = {
-        ">|", "<>", ">>", ">&", "<&", ">", "<"};
+    char *redir_list[7] = { ">|", "<>", ">>", ">&", "<&", ">", "<" };
     char *value = malloc(1);
     value[0] = '\0';
     while (!(in(input[i], "; |\t\n'\"$(){}")))
@@ -89,7 +88,7 @@ int reduce5_1(char *input,struct lexer *res, int i) // gestion des redirections
     return i;
 }
 
-int reduce5(char *input,struct lexer *res, int i)
+int reduce5(char *input, struct lexer *res, int i)
 {
     int tok_type = get_token_type(input + i);
     if (tok_type == WORD) // gestion des words
@@ -101,15 +100,16 @@ int reduce5(char *input,struct lexer *res, int i)
     }
     else if (tok_type == TOKEN_REDIRECTION) // gestion des redirections
     {
-        i=reduce5_1(input,res,i);
+        i = reduce5_1(input, res, i);
     }
-    else if (tok_type != -1 && tok_type != TOKEN_EOF) // gestion tokens "normaux"
+    else if (tok_type != -1
+             && tok_type != TOKEN_EOF) // gestion tokens "normaux"
     {
-        char *tok_list[NUM_TOK - 3] = {
-                    ";",  "||",    "&&", "|",    "!",     "\n",   "{",
-                    "}",  "(",     ")",  "if",   "then",  "elif", "else",
-                    "fi", "while", "do", "done", "until", "for",  "in"
-        }; // TO_UPDATE:token
+        char *tok_list[NUM_TOK - 3] = { ";",     "||",   "&&",   "|",     "!",
+                                        "\n",    "{",    "}",    "(",     ")",
+                                        "if",    "then", "elif", "else",  "fi",
+                                        "while", "do",   "done", "until", "for",
+                                        "in" }; // TO_UPDATE:token
         struct token *tok = token_init(tok_list[tok_type], tok_type);
         res = lexer_append(res, tok);
         i += strlen(tok_list[tok_type]);
@@ -121,41 +121,41 @@ int reduce5(char *input,struct lexer *res, int i)
     return i;
 }
 
-int reduce6(char *input,struct lexer *res, int i)
+int reduce6(char *input, struct lexer *res, int i)
 {
     if (strncmp(input + i, "\\", 1) == 0) // gestion des backslash
-        {
-            i=reduce1(input,res,i);
-        }
-        else if (strncmp(input + i, "#", 1) == 0) // gestion des commentaires
-        {
-            i += handle_comment(input + i);
-        }
-        else if (strncmp(input + i, "'", 1) == 0) // getsion des single quote
-        {
-            i=reduce2(input,res,i);
-        }
-        else if (strncmp(input + i, "$(", 2) == 0) // gestion des substitutions
-        {
-            i=reduce3(input,res,i);
-        }
+    {
+        i = reduce1(input, res, i);
+    }
+    else if (strncmp(input + i, "#", 1) == 0) // gestion des commentaires
+    {
+        i += handle_comment(input + i);
+    }
+    else if (strncmp(input + i, "'", 1) == 0) // getsion des single quote
+    {
+        i = reduce2(input, res, i);
+    }
+    else if (strncmp(input + i, "$(", 2) == 0) // gestion des substitutions
+    {
+        i = reduce3(input, res, i);
+    }
 
-        else if (strncmp(input + i, "${", 2) == 0) // getsion des variables
-        {
-            i=reduce3(input,res,i);
-        }
-        else if (strncmp(input + i, "\"", 1) == 0) // getsion des double quote
-        {
-            i=reduce4(input,res,i);
-        }
-        else
-        {
-            i=reduce5(input,res,i);
-        }
-        if (i==-1)
-        {
-            return -1;
-        }
+    else if (strncmp(input + i, "${", 2) == 0) // getsion des variables
+    {
+        i = reduce3(input, res, i);
+    }
+    else if (strncmp(input + i, "\"", 1) == 0) // getsion des double quote
+    {
+        i = reduce4(input, res, i);
+    }
+    else
+    {
+        i = reduce5(input, res, i);
+    }
+    if (i == -1)
+    {
+        return -1;
+    }
     return i;
 }
 
@@ -164,8 +164,8 @@ struct lexer *lexer_load(char *input, struct lexer *res)
     int i = 0;
     while (input[i] != '\0')
     {
-        i=reduce6(input,res,i);
-        if (i==-1)
+        i = reduce6(input, res, i);
+        if (i == -1)
         {
             return NULL;
         }

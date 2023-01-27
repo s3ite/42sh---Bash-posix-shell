@@ -1,9 +1,9 @@
-#define _POSIX_C_SOURCE  200809L
-#include "lexer.h"
+#define _POSIX_C_SOURCE 200809L
+#include <fcntl.h>
 #include <unistd.h>
 
- #include <fcntl.h>
- 
+#include "lexer.h"
+
 struct lexer *lexer_init(size_t n, char *input)
 {
     struct lexer *v = malloc(sizeof(struct lexer));
@@ -82,7 +82,7 @@ void lexer_print(struct lexer *v)
     sprintf(buffer, "input is: %s\ntoken list is: ", v->input);
 
     nbwrite += write(fd, buffer, strlen(buffer));
-   
+
     for (size_t i = 0; i < v->size; i++)
     {
         sprintf(buffer, "%s ", v->data[i]->value);
@@ -93,15 +93,14 @@ void lexer_print(struct lexer *v)
     for (size_t i = 0; i < v->size; i++)
     {
         sprintf(buffer, "%d ", (enum TokenType)v->data[i]->type);
-        nbwrite += write(fd, buffer, strlen(buffer) );
+        nbwrite += write(fd, buffer, strlen(buffer));
     }
     close(fd);
-    
 }
 
 struct token *lexer_peek_two(struct lexer *v)
 {
-    return v->data[v->index+1];
+    return v->data[v->index + 1];
 }
 
 struct token *lexer_peek(struct lexer *v)

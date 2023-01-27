@@ -1,6 +1,5 @@
 #include "parser.h"
 
-
 /*
  ** Name: build_condition_if_node
  ** Description: build condition_node struct

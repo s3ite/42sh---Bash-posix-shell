@@ -1,7 +1,6 @@
 
-add_library(redirection 
+add_library(redirection
 
-redirection.c
-redirection.h
+                redirection.c redirection.h
 
 )

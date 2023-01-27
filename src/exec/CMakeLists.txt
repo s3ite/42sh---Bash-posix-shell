@@ -1,6 +1,4 @@
 
-add_library(exec 
-exec.c
-exec.h
+add_library(exec exec.c exec.h
 
 )

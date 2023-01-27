@@ -1,9 +1,8 @@
 #include "parser.h"
 
-
 /*
  ** Name: parse_condition
- ** Description: parse condition 
+ ** Description: parse condition
  ** truct ast *body, struct ast *condition,enum loop loo
  ** Return: struct ast
  */
@@ -39,7 +38,6 @@ struct condition_wu *build_condition_wu(struct ast *body, struct ast *condition,
 
     return ast;
 }
-
 
 /*
  ** Name: parse_rule_wu
