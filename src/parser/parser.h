@@ -21,8 +21,7 @@ struct parser
 };
 
 void set_rc(int res, struct global_var *ret);
-int get_rc(struct global_var *ret);
-
+void init_map(void);
 struct parser *parse(struct lexer *lexer);
 
 int parse_input(struct lexer *lexer, struct parser *parser);

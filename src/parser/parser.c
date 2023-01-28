@@ -14,14 +14,15 @@ void set_rc(int res, struct global_var *ret)
     ret->rc = res;
 }
 
-int get_rc(struct global_var *ret)
-{
-    return ret->rc;
-}
 
 struct hash_map *get_functions()
 {
     return hash_func;
+}
+
+void init_map(void)
+{
+    hash_func = hash_map_init(3);
 }
 /*
  ** Name: parse
@@ -32,7 +33,7 @@ struct hash_map *get_functions()
 struct parser *parse(struct lexer *lexer)
 {
     // Check for eof or newline
-    hash_func = hash_map_init(3);
+   
     struct parser *parser = malloc(sizeof(struct parser));
     if (!parser)
         return NULL;

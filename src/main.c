@@ -19,6 +19,7 @@
 int main(int argc, char **argv)
 {
     variables_list = init_variables_list();
+    init_map();
     char *input = parse_command_line(argc, argv);
     if (!input)
     {
@@ -27,8 +28,10 @@ int main(int argc, char **argv)
                 "[ARGUMENTS ...]\n");
         return 2;
     }
-
     int rc = run_program(input);
     free_variables();
+
+    hash_map_free(get_functions());
+
     return rc;
 }
