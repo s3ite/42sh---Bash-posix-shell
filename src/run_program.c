@@ -1,4 +1,5 @@
 #include "run_program.h"
+
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,7 +40,7 @@ int run_program(char *input)
     update_question_mark(variables_list, 0);
 
     lexer_destroy(lexer);
-    
+
     parser_free(parser);
     free(input);
     free(new_input);

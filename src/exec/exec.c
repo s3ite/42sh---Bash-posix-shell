@@ -189,7 +189,7 @@ bool is_variable_assigment(struct dlist *args)
     return strchr(args->head->value, '=') != NULL;
 }
 
-static int sub_exec_cmd(struct dlist *args,struct dlist *values )
+static int sub_exec_cmd(struct dlist *args, struct dlist *values)
 {
     int rc = 0;
     char **cmd = to_command(args, values);
@@ -211,7 +211,6 @@ static int sub_exec_cmd(struct dlist *args,struct dlist *values )
     free_cmd(cmd);
 
     return rc;
-
 }
 
 static int simple_cmd_exec(struct ast *ast)
@@ -274,7 +273,7 @@ static int simple_cmd_exec(struct ast *ast)
         return rc;
     }
 
-    rc = sub_exec_cmd(args,values);
+    rc = sub_exec_cmd(args, values);
     reset_fd(prefix, len);
     return rc;
 }

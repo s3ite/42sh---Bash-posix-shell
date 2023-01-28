@@ -161,7 +161,7 @@ static int exec_word(char **new_input, char *word)
     int nbread = 0;
     pid_t pid = fork();
     if (pid == 0)
-    { 
+    {
         dup2(fd[1], 1); // redirect stdout to the pipe
         close(fd[0]);
         close(fd[1]);
@@ -183,7 +183,6 @@ static int exec_word(char **new_input, char *word)
 
     return 0;
 }
-
 
 /**
  * Build a new string with subtitution commands extended
