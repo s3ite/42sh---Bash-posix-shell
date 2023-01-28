@@ -141,8 +141,8 @@ int remove_variable(struct variables_list *list, char *name)
     }
     return 0; // Error handling
 }
-
-void free_variable_list(struct variables_list *list)
+/*
+static void free_variable_list(struct variables_list *list)
 {
     struct variable_item *head = list->head;
     struct variable_item *tmp;
@@ -155,7 +155,7 @@ void free_variable_list(struct variables_list *list)
         free(tmp);
     }
     free(list);
-}
+}*/
 
 /**
  * Init the variable list structure
