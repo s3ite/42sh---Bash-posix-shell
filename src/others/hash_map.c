@@ -61,7 +61,7 @@ bool hash_map_insert(struct hash_map *hash_map, const char *key,
 void hash_map_free(struct hash_map *hash_map)
 {
     if (!hash_map)
-        printf("%s\n","not");
+        printf("%s\n", "not");
     if (!hash_map)
         return;
     size_t i = 0;

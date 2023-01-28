@@ -1,11 +1,11 @@
 #define _POSIX_C_SOURCE 200809L
+#include <ctype.h>
 #include <dirent.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <ctype.h>
 
 #include "../ast/variable.h"
 #include "built_in.h"
@@ -30,6 +30,28 @@ static bool is_directory_exists(const char *path)
     return false;
 }
 
+static int handle_tiret(char **cmd, char *oldpwd, char buffer[])
+{
+    int rc = 0;
+    if (isspace(cmd[1][1]) != 0)
+    {
+        rc = 2;
+        fprintf(stderr, "invalid option");
+    }
+    if (strcmp(oldpwd, "") == 0)
+    {
+        fprintf(stderr, "OLDPWD is not set\n");
+        return 1;
+    }
+    else
+    {
+        rc = chdir(oldpwd);
+        printf("%s\n", getcwd(buffer, BUFFER_SIZE));
+    }
+
+    return rc;
+}
+
 int my_cd(char **cmd)
 {
     if (cmd[1] && cmd[2])
@@ -48,7 +70,7 @@ int my_cd(char **cmd)
     if (cmd[1] == NULL)
     {
         char *tmp = getenv("HOME");
-        if (tmp == NULL) 
+        if (tmp == NULL)
         {
             fprintf(stderr, " HOME environment variable not set\n");
             return 1;
@@ -58,23 +80,10 @@ int my_cd(char **cmd)
     // cas du -
     else if (cmd[1][0] == '-')
     {
-        if (isspace(cmd[1][1]) != 0)
-        {
-            rc = 2;
-            fprintf(stderr, "invalid option");
-        }
-        if (strcmp(oldpwd, "") == 0)
-        {
-            fprintf(stderr, "OLDPWD is not set\n");
-            return 1;
-        }
-        else
-        {
-            rc = chdir(oldpwd);
-            printf("%s\n", getcwd(buffer, BUFFER_SIZE));
-        }
+        if ((rc = handle_tiret(cmd, oldpwd, buffer)) != 0)
+            return rc;
     }
-    
+
     // si path absolue / relatif
     else
     {

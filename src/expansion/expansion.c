@@ -1,9 +1,10 @@
 #define _POSIX_C_SOURCE 200809L
 #include "expansion.h"
-#include <sys/wait.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 
 #include "../ast/variable.h"
 #include "../run_program.h"
@@ -151,6 +152,39 @@ char *expand_variable(char *input, struct variables_list *list)
     return new_input;
 }
 
+static int exec_word(char **new_input, char *word)
+{
+    int fd[2];
+    int status;
+    pipe(fd);
+
+    int nbread = 0;
+    pid_t pid = fork();
+    if (pid == 0)
+    { 
+        dup2(fd[1], 1); // redirect stdout to the pipe
+        close(fd[0]);
+        close(fd[1]);
+        execl("/bin/sh", "sh", "-c", word, (char *)0);
+    }
+    else
+    {
+        if (waitpid(pid, &status, 0) != pid)
+            return -1;
+        close(fd[1]);
+        char *output = calloc(1, BUFFER_SIZE);
+        nbread = read(fd[0], output, BUFFER_SIZE);
+        close(fd[0]);
+
+        output[nbread - 1] = '\0';
+        *new_input = strcat(*new_input, output);
+        free(output);
+    }
+
+    return 0;
+}
+
+
 /**
  * Build a new string with subtitution commands extended
  */
@@ -159,8 +193,6 @@ char *expand_substitution(char *input, struct variables_list *list)
     char *new_input = calloc(1, BUFFER_SIZE);
     char *tmp = strtok(input, DELIM);
     char *word = NULL;
-
-    // on expand de potentielle commandes inbriques
     word = strdup(get_word_between_closer(&input, '('));
     while (contains_expansions(word))
     {
@@ -173,32 +205,7 @@ char *expand_substitution(char *input, struct variables_list *list)
     }
 
     if (word)
-    {
-        int fd[2];
-        int status;
-        pipe(fd);
-
-        int nbread = 0;
-        pid_t pid = fork();
-        if (pid == 0) { // child process
-            dup2(fd[1], 1); // redirect stdout to the pipe
-            close(fd[0]);
-            close(fd[1]);
-            execl("/bin/sh", "sh", "-c", word, (char *) 0);
-        } else { // parent process
-
-            if (waitpid(pid, &status, 0) != pid)
-                return NULL;
-            close(fd[1]);
-            char *output = calloc(1, BUFFER_SIZE);
-            nbread = read(fd[0], output, BUFFER_SIZE);
-            close(fd[0]);
-
-            output[nbread-1] = '\0';
-            new_input = strcat(new_input, output);
-            free(output);
-        }
-    }
+        exec_word(&new_input, word);
     else
         new_input = strcat(new_input, tmp);
 

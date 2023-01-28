@@ -14,7 +14,6 @@ void set_rc(int res, struct global_var *ret)
     ret->rc = res;
 }
 
-
 struct hash_map *get_functions()
 {
     return hash_func;
@@ -33,7 +32,7 @@ void init_map(void)
 struct parser *parse(struct lexer *lexer)
 {
     // Check for eof or newline
-   
+
     struct parser *parser = malloc(sizeof(struct parser));
     if (!parser)
         return NULL;

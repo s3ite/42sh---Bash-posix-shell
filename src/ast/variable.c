@@ -163,9 +163,10 @@ void free_variable_list(struct variables_list *list)
 struct variables_list *init_variables_list(void)
 {
     struct variables_list *list = malloc(sizeof(struct variables_list));
-    char *buffer2 =  calloc(1,1024);
+    char *buffer2 = calloc(1, 1024);
     getcwd(buffer2, 1024);
-    if (buffer2 == NULL) buffer2 = "";
+    if (buffer2 == NULL)
+        buffer2 = "";
 
     list->head = NULL;
     list->tail = NULL;
@@ -175,12 +176,12 @@ struct variables_list *init_variables_list(void)
     add_variable(
         list, init_item("0", (union value){ .string = "42sh" }, TYPE_STRING));
     add_variable(list,
-                 init_item("?", (union value){ .integer = 0 }, TYPE_INTEGER));    
+                 init_item("?", (union value){ .integer = 0 }, TYPE_INTEGER));
+    add_variable(
+        list, init_item("OLDPWD", (union value){ .string = "" }, TYPE_STRING));
     add_variable(
         list,
-        init_item("OLDPWD", (union value){ .string = "" }, TYPE_STRING));
-    add_variable(
-        list, init_item("PWD", (union value){ .string = buffer2 }, TYPE_STRING));
+        init_item("PWD", (union value){ .string = buffer2 }, TYPE_STRING));
 
     free(buffer2);
     return list;
