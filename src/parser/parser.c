@@ -14,7 +14,8 @@ void set_rc(int res, struct global_var *ret)
     ret->rc = res;
 }
 
-struct hash_map *get_functions()
+
+struct hash_map *get_functions(void)
 {
     return hash_func;
 }

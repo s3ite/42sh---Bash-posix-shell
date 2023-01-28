@@ -114,7 +114,7 @@ static char *get_word(char **io_command)
     int len = strlen(res);
     int cmd = strlen(io_command[0]);
     io_command[0][cmd - len] = '\0';
-    lastchar = '\0';
+    *lastchar = '\0';
     return res;
 }
 

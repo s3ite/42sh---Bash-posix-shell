@@ -57,7 +57,7 @@ char *remove_escaped_newline(char *input)
  ** void
  ** Return: schar *
  */
-char *get_stdin()
+char *get_stdin(void)
 {
     if ((isatty(STDIN_FILENO)))
     {
