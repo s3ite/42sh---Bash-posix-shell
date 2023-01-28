@@ -1,1 +1,1 @@
-cd -/
+echo $(echo bonjour)

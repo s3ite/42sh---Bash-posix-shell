@@ -1,12 +1,12 @@
 2
+CMakeLists.txt
+README.md
 ass=ignation
 bad
 build
-CMakeLists.txt
 def=d
 def=d$ee
 file
-README.md
 src
 test
 tests

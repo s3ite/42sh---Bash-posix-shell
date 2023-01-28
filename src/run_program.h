@@ -4,4 +4,4 @@
 
 int run_program(char *input);
 
-#endif //
+#endif /* ! RUN_PROGRAM_H */

@@ -12,14 +12,13 @@
 #include "expansion/expansion.h"
 #include "lexer/lexer.h"
 #include "others/hash_map.h"
-#include "parse_command_line/parse_command_line.h"
+#include "parser/parse_command_line.h"
 #include "parser/parser.h"
 #include "run_program.h"
 
 int main(int argc, char **argv)
 {
     variables_list = init_variables_list();
-
     char *input = parse_command_line(argc, argv);
     if (!input)
     {

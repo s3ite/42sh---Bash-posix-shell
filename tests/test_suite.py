@@ -26,7 +26,7 @@ def diff(expected : str, actual : str) -> str:
     return ''.join(unified_diff(expected_lines, actual_lines, fromfile="expected", tofile="actual"))
 
 def run_shell(shell : str, test : str) -> subprocess.CompletedProcess:
-    return subprocess.run([shell, test], capture_output=True, text=True)
+    return subprocess.run(["env", "-i", shell, test], capture_output=True, text=True)
 
 def performc_checks(test : TestCase, actual : subprocess.CompletedProcess):
     assert (not test.stderr) or actual.stderr != "", \

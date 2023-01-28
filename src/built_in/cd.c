@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #include "../ast/variable.h"
 #include "built_in.h"
@@ -31,33 +32,49 @@ static bool is_directory_exists(const char *path)
 
 int my_cd(char **cmd)
 {
-    char buffer[BUFFER_SIZE];
-
-    struct variable_item *variable = get_variable(variables_list, "OLDPWD");
-    char *oldpwd = variable->value.string;
-    char *pwd = strdup(getcwd(buffer, BUFFER_SIZE));
-    int rc = 0;
-    if (cmd[1] != NULL && cmd[2] != NULL)
+    if (cmd[1] && cmd[2])
     {
         fprintf(stderr, "cd : too many arguments");
         return 1;
     }
-    // si pas d'arguments
+
+    char buffer[BUFFER_SIZE];
+    char *oldpwd = get_variable(variables_list, "OLDPWD")->value.string;
+    char pwd[BUFFER_SIZE];
+    getcwd(pwd, BUFFER_SIZE);
+
+    int rc = 0;
+
     if (cmd[1] == NULL)
-        rc = chdir(getenv("HOME"));
-
+    {
+        char *tmp = getenv("HOME");
+        if (tmp == NULL) 
+        {
+            fprintf(stderr, " HOME environment variable not set\n");
+            return 1;
+        }
+        rc = chdir(tmp);
+    }
     // cas du -
-    else if (strcmp(cmd[1], "-") == 0)
+    else if (cmd[1][0] == '-')
     {
-        rc = chdir(oldpwd);
-        printf("%s\n", getcwd(buffer, BUFFER_SIZE));
+        if (isspace(cmd[1][1]) != 0)
+        {
+            rc = 2;
+            fprintf(stderr, "invalid option");
+        }
+        if (strcmp(oldpwd, "") == 0)
+        {
+            fprintf(stderr, "OLDPWD is not set\n");
+            return 1;
+        }
+        else
+        {
+            rc = chdir(oldpwd);
+            printf("%s\n", getcwd(buffer, BUFFER_SIZE));
+        }
     }
-    else if (strcmp(cmd[1], "-/") == 0)
-    {
-        rc = 2;
-        fprintf(stderr, "invalid option");
-    }
-
+    
     // si path absolue / relatif
     else
     {
@@ -75,6 +92,5 @@ int my_cd(char **cmd)
     if (update_variable(variables_list, "OLDPWD", TYPE_STRING, value) == -1)
         add_variable(variables_list, init_item("OLDPWD", value, TYPE_STRING));
 
-    free(pwd);
     return rc;
 }

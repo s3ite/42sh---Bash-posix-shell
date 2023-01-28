@@ -11,7 +11,7 @@
 #include "exec/exec.h"
 #include "expansion/expansion.h"
 #include "lexer/lexer.h"
-#include "parse_command_line/parse_command_line.h"
+#include "parser/parse_command_line.h"
 #include "parser/parser.h"
 
 int run_program(char *input)

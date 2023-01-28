@@ -15,7 +15,7 @@ class TestCase:
 
 
 def run_shell(file : str) -> subprocess.CompletedProcess:
-    return subprocess.run(["bash", "--posix", file], capture_output=True, text=True)
+    return subprocess.run(["env", "-i", "bash", "--posix", file], capture_output=True, text=True)
 
 def create_testcase_from_file(file : str) -> TestCase:
     process = run_shell(file)
@@ -23,10 +23,9 @@ def create_testcase_from_file(file : str) -> TestCase:
     
 
 if __name__ == "__main__":
-    test_directory = ["comment", "edge_case", "echo", "exit", "empty", "if", "simple_command", "substitution", "script", "single_quote", "true_false", "redirection", "variable", "cd"]
+    test_directory = ["comment", "edge_case", "echo", "exit", "empty", "if", "simple_command", "substitution", "script", "single_quote", "true_false", "redirection", "variable", "cd", "dot_builtin"]
     #test_directory = ["redirection", "42trash_criterion"]
-    #test_directory = ["variable", "substitution"]
-    #test_directory = ["cd"]
+    #test_directory = ["substitution"]
     nb_dir = len(test_directory)
 
     path = "./tests/data.yml"

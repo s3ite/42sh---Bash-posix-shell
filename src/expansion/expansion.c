@@ -1,6 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #include "expansion.h"
-
+#include <sys/wait.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -131,6 +131,7 @@ char *expand_variable(char *input, struct variables_list *list)
         }
         else
         {
+            free(new_input);
             fprintf(stderr, "bad substitution : expand_variable");
             free(save);
             free(tmp);
@@ -148,18 +149,6 @@ char *expand_variable(char *input, struct variables_list *list)
     free(save);
     free(tmp);
     return new_input;
-}
-
-/**
- * Build a string of the command that will be executed by the substitution and
- * return it
- */
-static char *build_subcommand(char *input)
-{
-    char *res = malloc(BUFFER_SIZE);
-    sprintf(res, "./build/42sh -c '%s'", input);
-
-    return res;
 }
 
 /**
@@ -185,21 +174,30 @@ char *expand_substitution(char *input, struct variables_list *list)
 
     if (word)
     {
-        char *subcommand = build_subcommand(word);
+        int fd[2];
+        int status;
+        pipe(fd);
 
-        char *output = calloc(1, BUFFER_SIZE);
+        int nbread = 0;
+        pid_t pid = fork();
+        if (pid == 0) { // child process
+            dup2(fd[1], 1); // redirect stdout to the pipe
+            close(fd[0]);
+            close(fd[1]);
+            execl("/bin/sh", "sh", "-c", word, (char *) 0);
+        } else { // parent process
 
-        FILE *fp = popen(subcommand, "r");
-        fgets(output, BUFFER_SIZE, fp);
-        // printf("Output: %s", output);
-        pclose(fp);
+            if (waitpid(pid, &status, 0) != pid)
+                return NULL;
+            close(fd[1]);
+            char *output = calloc(1, BUFFER_SIZE);
+            nbread = read(fd[0], output, BUFFER_SIZE);
+            close(fd[0]);
 
-        // remove the \n a the end
-        int len = strlen(output);
-        output[len - 1] = '\0';
-        new_input = strcat(new_input, output);
-        free(output);
-        free(subcommand);
+            output[nbread-1] = '\0';
+            new_input = strcat(new_input, output);
+            free(output);
+        }
     }
     else
         new_input = strcat(new_input, tmp);

@@ -1,0 +1,1 @@
+PWD=la_sauce; cd ..; echo $PWD

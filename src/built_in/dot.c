@@ -6,9 +6,14 @@
 
 int my_dot(char **cmd)
 {
+    if (cmd[1] == NULL)
+    {
+        fprintf(stderr, "dot : not enough arguments");
+        return 2;
+    }
     if (cmd[2] != NULL)
     {
-        fprintf(stderr, "cd : too many arguments");
+        fprintf(stderr, "dot : too many arguments");
         return 1;
     }
 

@@ -1,0 +1,1 @@
+var=test;var3=test; echo $var $var3; unset var var var var var3; echo $var $var3
